@@ -1,0 +1,243 @@
+{
+  "generated_at": "2026-07-24T01:25:49.223913+00:00",
+  "source": {
+    "policy_url": "https://app.populus.ai/columbus/public/policies?policy_id=db37662e-cd6c-429f-90f9-84e5ffb9099e",
+    "policy_export_version": "1.2.0",
+    "policy_export_updated": 1783347294279,
+    "geography_export_version": "1.2.0",
+    "geography_export_updated": 1783347294279,
+    "complaint_exported_at": "2026-07-23T23:00:05.910Z"
+  },
+  "method": {
+    "purpose": "Test proximity to published no-parking, mandatory-parking, and no-ride boundaries.",
+    "distance": "Nearest point-to-polygon-boundary distance using a local equirectangular approximation.",
+    "thresholds_m": [
+      25,
+      50,
+      100
+    ],
+    "interpretation": "Proximity is an operational correlation signal only. It does not establish that a policy boundary caused a complaint, that the policy was active at report time, or that a vehicle was inside a prohibited area."
+  },
+  "summary": {
+    "source_complaint_count": 104,
+    "boundary_policy_count": 17,
+    "boundary_feature_count": 52,
+    "inside_policy_zone_count": 24,
+    "within_boundary_m": {
+      "25": 26,
+      "50": 29,
+      "100": 31
+    }
+  },
+  "boundaries": [
+    {
+      "policy_id": "1c7d2e84-19b0-405b-9462-7640618c9e4d",
+      "policy_name": "Short North Parking",
+      "boundary_type": "mandatory_parking",
+      "description": "There is to be mandatory parking in this zone 24/7. This includes bike racks, Ride Hubs and shared mobility corrals in the Short North Arts District.",
+      "geography_id": "c25b6a30-b8aa-419f-83c1-816726e8a801",
+      "geography_name": "Short North Parking Border",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.001844,
+              39.974131
+            ],
+            [
+              -83.003823,
+              39.973782
+            ],
+            [
+              -83.006861,
+              39.987056
+            ],
+            [
+              -83.004132,
+              39.987002
+            ],
+            [
+              -83.001844,
+              39.974131
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "policy_id": "29b7b655-c01f-401e-ae19-a21538d74599",
+      "policy_name": "No Ride - COSI, Vets & Bicentennial",
+      "boundary_type": "no_ride",
+      "description": "These areas are No Ride areas 24/7",
+      "geography_id": "8aeb75a0-2b8b-4e39-86b7-1ed990ca273f",
+      "geography_name": "No Rides - Vets, COSI, Bicentennial",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.003665,
+              39.956918
+            ],
+            [
+              -83.003506,
+              39.956922
+            ],
+            [
+              -83.003294,
+              39.956723
+            ],
+            [
+              -83.003151,
+              39.956443
+            ],
+            [
+              -83.003023,
+              39.955843
+            ],
+            [
+              -83.003074,
+              39.95579
+            ],
+            [
+              -83.004308,
+              39.955683
+            ],
+            [
+              -83.004791,
+              39.955711
+            ],
+            [
+              -83.005025,
+              39.955744
+            ],
+            [
+              -83.005216,
+              39.955788
+            ],
+            [
+              -83.005191,
+              39.956
+            ],
+            [
+              -83.004622,
+              39.956668
+            ],
+            [
+              -83.00426,
+              39.956988
+            ],
+            [
+              -83.003665,
+              39.956918
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "policy_id": "29b7b655-c01f-401e-ae19-a21538d74599",
+      "policy_name": "No Ride - COSI, Vets & Bicentennial",
+      "boundary_type": "no_ride",
+      "description": "These areas are No Ride areas 24/7",
+      "geography_id": "8aeb75a0-2b8b-4e39-86b7-1ed990ca273f",
+      "geography_name": "No Rides - Vets, COSI, Bicentennial",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.00877,
+              39.96114
+            ],
+            [
+              -83.006667,
+              39.961352
+            ],
+            [
+              -83.0059,
+              39.960292
+            ],
+            [
+              -83.005742,
+              39.959363
+            ],
+            [
+              -83.005818,
+              39.958956
+            ],
+            [
+              -83.006314,
+              39.958071
+            ],
+            [
+              -83.00701,
+              39.958152
+            ],
+            [
+              -83.008135,
+              39.958042
+            ],
+            [
+              -83.00877,
+              39.96114
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "policy_id": "29b7b655-c01f-401e-ae19-a21538d74599",
+      "policy_name": "No Ride - COSI, Vets & Bicentennial",
+      "boundary_type": "no_ride",
+      "description": "These areas are No Ride areas 24/7",
+      "geography_id": "8aeb75a0-2b8b-4e39-86b7-1ed990ca273f",
+      "geography_name": "No Rides - Vets, COSI, Bicentennial",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.010937,
+              39.961132
+            ],
+            [
+              -83.011073,
+              39.96199
+            ],
+            [
+              -83.01088,
+              39.962564
+            ],
+            [
+              -83.009925,
+              39.963286
+            ],
+            [
+              -83.008919,
+              39.963384
+            ],
+            [
+              -83.007935,
+              39.962799
+            ],
+            [
+              -83.007435,
+              39.962433
+            ],
+            [
+              -83.006929,
+              39.961629
+            ],
+            [
+              -83.010937,
+              39.961132
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "_extraction_note": "Source capture from the fetch tool was truncated at ~127KB (each boundary polygon has hundreds of coordinate points, so very few fit before the cutoff); only 4 of the originally reported 52 boundary features were present as complete JSON objects. The 'complaints' proximity-match array was dropped entirely per instructions (duplicates data-311.json) and was also beyond the truncation point regardless."
+}
