@@ -1,78 +1,60 @@
-# Columbus Fleet Ops — Automated Operations Pipeline
-### Six months of AI-assisted micromobility operations (Jan–Jun 2026)
+# Columbus Micromobility Data
 
-This repo documents an automated operations system I built and ran for the Bird/Spin shared-scooter fleet in Columbus, Ohio. Twice a day, an AI agent pulled live data from the fleet data warehouse (Presto via Metabase), analyzed coverage and workload, rebuilt a suite of six cross-linked HTML dashboards, deployed them to a static host, and sent targeted iMessage updates to each stakeholder — the ops lead, the team lead, and two external operator partners.
+An independent, public-data-only look at shared-scooter operations in Columbus, Ohio — 311 complaint activity, published vehicle positions, and city policy boundaries. Built and maintained by Steven Needham as a personal project. **Not affiliated with, endorsed by, or built using data from any current or former employer** — everything here comes from public sources: the City of Columbus 311 feed, published GBFS vehicle-position data, and Columbus's published mobility policy boundaries.
 
-The system is no longer running as a daily live pipeline. What's here is a retrospective: the architecture, the code and query patterns that held up, real (sanitized) output examples, and the operational lessons.
+## What's here
 
----
+### `columbus-observer-dashboard.html`
+A single self-contained HTML dashboard — no build step, no server required. Open it directly in a browser. It renders a Leaflet map of Columbus with four layers you can toggle independently:
 
-## Architecture
+- **311 requests** — shared bike/scooter complaints from the City's public feed, color-coded by a priority heuristic (critical / high / standard) derived from complaint type. Click a marker for source ID, address, zone, status, and a link back to the source record.
+- **GBFS vehicle positions** — published Veo and Spin vehicle locations, filterable by operator and availability.
+- **Cross-vendor pile-ups** — clusters of four or more vehicles from more than one operator within ~20 metres of each other, flagged as a review signal (not a confirmed violation).
+- **Policy boundaries** — published no-parking, mandatory-parking, and no-ride zones.
 
-```
-Presto / Metabase  ──►  Analysis layer (AI agent, twice daily)
-  scans, tasks,           coverage classification, schedule inference,
-  bounties, vehicles      anomaly detection, partner gap evaluation
-                                   │
-          ┌────────────────────────┼──────────────────────────┐
-          ▼                        ▼                          ▼
-  6 static HTML dashboards   JSON snapshot            iMessage per audience
-  (Surge deploy)             (state across runs)      (4 recipients, tone rules)
-          │                        │
-          ▼                        ▼
-  Notion hub + partner       Feedback loop: notes widget →
-  reports                    JSON export → read at next run's pre-flight
-```
+Summary stat cards and a legend sit above the map. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
 
-**Outputs per run:** main ops dashboard · GPS scan map · two partner-facing reports · schedule comparison view · worker registry · OOB rebalance worklists (xlsx) + self-contained SVG map.
+### `data-311.json`, `data-gbfs.json`, `data-policy.json`
+The data snapshots the dashboard is built from, pulled from the companion prototype repo [`steveneedham/311-Intel`](https://github.com/steveneedham/311-Intel). Each file documents its own source (query URL, fetch timestamp, method) inline.
 
----
+**These snapshots are partial**, not the full feed — each file has an `_extraction_note` field stating exactly how much was recovered versus what the source reports. To refresh with complete data, pull the full versions directly from `311-Intel`:
 
-## What it did
-
-### 1. Coverage-gap detection (schedule vs. presence)
-Three signals cross-referenced every run: the official Homebase schedule (ground truth, parsed from a PDF export), a schedule *inferred* from 14 days of scan patterns, and live scan activity today. Each run classified the day 🟢 COVERED / 🟡 AT RISK / 🔴 GAP DETECTED and alerted only on the last two. A five-type discrepancy taxonomy (new/returning worker, unscheduled worker, day mismatch, time mismatch, scheduled-but-inactive) caught schedule drift automatically.
-
-### 2. Partner accountability without adversarial alerts
-External operators set their own schedules — a scan gap on a low-demand day is planned downtime, not a no-show. Alert triggers were gated on demand context: no alert unless bounty volume made the gap a missed opportunity. Messages used collaborative tone rules, deduped via a persisted `alert_sent_today` flag, and were suppressed entirely on off-schedule runs. See [examples/imessage-alerts.md](examples/imessage-alerts.md).
-
-### 3. Commitment tracking
-The core KPI: percentage of battery swaps (target 100%) and rebalances (target ≥50%) completed by external operators, computed daily from task completions and rendered as color-thresholded progress bars. See [sql/task-completions-external-share.sql](sql/task-completions-external-share.sql).
-
-### 4. Out-of-bounds rebalance pipeline
-Twice daily: pull every vehicle with a **same-day** GPS fix, run an exclusion cascade (active bounty → in-bounds polygon → launched nest polygons), and emit xlsx worklists with per-vehicle deep links plus a fully self-contained inline-SVG map — no CDN dependencies, so it renders in any context including chat previews. See [sql/fresh-gps-oob-export.sql](sql/fresh-gps-oob-export.sql).
-
-### 5. Human-in-the-loop feedback across autonomous runs
-Each dashboard carried a notes widget (localStorage, zero backend). Notes exported to JSON, were read at the next run's pre-flight step, and re-rendered as "prior run notes" — a feedback loop between a human and an autonomous agent with no infrastructure at all. See [snippets/feedback-widget.html](snippets/feedback-widget.html).
-
----
-
-## What we learned
-
-**Scans are attendance, not performance.** Scan counts systematically underrepresent workers who skip scanning before resolving tasks — one field worker showed 13 scans against 31 confirmed task completions in the same window. Every presence signal was cross-referenced against the task table before any conclusion.
-
-**Demand context must gate alerts.** Early versions flagged every partner scan gap. That erodes trust fast when the partner simply wasn't scheduled. Gating alerts on "was there meaningful work available?" turned the alert channel from noise into signal.
-
-**Distrust convenient documents.** Two externally-produced audit spreadsheets were proven unreliable — one showed zero activity on a day with confirmed field work; another introduced phantom workers. Policy: the warehouse is canonical, conflicts resolve toward it, and missing date ranges are flagged as pipeline gaps rather than assumed to be zero activity.
-
-**Identity resolution needs a human channel.** Day-of-week pattern inference misbucketed multiple workers; database email evidence and human confirmation were the only reliable sources. The worker registry carried explicit confidence states (Confirmed / Unconfirmed) and a "Needs ID" banner for high-activity unknowns.
-
-**GPS freshness is correctness.** A rebalance worklist built on stale coordinates sends field workers to places vehicles no longer are. The vehicle query joins the dimension table for the same-day GPS fix rather than trusting the current-state snapshot.
-
-**Static HTML + chat messages beat BI logins.** Field operators reliably opened a short link from a text message. Nobody logged into a BI tool. Distribution was: static site, Bitly permalinks, per-audience texts with per-recipient tone rules.
-
-**Admin accounts distort field metrics.** The ops lead's own account was excluded from every field-action query by standing policy.
-
----
-
-## Repo contents
-
-| Path | Contents |
+| This repo | Full source in `311-Intel` |
 |---|---|
-| `sql/` | Annotated production queries (Presto dialect) |
-| `snippets/` | Feedback widget, reusable patterns |
-| `examples/` | Sanitized message examples, partner report excerpts, run snapshot JSON schema |
-| `sanitized-dashboards/` | Sanitized full-page copies of all 8 live dashboard/report pages (names, emails, UUIDs, and internal admin links replaced with placeholders) |
-| `screenshots/` | Dashboard and map captures |
+| `data-311.json` | `columbus-311-current.json` |
+| `data-gbfs.json` | `gbfs-vehicle-positions.json` |
+| `data-policy.json` | `mobility-policy-boundaries.json` |
 
-All personal identifiers (names, phone numbers, emails, account UUIDs, internal admin URLs) have been removed or replaced with placeholders. Fleet-level data shown is representative.
+Swap the file contents in and reload the dashboard — no code changes needed, since it reads by the same embedded structure.
+
+## Why this exists
+
+This project sits alongside the market-monitoring "watch mode" work described in the rest of this repo: a lightweight, sustainable way to track the Columbus shared-mobility market using only what's publicly available — no insider access required. The framing is deliberately that of an informed outside observer, not an advocate: claims are hedged to what the data actually supports, and every figure traces back to a named public source.
+
+## Data sources
+
+- **311 complaints** — City of Columbus 311 public map (`gis.columbus.gov/coc311map`), filtered to "Shared Electric Bike & Scooters" requests.
+- **Vehicle positions** — published GBFS feeds for Veo and Spin.
+- **Policy boundaries** — Columbus's published Populus mobility-policy export (no-parking, mandatory-parking, no-ride zones).
+
+None of this requires or uses any operator- or employer-internal system, login, or dataset.
+
+## Evidence boundaries
+
+- Cross-vendor proximity clusters are a spatial review signal, not a confirmed pile-up, complaint, or violation.
+- Policy-boundary proximity does not establish that a boundary caused a complaint or was active at the time of the report.
+- 311 status and vehicle availability reflect a single fetch timestamp (see each JSON file's `fetched_at` / `snapshot_id`) — not a live feed.
+
+## Running locally
+
+No install needed:
+
+```
+open columbus-observer-dashboard.html
+```
+
+or serve the folder with any static file server if your browser blocks local file access to the embedded scripts.
+
+---
+
+© 2026 Steven Needham. Independent project, public data only.
