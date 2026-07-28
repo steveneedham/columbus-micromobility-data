@@ -2,6 +2,12 @@
 
 An independent, public-data-only look at shared-scooter operations in Columbus, Ohio — 311 complaint activity, published vehicle positions, and city policy boundaries. Built and maintained by Steven Needham as a personal project. **Not affiliated with, endorsed by, or built using data from any current or former employer** — everything here comes from public sources: the City of Columbus 311 feed, published GBFS vehicle-position data, and Columbus's published mobility policy boundaries.
 
+## Architecture
+
+![Architecture diagram: public data sources feed the companion 311-Intel repo, which is the source for this repo's JSON snapshots, which are embedded into a single self-contained dashboard rendered in the browser](architecture.svg)
+
+Three public sources → full snapshots committed in the companion [`311-Intel`](https://github.com/steveneedham/311-Intel) repo → partial snapshots copied into this repo as `data-*.json` → embedded directly into `columbus-observer-dashboard.html` → rendered client-side in the browser. No server, no database, no build step. The dashed line marks the fastest path to a full refresh: swap the full files from `311-Intel` into this repo's `data-*.json` and reload.
+
 ## What's here
 
 ### `columbus-observer-dashboard.html`
@@ -26,6 +32,9 @@ The data snapshots the dashboard is built from, pulled from the companion protot
 | `data-policy.json` | `mobility-policy-boundaries.json` |
 
 Swap the file contents in and reload the dashboard — no code changes needed, since it reads by the same embedded structure.
+
+### `architecture.svg`
+The diagram above, as a standalone file for reuse in docs or a portfolio writeup.
 
 ## Why this exists
 

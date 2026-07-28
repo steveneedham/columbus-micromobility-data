@@ -1,0 +1,97 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Columbus Micromobility Observer View — architecture</title>
+<desc>Public data sources feed three JSON snapshot files, which are embedded into a single self-contained HTML dashboard that renders a Leaflet map in the browser. A companion prototype repo, 311-Intel, is the source of the full snapshots.</desc>
+
+<style>
+  .box { fill: #f8fafc; stroke: #334155; stroke-width: 1.5; }
+  .box-accent { fill: #f8fafc; stroke: #0d9488; stroke-width: 1.5; }
+  .label { font-family: -apple-system, "Segoe UI", sans-serif; font-size: 14px; fill: #0f172a; font-weight: 600; }
+  .sublabel { font-family: -apple-system, "Segoe UI", sans-serif; font-size: 11.5px; fill: #64748b; }
+  .group-label { font-family: -apple-system, "Segoe UI", sans-serif; font-size: 12px; fill: #64748b; letter-spacing: 0.04em; text-transform: uppercase; }
+  .arrow { stroke: #334155; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+  .arrow-dashed { stroke: #64748b; stroke-width: 1.3; fill: none; stroke-dasharray: 4 3; marker-end: url(#arrowhead2); }
+</style>
+
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 Z" fill="#334155"/>
+  </marker>
+  <marker id="arrowhead2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 Z" fill="#64748b"/>
+  </marker>
+</defs>
+
+<rect width="900" height="460" fill="#ffffff"/>
+
+<!-- Column 1: public data sources -->
+<text x="40" y="34" class="group-label">Public data sources</text>
+<rect x="40" y="50" width="190" height="52" rx="10" class="box"/>
+<text x="55" y="72" class="label">City 311 feed</text>
+<text x="55" y="89" class="sublabel">gis.columbus.gov</text>
+
+<rect x="40" y="118" width="190" height="52" rx="10" class="box"/>
+<text x="55" y="140" class="label">GBFS vehicle feeds</text>
+<text x="55" y="157" class="sublabel">Veo &amp; Spin positions</text>
+
+<rect x="40" y="186" width="190" height="52" rx="10" class="box"/>
+<text x="55" y="208" class="label">City policy export</text>
+<text x="55" y="225" class="sublabel">no-park / no-ride zones</text>
+
+<!-- Column 2: 311-Intel repo -->
+<text x="300" y="34" class="group-label">Companion prototype</text>
+<rect x="300" y="94" width="190" height="100" rx="10" class="box-accent"/>
+<text x="315" y="120" class="label">311-Intel repo</text>
+<text x="315" y="138" class="sublabel">full committed snapshots:</text>
+<text x="315" y="154" class="sublabel">columbus-311-current.json</text>
+<text x="315" y="169" class="sublabel">gbfs-vehicle-positions.json</text>
+<text x="315" y="184" class="sublabel">mobility-policy-boundaries.json</text>
+
+<!-- Column 3: this repo's data snapshots -->
+<text x="560" y="34" class="group-label">columbus-micromobility-data</text>
+<rect x="560" y="50" width="190" height="46" rx="10" class="box"/>
+<text x="575" y="70" class="label">data-311.json</text>
+<text x="575" y="86" class="sublabel">partial snapshot</text>
+
+<rect x="560" y="106" width="190" height="46" rx="10" class="box"/>
+<text x="575" y="126" class="label">data-gbfs.json</text>
+<text x="575" y="142" class="sublabel">partial snapshot</text>
+
+<rect x="560" y="162" width="190" height="46" rx="10" class="box"/>
+<text x="575" y="182" class="label">data-policy.json</text>
+<text x="575" y="198" class="sublabel">partial snapshot</text>
+
+<!-- Column 3 -> dashboard -->
+<rect x="560" y="300" width="190" height="70" rx="10" class="box-accent"/>
+<text x="575" y="328" class="label">columbus-observer</text>
+<text x="575" y="345" class="label">-dashboard.html</text>
+<text x="575" y="360" class="sublabel">self-contained, data embedded</text>
+
+<!-- Column 4: browser -->
+<text x="820" y="34" class="group-label" text-anchor="middle">Output</text>
+<rect x="770" y="300" width="110" height="70" rx="10" class="box"/>
+<text x="785" y="328" class="label">Browser</text>
+<text x="785" y="345" class="sublabel">Leaflet map,</text>
+<text x="785" y="360" class="sublabel">no server</text>
+
+<!-- Arrows: sources -> 311-Intel -->
+<path d="M230,76 L300,120" class="arrow"/>
+<path d="M230,144 L300,144" class="arrow"/>
+<path d="M230,212 L300,168" class="arrow"/>
+
+<!-- Arrows: 311-Intel -> this repo's json (solid) -->
+<path d="M490,130 L560,73" class="arrow"/>
+<path d="M490,144 L560,129" class="arrow"/>
+<path d="M490,158 L560,185" class="arrow"/>
+
+<!-- Arrows: json files -> dashboard (embedded) -->
+<path d="M655,208 L655,300" class="arrow"/>
+
+<!-- Arrow: dashboard -> browser -->
+<path d="M750,335 L770,335" class="arrow"/>
+
+<!-- Dashed: full-refresh path direct from 311-Intel -->
+<path d="M395,194 C 480,260 480,300 560,330" class="arrow-dashed"/>
+<text x="400" y="255" class="sublabel">full-file swap-in</text>
+<text x="400" y="268" class="sublabel">to refresh dashboard</text>
+
+</svg>
