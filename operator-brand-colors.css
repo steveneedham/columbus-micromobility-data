@@ -1,0 +1,29 @@
+/*
+ * Operator brand color tokens — Columbus micromobility market
+ * Extracted directly from each operator's live public website (computed
+ * button/CTA colors and logo pixel sampling), not approximated from memory.
+ * Verified 2026-07-28.
+ *
+ * Usage: reference these for operator-coded UI (map markers, legends,
+ * charts) in the Columbus Micromobility Observer View project and related
+ * public-data dashboards. These are third-party trademarks — used here only
+ * to identify each operator's own vehicles/data in a neutral, informational
+ * context, not as an endorsement or affiliation claim.
+ */
+
+:root {
+  /* Spin — spin.app, "Download The App" / primary accent */
+  --op-spin: #E03F23;
+
+  /* Veo — veoride.com, favicon + VeoPlus logo (sampled, consistent) */
+  --op-veo: #00B8AA;
+
+  /* Bird — bird.co, "Download the App" CTA background */
+  --op-bird: #26CCF0;
+
+  /* Lime — li.me, "Download App" CTA background */
+  --op-lime: #00DD00;
+
+  /* Unknown / unattributed operator fallback */
+  --op-unknown: #8B93A1;
+}
