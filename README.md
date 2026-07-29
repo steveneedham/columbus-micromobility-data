@@ -24,10 +24,11 @@ A single self-contained HTML dashboard — no build step, no server required. Op
 - **GBFS vehicle positions** — published Veo and Spin vehicle locations, filterable by operator and availability.
 - **Cross-vendor pile-ups** — clusters of four or more vehicles from more than one operator within ~20 metres of each other, flagged as a review signal (not a confirmed violation).
 - **Policy boundaries** — published no-parking, mandatory-parking, and no-ride zones.
+- **Populus MDS Geographies** — the complete supplied MDS geography export: 110 named geographies and 147 polygon/multipolygon features, toggleable as a separate map layer.
 - **Columbus Ride Hubs** — official City-published CoGo station locations and dock capacity, with a badge and popup breakdown counting each vendor’s published vehicles within 100 metres in the current GBFS snapshot. A dedicated status dashboard groups empty and capacity-exceeding proximity signals; every row jumps to its hub on the map.
 - **Vendor observation log** — the latest snapshot’s geographically relevant vendor changes rendered as toggleable review-area circles; selecting a matching log entry enables and focuses this layer.
 
-A compact overview leads into a map-first workspace. On phones, a sticky four-part navigation and map control sheet keep layers and filters within reach; Ride Hub, vendor-change, and pile-up findings share a tabbed Insights section. The perpetual GBFS observation history compares each new snapshot with its prior archived snapshot without using 311 signals. Focus presets, a shareable URL state, and a compact top-ten pile-up list make map review easier. A “How to use this site” dialog catalogs the dashboard controls, and the downloadable Columbus 311 case-lookup workflow includes a native Claude skill ZIP plus portable Markdown setup instructions for ChatGPT Projects and Gemini Gems. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
+A compact overview leads into a map-first workspace. On phones, a sticky four-part navigation and map control sheet keep layers and filters within reach; Ride Hub, Downtown CBD distribution, vendor-change, and pile-up findings share a tabbed Insights section. The perpetual GBFS observation history compares each new snapshot with its prior archived snapshot without using 311 signals. Focus presets, a shareable URL state, and a compact top-ten pile-up list make map review easier. A “How to use this site” dialog catalogs the dashboard controls, and the downloadable Columbus 311 case-lookup workflow includes a native Claude skill ZIP plus portable Markdown setup instructions for ChatGPT Projects and Gemini Gems. The dashboard is read-only: no accounts and no write-back. Google Analytics 4 (`G-76JHMZJ82N`) measures aggregate site usage.
 
 ### `data-311.json`, `data-gbfs.json`, `data-policy.json`, `data-ride-hubs.json`, `data-gbfs-observations.json`
 The data snapshots the dashboard is built from. The operational snapshots are pulled from the companion prototype repo [`steveneedham/311-Intel`](https://github.com/steveneedham/311-Intel); the Ride Hubs snapshot comes from the official City ArcGIS layer. Each file documents its own source (query URL, fetch timestamp, method) inline.
@@ -41,6 +42,7 @@ The data snapshots the dashboard is built from. The operational snapshots are pu
 | `data-policy.json` | `mobility-policy-boundaries.json` |
 | `data-ride-hubs.json` | City of Columbus `PublicService/MapServer/31` |
 | `data-gbfs-observations.json` | Derived comparison of the newest GBFS snapshot with the prior archive |
+| `data-mds-geographies.json` | Complete supplied Populus MDS geography export; 110 named geographies |
 
 The dashboard is self-contained and reads the embedded copies directly; no runtime fetch or build service is required.
 

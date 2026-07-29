@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Columbus Micromobility — Observer View</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-76JHMZJ82N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-76JHMZJ82N');
+</script>
 <link rel="icon" type="image/svg+xml" href="assets/field-ledger-mark.svg">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
@@ -265,6 +273,20 @@
   .swatch.observation { background: rgba(169, 71, 40, .08); border: 2px dashed var(--red-600); }
   .swatch.ring { background: transparent; border: 2px solid var(--red-600); }
   .swatch.line { width: 18px; height: 0; border-top: 2px dashed var(--violet-600); border-radius: 0; }
+  .swatch.geography { background: rgba(35,106,115,.14); border: 2px solid var(--blue-700); border-radius: 1px; }
+  .cbd-insight-card { max-width: 880px; border: 1px solid var(--slate-300); background: var(--source-sheet); }
+  .cbd-insight-header { padding: 18px 20px; border-bottom: 1px solid var(--slate-300); }
+  .cbd-insight-header h3 { margin: 0 0 6px; font: 500 1.45rem var(--display); }
+  .cbd-insight-header p { margin: 0; color: var(--slate-600); font-size: .84rem; }
+  .cbd-insight-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .cbd-insight-table th, .cbd-insight-table td { padding: 11px 12px; border-bottom: 1px solid var(--slate-300); text-align: right; }
+  .cbd-insight-table th { color: var(--slate-500); font: 600 .62rem var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+  .cbd-insight-table th:first-child, .cbd-insight-table td:first-child { text-align: left; }
+  .cbd-insight-table .above { color: var(--red-600); font-weight: 700; }
+  .cbd-insight-table .below { color: var(--teal-600); font-weight: 700; }
+  .cbd-map-button { width: 100%; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
+  .cbd-map-button:hover { color: var(--blue-700); text-decoration: underline; }
+  .cbd-insight-note { margin: 0; padding: 14px 18px; color: var(--slate-500); font-size: .74rem; font-style: italic; }
   .pileup-list { padding: 12px 16px; max-height: 260px; overflow-y: auto; font-size: 0.82rem; }
   .pileup-item {
     display: block;
@@ -688,14 +710,14 @@
       <section class="guide-item"><h3>2 · Toggle map layers</h3><p>On phones, select Layers &amp; filters over the map to open the control sheet. On larger screens, the controls remain beside the map.</p></section>
       <section class="guide-item"><h3>3 · Read marker shapes</h3><p>311 reports use diamonds with priority colors. GBFS vehicles use vendor-colored circles. Ride Hubs use the purple hub sign, while pile-ups use outlined flags.</p></section>
       <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow GBFS vehicle positions. Ride Hub proximity counts continue to use the complete current snapshot, independent of those display filters.</p></section>
-      <section class="guide-item"><h3>5 · Review insights</h3><p>Use the Ride Hubs, Vendor changes, and Pile-ups tabs. Select any geographic finding to enable its layer and return to the relevant map area.</p></section>
+      <section class="guide-item"><h3>5 · Review insights</h3><p>Use the Ride Hubs, CBD distribution, Vendor changes, and Pile-ups tabs. Select any geographic finding to enable its layer and return to the relevant map area.</p></section>
       <section class="guide-item"><h3>6 · Inspect Ride Hubs</h3><p>Open the Ride Hub Status dashboard to compare empty and capacity-exceeding proximity signals. Select any row to enable the hub layer and jump to its map marker.</p></section>
       <section class="guide-item"><h3>7 · Research a 311 case</h3><p>Select a 311 diamond for its CAS ID, address, status, source link, and a button that copies a complete case-lookup prompt for your AI tool.</p></section>
       <section class="guide-item"><h3>8 · Install the lookup workflow</h3><p>Below the observation log, download the native Claude skill ZIP or portable Markdown instructions for a ChatGPT Project or Gemini Gem.</p></section>
       <section class="guide-item"><h3>9 · Follow vendor changes</h3><p>The perpetual observation history preserves every committed GBFS comparison for fleet size, published range, availability, and geographic concentration without using 311 reports.</p></section>
       <section class="guide-item"><h3>10 · Use research artifacts</h3><p>Open the separate Research Library for downloadable forecast guides, inventories, project cards, and analysis charts with visible source provenance.</p></section>
     </div>
-    <p class="guide-footnote">This is an independent public-data observer view—not a live dispatch system, official City record system, or confirmed-violation ledger.</p>
+    <p class="guide-footnote">This is an independent public-data observer view—not a live dispatch system, official City record system, or confirmed-violation ledger. The site uses Google Analytics to measure aggregate usage.</p>
   </div>
 </dialog>
 
@@ -738,6 +760,7 @@
         <label><input type="checkbox" id="toggleGbfs" checked> GBFS vehicle positions</label>
         <label><input type="checkbox" id="togglePileups" checked> Cross-vendor flags</label>
         <label><input type="checkbox" id="togglePolicy" checked> Policy boundaries</label>
+        <label><input type="checkbox" id="toggleMdsGeographies"> Populus MDS Geographies (110)</label>
         <label><input type="checkbox" id="toggleRideHubs"> Columbus Ride Hubs (100 m counts)</label>
         <button type="button" class="hub-dashboard-button" id="openRideHubDashboard" aria-haspopup="dialog">Open Ride Hub status dashboard</button>
         <label><input type="checkbox" id="toggleVendorObservations"> Vendor observation log</label>
@@ -771,6 +794,7 @@
           <div class="legend-row"><span class="swatch observation"></span> Vendor observation review area</div>
           <div class="legend-row"><span class="swatch ring"></span> Cross-vendor pile-up flag</div>
           <div class="legend-row"><span class="swatch line"></span> Policy boundary</div>
+          <div class="legend-row"><span class="swatch geography"></span> Populus MDS geography</div>
         </div>
       </details>
     </div>
@@ -783,11 +807,18 @@
     </div>
     <div class="insight-tabs" role="tablist" aria-label="Insight views">
       <button type="button" class="insight-tab" role="tab" id="tab-ride-hubs" aria-controls="panel-ride-hubs" aria-selected="true" data-insight="ride-hubs">Ride Hubs</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-cbd-distribution" aria-controls="panel-cbd-distribution" aria-selected="false" data-insight="cbd-distribution">CBD distribution</button>
       <button type="button" class="insight-tab" role="tab" id="tab-vendor-changes" aria-controls="panel-vendor-changes" aria-selected="false" data-insight="vendor-changes">Vendor changes</button>
       <button type="button" class="insight-tab" role="tab" id="tab-pileups" aria-controls="panel-pileups" aria-selected="false" data-insight="pileups">Pile-ups</button>
     </div>
     <div class="insight-panel" id="panel-ride-hubs" role="tabpanel" aria-labelledby="tab-ride-hubs" data-insight-panel="ride-hubs">
       <div class="insight-hub-card"><div><h3>Ride Hub status dashboard</h3><p id="rideHubInsightSummary">Compare empty and over-capacity proximity signals from the current GBFS snapshot.</p></div><button type="button" class="hub-dashboard-button" id="openRideHubDashboardInsights" aria-haspopup="dialog">Open Ride Hub status</button></div>
+    </div>
+    <div class="insight-panel" id="panel-cbd-distribution" role="tabpanel" aria-labelledby="tab-cbd-distribution" data-insight-panel="cbd-distribution" hidden>
+      <div class="cbd-insight-card">
+        <div class="cbd-insight-header"><h3>Downtown CBD Distribution</h3><p>Active devices inside the published Downtown CBD geography compared with each vendor’s active citywide devices.</p></div>
+        <div id="cbdDistributionInsight"><p class="cbd-insight-note">Loading the Populus MDS geography export…</p></div>
+      </div>
     </div>
     <div class="insight-panel observation-log" id="panel-vendor-changes" role="tabpanel" aria-labelledby="tab-vendor-changes" data-insight-panel="vendor-changes" hidden>
       <div class="observation-log-header"><div><p class="eyebrow">GBFS snapshot-to-snapshot</p><h3 id="observation-log-title">Vendor observation history</h3></div><p class="observation-intro">A perpetual record of fleet size, range, availability, and geographic concentration. Every committed comparison is retained; no 311 signals are used.</p></div>
@@ -861,7 +892,7 @@
   </section>
 </main>
 
-<footer>© 2026 Steven Needham · Independent project, public data only.</footer>
+<footer>© 2026 Steven Needham · Independent project, public data only · Google Analytics enabled.</footer>
 
 <script type="application/json" id="data-311">
 {
@@ -170818,6 +170849,82 @@
     hub.marker.openPopup();
   });
 
+  // ---- Complete Populus MDS geography layer ----
+  const layerMdsGeographies = L.layerGroup();
+  const mdsCanvasRenderer = L.canvas({ padding: .35 });
+  let downtownCbdLayer = null;
+  let mdsGeographyData = null;
+
+  function pointInRing(lng, lat, ring) {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i];
+      const [xj, yj] = ring[j];
+      if ((yi > lat) !== (yj > lat) && lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  }
+  function pointInGeometry(lng, lat, geometry) {
+    if (!geometry || !Array.isArray(geometry.coordinates)) return false;
+    const polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.type === "MultiPolygon" ? geometry.coordinates : [];
+    return polygons.some(rings => rings.length && pointInRing(lng, lat, rings[0]) && !rings.slice(1).some(hole => pointInRing(lng, lat, hole)));
+  }
+  function vehicleInsideFeatureCollection(vehicle, featureCollection) {
+    return typeof vehicle.lng === "number" && typeof vehicle.lat === "number" &&
+      (featureCollection.features || []).some(feature => pointInGeometry(vehicle.lng, vehicle.lat, feature.geometry));
+  }
+  function buildCbdDistributionInsight(geography, layer) {
+    const activeVehicles = vehicles.filter(vehicle => !vehicle.disabled && !vehicle.reserved);
+    const rows = ["Veo", "Spin"].map(vendor => {
+      const vendorActive = activeVehicles.filter(vehicle => vehicle.company === vendor);
+      const inside = vendorActive.filter(vehicle => vehicleInsideFeatureCollection(vehicle, geography.geography_json)).length;
+      const percent = vendorActive.length ? inside / vendorActive.length * 100 : 0;
+      return { vendor, inside, total: vendorActive.length, percent };
+    });
+    const snapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
+    const timeLabel = snapshotAt ? fmtDateTime(snapshotAt.toISOString()) : "current embedded snapshot";
+    document.getElementById("cbdDistributionInsight").innerHTML = `
+      <div class="hub-dashboard-table-wrap"><table class="cbd-insight-table"><thead><tr><th>Vendor</th><th>CBD active</th><th>Citywide active</th><th>CBD share</th><th>30% line</th></tr></thead><tbody>
+      ${rows.map(row => `<tr><td><button type="button" class="cbd-map-button" data-cbd-map>${row.vendor}</button></td><td>${row.inside.toLocaleString()}</td><td>${row.total.toLocaleString()}</td><td class="${row.percent > 30 ? "above" : "below"}">${row.percent.toFixed(1)}%</td><td>${row.percent > 30 ? `+${(row.percent - 30).toFixed(1)} pts` : `${(row.percent - 30).toFixed(1)} pts`}</td></tr>`).join("")}
+      </tbody></table></div>
+      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. This is outside the policy’s 6:00–8:00 AM averaging window, so the figures are descriptive—not a compliance determination. “Active” excludes disabled and reserved devices.</p>`;
+    document.querySelectorAll("[data-cbd-map]").forEach(button => button.addEventListener("click", () => {
+      setLayerVisibility("geographies", true);
+      updatePresetState();
+      document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+      map.flyToBounds(layer.getBounds(), { padding: [28, 28], duration: .6 });
+      const firstFeatureLayer = layer.getLayers()[0];
+      if (firstFeatureLayer) setTimeout(() => firstFeatureLayer.openPopup(), 650);
+    }));
+  }
+
+  fetch("data-mds-geographies.json")
+    .then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
+    .then(payload => {
+      mdsGeographyData = payload;
+      (payload.geographies || []).forEach(geography => {
+        const collection = geography.geography_json;
+        if (!collection || collection.type !== "FeatureCollection") return;
+        const geographyLayer = L.geoJSON(collection, {
+          style: { renderer: mdsCanvasRenderer, color: "#236a73", weight: 1.25, fillColor: "#236a73", fillOpacity: .06 },
+          onEachFeature: (feature, featureLayer) => featureLayer.bindPopup(`
+            <div class="popup-title">${esc(geography.name || feature.properties && feature.properties.name || "Unnamed geography")}</div>
+            <div><b>Geography ID:</b> ${esc(geography.geography_id || "unknown")}</div>
+            <div><b>Geometry:</b> ${esc(feature.geometry && feature.geometry.type || "unknown")}</div>
+            <div><b>Export version:</b> ${esc(payload.version || "unknown")}</div>
+            <div class="review-note">Published MDS geography. A geography does not establish which policies are active within it.</div>`)
+        });
+        geographyLayer.addTo(layerMdsGeographies);
+        if (geography.name === "Downtown CBD 0") {
+          downtownCbdLayer = geographyLayer;
+          buildCbdDistributionInsight(geography, geographyLayer);
+        }
+      });
+    })
+    .catch(error => {
+      document.getElementById("cbdDistributionInsight").innerHTML = `<p class="cbd-insight-note">The geography export could not be loaded: ${esc(error.message)}</p>`;
+    });
+
   // ---- Policy boundaries layer ----
   const layerPolicy = L.geoJSON(
     boundaries.map(b => ({
@@ -170882,6 +170989,7 @@
     gbfs: { checkbox: document.getElementById("toggleGbfs"), layer: layerGbfs },
     pileups: { checkbox: document.getElementById("togglePileups"), layer: layerPileups },
     policy: { checkbox: document.getElementById("togglePolicy"), layer: layerPolicy },
+    geographies: { checkbox: document.getElementById("toggleMdsGeographies"), layer: layerMdsGeographies },
     hubs: { checkbox: document.getElementById("toggleRideHubs"), layer: layerRideHubs },
     observations: { checkbox: document.getElementById("toggleVendorObservations"), layer: layerVendorObservations }
   };
