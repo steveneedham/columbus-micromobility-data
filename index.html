@@ -170524,8 +170524,8 @@
       <div>${rec.source_url ? `<a href="${esc(rec.source_url)}" target="_blank" rel="noopener">Source record</a>` : ""}</div>
       <div class="case-lookup-callout">
         <strong>Look up full case details?</strong>
-        <p>The public portal must be searched by this address, then matched to the CAS ID.</p>
-        <button type="button" class="case-lookup-button" data-case-id="${esc(rec.source_id || "")}" data-case-address="${esc(rec.address || "")}">Copy $columbus-311-case-lookup prompt</button>
+        <p>First <a href="#lookup-tool">install the Columbus 311 case lookup workflow</a> in your AI tool. The workflow searches the public portal by address, then matches the result to this CAS ID.</p>
+        <button type="button" class="case-lookup-button" data-case-id="${esc(rec.source_id || "")}" data-case-address="${esc(rec.address || "")}">Copy lookup prompt · installation required</button>
         <span class="case-lookup-status" aria-live="polite"></span>
       </div>
       <div class="review-note">Review signal, not a confirmed violation. Not an official City record system.</div>
