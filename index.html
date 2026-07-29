@@ -282,8 +282,11 @@
   .cbd-insight-table th, .cbd-insight-table td { padding: 11px 12px; border-bottom: 1px solid var(--slate-300); text-align: right; }
   .cbd-insight-table th { color: var(--slate-500); font: 600 .62rem var(--mono); text-transform: uppercase; letter-spacing: .04em; }
   .cbd-insight-table th:first-child, .cbd-insight-table td:first-child { text-align: left; }
-  .cbd-insight-table .above { color: var(--red-600); font-weight: 700; }
-  .cbd-insight-table .below { color: var(--teal-600); font-weight: 700; }
+  .compliance-indicator { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; white-space: nowrap; }
+  .compliance-indicator::before { width: 9px; height: 9px; border-radius: 50%; background: currentColor; content: ""; }
+  .compliance-indicator.red { color: var(--red-600); }
+  .compliance-indicator.yellow { color: #8a6500; }
+  .compliance-indicator.green { color: #39704a; }
   .cbd-map-button { width: 100%; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
   .cbd-map-button:hover { color: var(--blue-700); text-decoration: underline; }
   .cbd-insight-note { margin: 0; padding: 14px 18px; color: var(--slate-500); font-size: .74rem; font-style: italic; }
@@ -363,6 +366,11 @@
     text-align: left;
   }
   .observation-item p { margin: 0; color: var(--slate-800); font-size: .88rem; }
+  .observation-meta { display: grid; justify-items: end; gap: 5px; }
+  .observation-direction { display: inline-flex; align-items: center; gap: 5px; color: var(--slate-600); font: 700 .64rem var(--mono); letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; }
+  .observation-direction .arrow { font-size: 1rem; line-height: .7; }
+  .observation-direction.up { color: #39704a; }
+  .observation-direction.down { color: var(--red-600); }
   .observation-map-link { cursor: pointer; }
   .observation-map-link:hover { background: var(--amber-100); }
   .observation-map-link:focus-visible { outline: 2px solid var(--red-600); outline-offset: -3px; }
@@ -395,7 +403,7 @@
   @media (max-width: 700px) {
     .observation-log-header, .insights-header { grid-template-columns: 1fr; gap: 10px; }
     .observation-item { grid-template-columns: 44px 1fr; padding: 12px; gap: 9px; }
-    .observation-category { grid-column: 2; }
+    .observation-meta { grid-column: 2; justify-items: start; }
     .insight-hub-card { grid-template-columns: 1fr; }
   }
   .skill-library {
@@ -803,11 +811,12 @@
   <section class="insights" id="insights" aria-labelledby="insights-title">
     <div class="insights-header">
       <div><p class="eyebrow">Current snapshot signals</p><h2 id="insights-title">Insights</h2></div>
-      <p>Review Ride Hub capacity signals, vendor changes between snapshots, or cross-vendor pile-ups. Every relevant result can take you back to the map.</p>
+      <p>Review Ride Hub capacity signals, fleet distribution, vendor changes between snapshots, or cross-vendor pile-ups. Every relevant result can take you back to the map.</p>
     </div>
     <div class="insight-tabs" role="tablist" aria-label="Insight views">
       <button type="button" class="insight-tab" role="tab" id="tab-ride-hubs" aria-controls="panel-ride-hubs" aria-selected="true" data-insight="ride-hubs">Ride Hubs</button>
       <button type="button" class="insight-tab" role="tab" id="tab-cbd-distribution" aria-controls="panel-cbd-distribution" aria-selected="false" data-insight="cbd-distribution">CBD distribution</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-opportunity-distribution" aria-controls="panel-opportunity-distribution" aria-selected="false" data-insight="opportunity-distribution">Opportunity zones</button>
       <button type="button" class="insight-tab" role="tab" id="tab-vendor-changes" aria-controls="panel-vendor-changes" aria-selected="false" data-insight="vendor-changes">Vendor changes</button>
       <button type="button" class="insight-tab" role="tab" id="tab-pileups" aria-controls="panel-pileups" aria-selected="false" data-insight="pileups">Pile-ups</button>
     </div>
@@ -818,6 +827,12 @@
       <div class="cbd-insight-card">
         <div class="cbd-insight-header"><h3>Downtown CBD Distribution</h3><p>Active devices inside the published Downtown CBD geography compared with each vendor’s active citywide devices.</p></div>
         <div id="cbdDistributionInsight"><p class="cbd-insight-note">Loading the Populus MDS geography export…</p></div>
+      </div>
+    </div>
+    <div class="insight-panel" id="panel-opportunity-distribution" role="tabpanel" aria-labelledby="tab-opportunity-distribution" data-insight-panel="opportunity-distribution" hidden>
+      <div class="cbd-insight-card">
+        <div class="cbd-insight-header"><h3>Opportunity Zone Distribution</h3><p>Active devices in each published opportunity-zone geography compared with each vendor’s active citywide fleet.</p></div>
+        <div id="opportunityDistributionInsight"><p class="cbd-insight-note">Loading the Populus MDS geography export…</p></div>
       </div>
     </div>
     <div class="insight-panel observation-log" id="panel-vendor-changes" role="tabpanel" aria-labelledby="tab-vendor-changes" data-insight-panel="vendor-changes" hidden>
@@ -170854,6 +170869,15 @@
   const mdsCanvasRenderer = L.canvas({ padding: .35 });
   let downtownCbdLayer = null;
   let mdsGeographyData = null;
+  const opportunityZoneNames = new Map([
+    ["South Columbus", "South Columbus"],
+    ["Hilltop", "Hilltop"],
+    ["Franklinton", "Franklinton"],
+    ["South Linden", "South Linden"],
+    ["Old Town/Bronezville", "Old Town/Bronzeville"],
+    ["North Linden", "North Linden"]
+  ]);
+  const opportunityZones = [];
 
   function pointInRing(lng, lat, ring) {
     let inside = false;
@@ -170873,21 +170897,31 @@
     return typeof vehicle.lng === "number" && typeof vehicle.lat === "number" &&
       (featureCollection.features || []).some(feature => pointInGeometry(vehicle.lng, vehicle.lat, feature.geometry));
   }
+  function cbdCompliance(percent) {
+    if (percent > 30) return { level: "red", label: "Out of compliance" };
+    if (percent >= 27) return { level: "yellow", label: "Borderline" };
+    return { level: "green", label: "Within compliance" };
+  }
+  function opportunityCompliance(percent) {
+    if (percent < 4.5) return { level: "red", label: "Out of compliance" };
+    if (percent < 5) return { level: "yellow", label: "Borderline" };
+    return { level: "green", label: "Within compliance" };
+  }
   function buildCbdDistributionInsight(geography, layer) {
     const activeVehicles = vehicles.filter(vehicle => !vehicle.disabled && !vehicle.reserved);
     const rows = ["Veo", "Spin"].map(vendor => {
       const vendorActive = activeVehicles.filter(vehicle => vehicle.company === vendor);
       const inside = vendorActive.filter(vehicle => vehicleInsideFeatureCollection(vehicle, geography.geography_json)).length;
       const percent = vendorActive.length ? inside / vendorActive.length * 100 : 0;
-      return { vendor, inside, total: vendorActive.length, percent };
+      return { vendor, inside, total: vendorActive.length, percent, compliance: cbdCompliance(percent) };
     });
     const snapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
     const timeLabel = snapshotAt ? fmtDateTime(snapshotAt.toISOString()) : "current embedded snapshot";
     document.getElementById("cbdDistributionInsight").innerHTML = `
-      <div class="hub-dashboard-table-wrap"><table class="cbd-insight-table"><thead><tr><th>Vendor</th><th>CBD active</th><th>Citywide active</th><th>CBD share</th><th>30% line</th></tr></thead><tbody>
-      ${rows.map(row => `<tr><td><button type="button" class="cbd-map-button" data-cbd-map>${row.vendor}</button></td><td>${row.inside.toLocaleString()}</td><td>${row.total.toLocaleString()}</td><td class="${row.percent > 30 ? "above" : "below"}">${row.percent.toFixed(1)}%</td><td>${row.percent > 30 ? `+${(row.percent - 30).toFixed(1)} pts` : `${(row.percent - 30).toFixed(1)} pts`}</td></tr>`).join("")}
+      <div class="hub-dashboard-table-wrap"><table class="cbd-insight-table"><thead><tr><th>Vendor</th><th>CBD active</th><th>Citywide active</th><th>CBD share</th><th>30% line</th><th>Status</th></tr></thead><tbody>
+      ${rows.map(row => `<tr><td><button type="button" class="cbd-map-button" data-cbd-map>${row.vendor}</button></td><td>${row.inside.toLocaleString()}</td><td>${row.total.toLocaleString()}</td><td>${row.percent.toFixed(1)}%</td><td>${row.percent > 30 ? `+${(row.percent - 30).toFixed(1)} pts` : `${(row.percent - 30).toFixed(1)} pts`}</td><td><span class="compliance-indicator ${row.compliance.level}">${row.compliance.label}</span></td></tr>`).join("")}
       </tbody></table></div>
-      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. This is outside the policy’s 6:00–8:00 AM averaging window, so the figures are descriptive—not a compliance determination. “Active” excludes disabled and reserved devices.</p>`;
+      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. Status uses the 30% maximum: above 30% is out of compliance, 27–30% is borderline, and below 27% is within compliance. This snapshot is outside the policy’s 6:00–8:00 AM averaging window, so the indicator is provisional. “Active” excludes disabled and reserved devices.</p>`;
     document.querySelectorAll("[data-cbd-map]").forEach(button => button.addEventListener("click", () => {
       setLayerVisibility("geographies", true);
       updatePresetState();
@@ -170895,6 +170929,33 @@
       map.flyToBounds(layer.getBounds(), { padding: [28, 28], duration: .6 });
       const firstFeatureLayer = layer.getLayers()[0];
       if (firstFeatureLayer) setTimeout(() => firstFeatureLayer.openPopup(), 650);
+    }));
+  }
+
+  function buildOpportunityDistributionInsight() {
+    if (opportunityZones.length !== opportunityZoneNames.size) return;
+    const activeVehicles = vehicles.filter(vehicle => !vehicle.disabled && !vehicle.reserved);
+    const vendorTotals = Object.fromEntries(["Veo", "Spin"].map(vendor => [vendor, activeVehicles.filter(vehicle => vehicle.company === vendor).length]));
+    const rows = opportunityZones.sort((a, b) => a.label.localeCompare(b.label)).flatMap(zone => ["Veo", "Spin"].map(vendor => {
+      const total = vendorTotals[vendor];
+      const inside = activeVehicles.filter(vehicle => vehicle.company === vendor && vehicleInsideFeatureCollection(vehicle, zone.geography.geography_json)).length;
+      const percent = total ? inside / total * 100 : 0;
+      return { zone, vendor, inside, total, percent, compliance: opportunityCompliance(percent) };
+    }));
+    const snapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
+    const timeLabel = snapshotAt ? fmtDateTime(snapshotAt.toISOString()) : "current embedded snapshot";
+    document.getElementById("opportunityDistributionInsight").innerHTML = `
+      <div class="hub-dashboard-table-wrap"><table class="cbd-insight-table"><thead><tr><th>Opportunity zone</th><th>Vendor</th><th>Zone active</th><th>Citywide active</th><th>Fleet share</th><th>vs. 5%</th><th>Status</th></tr></thead><tbody>
+      ${rows.map(row => `<tr><td><button type="button" class="cbd-map-button" data-opportunity-map="${row.zone.geography.geography_id}">${esc(row.zone.label)}</button></td><td>${row.vendor}</td><td>${row.inside.toLocaleString()}</td><td>${row.total.toLocaleString()}</td><td>${row.percent.toFixed(1)}%</td><td>${row.percent >= 5 ? "+" : ""}${(row.percent - 5).toFixed(1)} pts</td><td><span class="compliance-indicator ${row.compliance.level}">${row.compliance.label}</span></td></tr>`).join("")}
+      </tbody></table></div>
+      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. The published policy interface identifies a 5% deployed-device rule for “Ghost - Opportunity Zones”; this table shows each component geography separately. Status uses the 5% minimum described for this analysis: below 4.5% is out of compliance, 4.5% to under 5% is borderline, and 5% or more is within compliance. The published interface screenshot labels 5% as a maximum, so that source discrepancy should be resolved before using these indicators for enforcement. “Active” excludes disabled and reserved devices.</p>`;
+    document.querySelectorAll("[data-opportunity-map]").forEach(button => button.addEventListener("click", () => {
+      const zone = opportunityZones.find(candidate => candidate.geography.geography_id === button.dataset.opportunityMap);
+      if (!zone) return;
+      setLayerVisibility("geographies", true);
+      updatePresetState();
+      document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+      map.flyToBounds(zone.layer.getBounds(), { padding: [28, 28], duration: .6 });
     }));
   }
 
@@ -170919,10 +170980,16 @@
           downtownCbdLayer = geographyLayer;
           buildCbdDistributionInsight(geography, geographyLayer);
         }
+        const normalizedName = (geography.name || "").trim();
+        if (opportunityZoneNames.has(normalizedName)) {
+          opportunityZones.push({ geography, layer: geographyLayer, label: opportunityZoneNames.get(normalizedName) });
+          buildOpportunityDistributionInsight();
+        }
       });
     })
     .catch(error => {
       document.getElementById("cbdDistributionInsight").innerHTML = `<p class="cbd-insight-note">The geography export could not be loaded: ${esc(error.message)}</p>`;
+      document.getElementById("opportunityDistributionInsight").innerHTML = `<p class="cbd-insight-note">The geography export could not be loaded: ${esc(error.message)}</p>`;
     });
 
   // ---- Policy boundaries layer ----
@@ -171186,6 +171253,12 @@
   setInterval(buildStats, 60000);
 
   // ---- GBFS vendor observation log ----
+  function observationDirection(item) {
+    if (/unchanged/i.test(item.text || "") || Number(item.change) === 0) return { level: "unchanged", glyph: "—", label: "Unchanged" };
+    if (Number(item.change) > 0) return { level: "up", glyph: "↑", label: "Up" };
+    if (Number(item.change) < 0) return { level: "down", glyph: "↓", label: "Down" };
+    return { level: "unchanged", glyph: "—", label: "Unchanged" };
+  }
   function buildGbfsObservationLog() {
     const container = document.getElementById("gbfsObservationLog");
     const snapshots = dataGbfsObservations.snapshots || [];
@@ -171200,10 +171273,11 @@
       const baselineLabel = baselineAt ? fmtDateTime(baselineAt.toISOString()) : snapshot.compared_with;
       const items = (snapshot.observations || []).map(item => {
         const area = item.area && dataGbfsObservations.method.review_areas[item.area];
+        const direction = observationDirection(item);
         const content = `
           <span class="observation-vendor ${esc(String(item.vendor || "").toLowerCase())}">${esc(item.vendor || "Vendor")}</span>
           <p>${esc(item.text)}</p>
-          <span class="observation-category">${esc(titleCase(item.category))}</span>
+          <span class="observation-meta"><span class="observation-direction ${direction.level}" aria-label="${direction.label}"><span class="arrow" aria-hidden="true">${direction.glyph}</span>${direction.label}</span><span class="observation-category">${esc(titleCase(item.category))}</span></span>
         `;
         return area
           ? `<li class="observation-row"><button type="button" class="observation-item observation-map-link" data-observation-area="${esc(item.area)}" aria-label="Show ${esc(item.area)} on the map">${content}</button></li>`
