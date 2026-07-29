@@ -295,16 +295,25 @@
   .observation-snapshot-header strong { font: 600 .78rem var(--mono); letter-spacing: .03em; }
   .observation-snapshot-header span { color: var(--slate-600); font-size: .75rem; }
   .observation-items { list-style: none; margin: 0; padding: 0; }
+  .observation-row + .observation-row { border-top: 1px solid var(--slate-200); }
   .observation-item {
     display: grid;
     grid-template-columns: 52px minmax(0, 1fr) auto;
     gap: 12px;
     align-items: start;
+    width: 100%;
     padding: 13px 16px;
-    border-top: 1px solid var(--slate-200);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
   }
-  .observation-item:first-child { border-top: 0; }
   .observation-item p { margin: 0; color: var(--slate-800); font-size: .88rem; }
+  .observation-map-link { cursor: pointer; }
+  .observation-map-link:hover { background: var(--amber-100); }
+  .observation-map-link:focus-visible { outline: 2px solid var(--red-600); outline-offset: -3px; }
+  .observation-map-link .observation-category::after { content: " · map"; color: var(--red-600); }
   .observation-vendor { font: 700 .7rem var(--mono); text-transform: uppercase; letter-spacing: .05em; }
   .observation-vendor.spin { color: var(--orange-500); }
   .observation-vendor.veo { color: var(--teal-600); }
@@ -170572,13 +170581,17 @@
       const baselineAt = parseSnapshotTime(snapshot.compared_with);
       const observedLabel = observedAt ? fmtDateTime(observedAt.toISOString()) : snapshot.snapshot_id;
       const baselineLabel = baselineAt ? fmtDateTime(baselineAt.toISOString()) : snapshot.compared_with;
-      const items = (snapshot.observations || []).map(item => `
-        <li class="observation-item">
+      const items = (snapshot.observations || []).map(item => {
+        const area = item.area && dataGbfsObservations.method.review_areas[item.area];
+        const content = `
           <span class="observation-vendor ${esc(String(item.vendor || "").toLowerCase())}">${esc(item.vendor || "Vendor")}</span>
           <p>${esc(item.text)}</p>
           <span class="observation-category">${esc(titleCase(item.category))}</span>
-        </li>
-      `).join("");
+        `;
+        return area
+          ? `<li class="observation-row"><button type="button" class="observation-item observation-map-link" data-observation-area="${esc(item.area)}" aria-label="Show ${esc(item.area)} on the map">${content}</button></li>`
+          : `<li class="observation-row"><div class="observation-item">${content}</div></li>`;
+      }).join("");
       return `
         <article class="observation-snapshot">
           <div class="observation-snapshot-header">
@@ -170591,6 +170604,31 @@
     }).join("");
   }
   buildGbfsObservationLog();
+  let observationAreaHighlight = null;
+  document.getElementById("gbfsObservationLog").addEventListener("click", event => {
+    const link = event.target.closest("[data-observation-area]");
+    if (!link) return;
+    const areaName = link.dataset.observationArea;
+    const area = dataGbfsObservations.method.review_areas[areaName];
+    if (!area) return;
+    if (observationAreaHighlight) map.removeLayer(observationAreaHighlight);
+    observationAreaHighlight = L.circle([area.lat, area.lng], {
+      radius: area.radius_m,
+      color: "#a94728",
+      weight: 2,
+      dashArray: "7,5",
+      fillColor: "#a94728",
+      fillOpacity: 0.06
+    }).addTo(map);
+    observationAreaHighlight.bindPopup(`
+      <div class="popup-title">${esc(areaName)}</div>
+      <div><b>Comparison radius:</b> ${area.radius_m.toLocaleString()} m</div>
+      <div class="review-note">Defined review area used for snapshot-to-snapshot GBFS vendor counts; not an official neighborhood boundary.</div>
+    `);
+    document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+    map.flyToBounds(observationAreaHighlight.getBounds(), { padding: [36, 36], duration: 0.6 });
+    observationAreaHighlight.openPopup();
+  });
 
   // ---- Sidebar pile-up list ----
   function buildPileupList() {
