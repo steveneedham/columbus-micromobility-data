@@ -248,7 +248,7 @@
   }
   .forecast-visuals {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
     margin-top: 26px;
   }
@@ -400,20 +400,24 @@
       </article>
     </div>
 
-    <div class="forecast-visuals" aria-label="ChatGPT Analysis visual references">
+    <div class="forecast-visuals" aria-label="Forecast project cards">
       <figure class="forecast-visual">
         <img src="demand-forecast-card.svg" alt="ChatGPT Forecast project card summarizing canonical events, home games, weather-risk days, and the ISO-week join">
-        <figcaption>Project card · <a href="demand-forecast-card.svg">SVG</a> · <a href="demand-forecast-card.png">PNG</a></figcaption>
+        <figcaption>ChatGPT Forecast card · <a href="demand-forecast-card.svg">SVG</a> · <a href="demand-forecast-card.png">PNG</a></figcaption>
       </figure>
+      <figure class="forecast-visual">
+        <img src="claude-demand-forecast-card.svg" alt="Claude Forecast project card summarizing event records, ISO-week series, projected weeks, and the weekly join">
+        <figcaption>Claude Forecast card · <a href="claude-demand-forecast-card.svg">SVG</a> · <a href="claude-demand-forecast-card.png">PNG</a></figcaption>
+      </figure>
+    </div>
+
+    <div class="forecast-visuals" aria-label="Comparable ChatGPT and Claude analysis charts">
       <figure class="forecast-visual">
         <img src="demand-forecast-chart.svg" alt="ChatGPT Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026">
         <figcaption>ChatGPT Analysis · workbook-derived projection · <a href="demand-forecast-chart.svg">SVG</a> · <a href="demand-forecast-chart.png">PNG</a></figcaption>
       </figure>
-    </div>
-
-    <div class="forecast-visuals" aria-label="Claude Analysis visual reference">
       <figure class="forecast-visual">
-        <img src="claude-demand-forecast-chart.svg" alt="Claude Analysis chart showing confirmed or logged events, projected additional events, and projected attendance for ISO weeks 32 through 53 of 2026">
+        <img src="claude-demand-forecast-chart.svg" alt="Claude Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026">
         <figcaption>Claude Analysis · workbook-derived projection · <a href="claude-demand-forecast-chart.svg">SVG</a> · <a href="claude-demand-forecast-chart.png">PNG</a></figcaption>
       </figure>
     </div>
