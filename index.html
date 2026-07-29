@@ -115,6 +115,16 @@
     font-size: 1rem;
     line-height: 1.65;
   }
+  .support-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 18px;
+  }
+  .support-label { margin-right: 3px; color: var(--slate-600); font: 500 .68rem var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+  .support-row a { border: 1px solid var(--slate-400); padding: 7px 9px; color: var(--slate-700); font: 600 .66rem var(--mono); text-decoration: none; }
+  .support-row a:hover { border-color: var(--blue-700); color: var(--blue-700); background: var(--source-sheet); }
   .caveat {
     margin-top: 22px;
     background: var(--source-sheet);
@@ -709,6 +719,13 @@
       <button type="button" class="guide-button" id="openSiteGuide" aria-haspopup="dialog">How to use this site</button>
     </div>
     <p class="desc">An independent, public-data-only look at Columbus shared-scooter operations — 311 requests, published vehicle positions, and policy boundaries. Built from public sources only; not affiliated with or using data from any employer.</p>
+    <div class="support-row" aria-label="Support this independent project">
+      <span class="support-label">Buy me lunch</span>
+      <a href="https://buymeacoffee.com/urbanstrategist" target="_blank" rel="noopener">Buy Me a Coffee</a>
+      <a href="https://ko-fi.com/stevenneedham" target="_blank" rel="noopener">Ko-fi</a>
+      <a href="https://www.venmo.com/u/scootinsteve" target="_blank" rel="noopener">Venmo</a>
+      <a href="https://cash.app/$steveneedham" target="_blank" rel="noopener">Cash App</a>
+    </div>
     <div class="caveat">
       <strong>Snapshot, not live operations.</strong> Counts and timestamps describe public point-in-time data. Proximity, reports, and observations are review signals—not confirmed violations or vendor intent. Open “How to use this site” for methods and evidence boundaries.
     </div>
