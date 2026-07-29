@@ -243,6 +243,54 @@
   .pileup-item .id { font-weight: 700; color: var(--red-600); font-size: 0.8rem; }
   .pileup-item .meta { color: var(--slate-600); margin-top: 2px; }
   .empty-note { color: var(--slate-500); font-style: italic; }
+  .observation-log {
+    margin-top: 34px;
+    padding-top: 30px;
+    border-top: 1px solid var(--slate-300);
+  }
+  .observation-log-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+    gap: 28px;
+    align-items: end;
+    margin-bottom: 18px;
+  }
+  .observation-log .eyebrow { margin: 0 0 7px; color: var(--red-600); }
+  .observation-log h2 { margin: 0; font: 500 clamp(1.7rem, 3vw, 2.5rem) var(--display); }
+  .observation-intro { margin: 0; color: var(--slate-600); font-size: .86rem; line-height: 1.6; }
+  .observation-snapshot { border: 1px solid var(--slate-300); background: var(--source-sheet); margin-top: 14px; }
+  .observation-snapshot-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 18px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--slate-300);
+    background: var(--slate-100);
+  }
+  .observation-snapshot-header strong { font: 600 .78rem var(--mono); letter-spacing: .03em; }
+  .observation-snapshot-header span { color: var(--slate-600); font-size: .75rem; }
+  .observation-items { list-style: none; margin: 0; padding: 0; }
+  .observation-item {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: start;
+    padding: 13px 16px;
+    border-top: 1px solid var(--slate-200);
+  }
+  .observation-item:first-child { border-top: 0; }
+  .observation-item p { margin: 0; color: var(--slate-800); font-size: .88rem; }
+  .observation-vendor { font: 700 .7rem var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+  .observation-vendor.spin { color: var(--orange-500); }
+  .observation-vendor.veo { color: var(--teal-600); }
+  .observation-category { color: var(--slate-500); font: 500 .64rem var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+  .observation-method { margin: 12px 0 0; color: var(--slate-500); font-size: .72rem; font-style: italic; }
+  @media (max-width: 700px) {
+    .observation-log-header { grid-template-columns: 1fr; gap: 10px; }
+    .observation-item { grid-template-columns: 48px 1fr; }
+    .observation-category { grid-column: 2; }
+  }
   .reference-library {
     margin-top: 52px;
     padding-top: 34px;
@@ -427,6 +475,18 @@
       </div>
     </div>
   </div>
+
+  <section class="observation-log" aria-labelledby="observation-log-title">
+    <div class="observation-log-header">
+      <div>
+        <p class="eyebrow">GBFS snapshot-to-snapshot</p>
+        <h2 id="observation-log-title">Vendor observation log</h2>
+      </div>
+      <p class="observation-intro">A running record of what each vendor’s published fleet appears to be doing between snapshots—fleet size, range, availability, and geographic concentration. No 311 signals are used.</p>
+    </div>
+    <div id="gbfsObservationLog"></div>
+    <p class="observation-method">Point-in-time public GBFS observations; changes do not establish deployment intent, demand, service quality, or causation.</p>
+  </section>
 
   <section class="reference-library" aria-labelledby="reference-library-title">
     <p class="eyebrow">Reference artifacts · July 2026</p>
@@ -168386,6 +168446,163 @@
 }
 </script>
 
+<script type="application/json" id="data-gbfs-observations">
+{
+  "generated_at": "2026-07-29T04:39:46.724782+00:00",
+  "method": {
+    "scope": "GBFS vendor behavior only; no 311 records or complaint signals are used.",
+    "comparison": "Newest website GBFS snapshot versus the newest older archived snapshot.",
+    "review_areas": {
+      "Arena District review area": {
+        "lat": 39.9699,
+        "lng": -83.0065,
+        "radius_m": 800
+      },
+      "Short North review area": {
+        "lat": 39.9785,
+        "lng": -83.0033,
+        "radius_m": 900
+      },
+      "Downtown review area": {
+        "lat": 39.9612,
+        "lng": -82.9988,
+        "radius_m": 1100
+      },
+      "Ohio State review area": {
+        "lat": 40.0067,
+        "lng": -83.0305,
+        "radius_m": 1300
+      }
+    },
+    "interpretation": "Published point-in-time fleet observations, not proof of deployment intent, demand, service quality, or causation."
+  },
+  "snapshots": [
+    {
+      "snapshot_id": "20260729T041002Z",
+      "compared_with": "20260727T163903Z",
+      "observations": [
+        {
+          "category": "fleet_size",
+          "vendor": "Spin",
+          "text": "Spin published 1,289 vehicles, down 50 (3.7%) from the prior snapshot.",
+          "current": 1289,
+          "previous": 1339,
+          "change": -50,
+          "change_pct": -3.7
+        },
+        {
+          "category": "published_range",
+          "vendor": "Spin",
+          "text": "Spin\u2019s median published range was essentially unchanged at 16.1 miles (-0.1 miles versus the prior snapshot).",
+          "current": 16.1,
+          "previous": 16.2,
+          "change": -0.1,
+          "unit": "miles"
+        },
+        {
+          "category": "geographic_concentration",
+          "vendor": "Spin",
+          "area": "Downtown review area",
+          "text": "Spin had 313 vehicles in the Downtown review area, down 55 (14.9%) from the prior snapshot.",
+          "current": 313,
+          "previous": 368,
+          "change": -55,
+          "change_pct": -14.9
+        },
+        {
+          "category": "geographic_concentration",
+          "vendor": "Spin",
+          "area": "Short North review area",
+          "text": "Spin had 210 vehicles in the Short North review area, down 43 (17.0%) from the prior snapshot.",
+          "current": 210,
+          "previous": 253,
+          "change": -43,
+          "change_pct": -17.0
+        },
+        {
+          "category": "fleet_size",
+          "vendor": "Veo",
+          "text": "Veo published 2,239 vehicles, up 32 (1.4%) from the prior snapshot.",
+          "current": 2239,
+          "previous": 2207,
+          "change": 32,
+          "change_pct": 1.4
+        },
+        {
+          "category": "published_range",
+          "vendor": "Veo",
+          "text": "Veo\u2019s median published range was higher at 21.8 miles (+1.4 miles versus the prior snapshot).",
+          "current": 21.8,
+          "previous": 20.4,
+          "change": 1.4,
+          "unit": "miles"
+        },
+        {
+          "category": "geographic_concentration",
+          "vendor": "Veo",
+          "area": "Arena District review area",
+          "text": "Veo had 150 vehicles in the Arena District review area, down 25 (14.3%) from the prior snapshot.",
+          "current": 150,
+          "previous": 175,
+          "change": -25,
+          "change_pct": -14.3
+        }
+      ],
+      "vendor_metrics": {
+        "Spin": {
+          "current": {
+            "vehicle_count": 1289,
+            "median_range_miles": 16.1,
+            "available_share_pct": 96.4,
+            "review_area_counts": {
+              "Arena District review area": 193,
+              "Short North review area": 210,
+              "Downtown review area": 313,
+              "Ohio State review area": 36
+            }
+          },
+          "previous": {
+            "vehicle_count": 1339,
+            "median_range_miles": 16.2,
+            "available_share_pct": 96.2,
+            "review_area_counts": {
+              "Arena District review area": 225,
+              "Short North review area": 253,
+              "Downtown review area": 368,
+              "Ohio State review area": 35
+            }
+          }
+        },
+        "Veo": {
+          "current": {
+            "vehicle_count": 2239,
+            "median_range_miles": 21.8,
+            "available_share_pct": 97.0,
+            "review_area_counts": {
+              "Arena District review area": 150,
+              "Short North review area": 152,
+              "Downtown review area": 285,
+              "Ohio State review area": 74
+            }
+          },
+          "previous": {
+            "vehicle_count": 2207,
+            "median_range_miles": 20.4,
+            "available_share_pct": 96.8,
+            "review_area_counts": {
+              "Arena District review area": 175,
+              "Short North review area": 155,
+              "Downtown review area": 282,
+              "Ohio State review area": 82
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+</script>
+
 <script type="application/json" id="data-ride-hubs">
 {
   "fetched_at": "2026-07-29T04:30:59Z",
@@ -169932,6 +170149,7 @@
   const dataGbfs = JSON.parse(document.getElementById("data-gbfs").textContent);
   const dataPolicy = JSON.parse(document.getElementById("data-policy").textContent);
   const dataRideHubs = JSON.parse(document.getElementById("data-ride-hubs").textContent);
+  const dataGbfsObservations = JSON.parse(document.getElementById("data-gbfs-observations").textContent);
 
   const records311 = data311.records || [];
   const vehicles = (dataGbfs.vehicles || []).map(v => ({ ...v }));
@@ -170296,6 +170514,39 @@
   }
   buildStats();
   setInterval(buildStats, 60000);
+
+  // ---- GBFS vendor observation log ----
+  function buildGbfsObservationLog() {
+    const container = document.getElementById("gbfsObservationLog");
+    const snapshots = dataGbfsObservations.snapshots || [];
+    if (!snapshots.length) {
+      container.innerHTML = `<div class="empty-note">A second GBFS snapshot is required before vendor changes can be observed.</div>`;
+      return;
+    }
+    container.innerHTML = snapshots.map(snapshot => {
+      const observedAt = parseSnapshotTime(snapshot.snapshot_id);
+      const baselineAt = parseSnapshotTime(snapshot.compared_with);
+      const observedLabel = observedAt ? fmtDateTime(observedAt.toISOString()) : snapshot.snapshot_id;
+      const baselineLabel = baselineAt ? fmtDateTime(baselineAt.toISOString()) : snapshot.compared_with;
+      const items = (snapshot.observations || []).map(item => `
+        <li class="observation-item">
+          <span class="observation-vendor ${esc(String(item.vendor || "").toLowerCase())}">${esc(item.vendor || "Vendor")}</span>
+          <p>${esc(item.text)}</p>
+          <span class="observation-category">${esc(titleCase(item.category))}</span>
+        </li>
+      `).join("");
+      return `
+        <article class="observation-snapshot">
+          <div class="observation-snapshot-header">
+            <strong>Snapshot ${esc(observedLabel)}</strong>
+            <span>Compared with ${esc(baselineLabel)}</span>
+          </div>
+          <ul class="observation-items">${items}</ul>
+        </article>
+      `;
+    }).join("");
+  }
+  buildGbfsObservationLog();
 
   // ---- Sidebar pile-up list ----
   function buildPileupList() {

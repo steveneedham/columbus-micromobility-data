@@ -26,9 +26,9 @@ A single self-contained HTML dashboard — no build step, no server required. Op
 - **Policy boundaries** — published no-parking, mandatory-parking, and no-ride zones.
 - **Columbus Ride Hubs** — official City-published CoGo station locations and dock capacity, shown as an optional infrastructure layer without live bike availability.
 
-Summary stat cards and a legend sit above the map. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
+Summary stat cards and a legend sit above the map. A running GBFS vendor observation log below the map compares each new snapshot with its prior archived snapshot without using 311 signals. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
 
-### `data-311.json`, `data-gbfs.json`, `data-policy.json`, `data-ride-hubs.json`
+### `data-311.json`, `data-gbfs.json`, `data-policy.json`, `data-ride-hubs.json`, `data-gbfs-observations.json`
 The data snapshots the dashboard is built from. The operational snapshots are pulled from the companion prototype repo [`steveneedham/311-Intel`](https://github.com/steveneedham/311-Intel); the Ride Hubs snapshot comes from the official City ArcGIS layer. Each file documents its own source (query URL, fetch timestamp, method) inline.
 
 **These files contain complete snapshots** from the four public feeds at their documented fetch times. Refresh by replacing them with the corresponding full outputs from `311-Intel`, then embed the same payloads in `index.html`:
@@ -39,8 +39,20 @@ The data snapshots the dashboard is built from. The operational snapshots are pu
 | `data-gbfs.json` | `gbfs-vehicle-positions.json` |
 | `data-policy.json` | `mobility-policy-boundaries.json` |
 | `data-ride-hubs.json` | City of Columbus `PublicService/MapServer/31` |
+| `data-gbfs-observations.json` | Derived comparison of the newest GBFS snapshot with the prior archive |
 
 The dashboard is self-contained and reads the embedded copies directly; no runtime fetch or build service is required.
+
+
+### GBFS vendor observation refresh
+
+After loading a new `data-gbfs.json` snapshot, append its vendor-only comparison to the running log:
+
+```sh
+python3 scripts/build_gbfs_observations.py
+```
+
+The builder compares fleet size, median published range, availability share, and counts within explicitly defined geographic review areas. It retains up to 24 snapshot comparisons and never reads 311 records.
 
 ### `architecture.svg`
 The diagram above, as a standalone file for reuse in docs or a portfolio writeup.
