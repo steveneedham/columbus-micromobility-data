@@ -325,6 +325,38 @@
     .observation-item { grid-template-columns: 48px 1fr; }
     .observation-category { grid-column: 2; }
   }
+  .skill-library {
+    margin-top: 52px;
+    padding-top: 34px;
+    border-top: 1px solid var(--slate-300);
+  }
+  .skill-library .eyebrow { margin: 0 0 8px; color: var(--blue-700); }
+  .skill-library h2 { margin: 0; color: var(--slate-900); font: 500 clamp(1.7rem, 3vw, 2.4rem)/1.1 var(--display); }
+  .skill-intro { max-width: 780px; margin: 12px 0 18px; color: var(--slate-600); }
+  .skill-downloads { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+  .skill-downloads a {
+    display: inline-block;
+    padding: 9px 12px;
+    border: 1px solid var(--blue-700);
+    color: var(--blue-700);
+    background: var(--source-sheet);
+    font: 600 .72rem var(--mono);
+    text-decoration: none;
+  }
+  .skill-downloads a:first-child { color: var(--source-sheet); background: var(--blue-700); }
+  .skill-downloads a:hover { color: var(--slate-900); background: var(--amber-100); border-color: var(--slate-900); }
+  .skill-install-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--slate-300); }
+  .skill-install {
+    padding: 18px 20px 20px 0;
+    border-bottom: 1px solid var(--slate-300);
+  }
+  .skill-install + .skill-install { padding-left: 20px; border-left: 1px solid var(--slate-300); }
+  .skill-install h3 { margin: 0 0 8px; font: 500 1.18rem var(--display); }
+  .skill-install .install-mode { margin-bottom: 10px; color: var(--slate-500); font: 500 .64rem var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+  .skill-install ol { margin: 0; padding-left: 18px; color: var(--slate-600); font-size: .82rem; line-height: 1.55; }
+  .skill-install li + li { margin-top: 4px; }
+  .skill-install a { text-underline-offset: .2em; }
+  .skill-note { max-width: 820px; margin: 14px 0 0; color: var(--slate-500); font-size: .74rem; font-style: italic; }
   .reference-library {
     margin-top: 52px;
     padding-top: 34px;
@@ -439,6 +471,41 @@
   .case-lookup-button:hover { background: var(--blue-100); }
   .case-lookup-button:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
   .case-lookup-status { display: block; min-height: 1.2em; margin-top: 6px; color: var(--teal-600); font-size: .7rem; }
+  .guide-button {
+    margin-left: auto;
+    padding: 8px 11px;
+    border: 1px solid var(--slate-900);
+    border-radius: 0;
+    background: transparent;
+    color: var(--slate-900);
+    font: 600 .68rem var(--mono);
+    cursor: pointer;
+  }
+  .guide-button:hover { background: var(--amber-100); }
+  .guide-button:focus-visible, .guide-close:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
+  .site-guide {
+    width: min(900px, calc(100vw - 32px));
+    max-height: calc(100vh - 32px);
+    padding: 0;
+    border: 1px solid var(--slate-900);
+    border-radius: 0;
+    background: var(--paper);
+    color: var(--slate-900);
+    box-shadow: 0 18px 60px rgba(15, 23, 42, .22);
+  }
+  .site-guide::backdrop { background: rgba(15, 23, 42, .58); }
+  .guide-shell { padding: 24px; }
+  .guide-header { display: flex; justify-content: space-between; gap: 24px; align-items: start; padding-bottom: 18px; border-bottom: 1px solid var(--slate-300); }
+  .guide-header .eyebrow { margin: 0 0 6px; color: var(--red-600); }
+  .guide-header h2 { margin: 0; font: 500 clamp(1.65rem, 4vw, 2.35rem)/1.05 var(--display); }
+  .guide-close { width: 36px; height: 36px; border: 1px solid var(--slate-400); background: var(--source-sheet); color: var(--slate-900); font-size: 1.25rem; cursor: pointer; }
+  .guide-lede { max-width: 720px; margin: 16px 0 20px; color: var(--slate-600); }
+  .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--slate-300); }
+  .guide-item { padding: 16px 18px 18px 0; border-bottom: 1px solid var(--slate-300); }
+  .guide-item:nth-child(even) { padding-left: 18px; border-left: 1px solid var(--slate-300); }
+  .guide-item h3 { margin: 0 0 6px; font: 600 .76rem var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .guide-item p { margin: 0; color: var(--slate-600); font-size: .82rem; line-height: 1.55; }
+  .guide-footnote { margin: 16px 0 0; color: var(--slate-500); font-size: .72rem; font-style: italic; }
   .review-note {
     margin-top: 6px;
     font-size: 0.75rem;
@@ -451,8 +518,13 @@
     .title-row { align-items: flex-start; }
     .project-mark { width: 32px; height: 32px; }
     h1 { flex-basis: calc(100% - 50px); }
+    .guide-button { width: 100%; margin-left: 0; }
+    .guide-shell { padding: 18px; }
+    .guide-grid { grid-template-columns: 1fr; }
+    .guide-item:nth-child(even) { padding-left: 0; border-left: 0; }
     #map { height: 62vh; }
-    .reference-grid, .forecast-visuals { grid-template-columns: 1fr; }
+    .skill-install-grid, .reference-grid, .forecast-visuals { grid-template-columns: 1fr; }
+    .skill-install + .skill-install { padding-left: 0; border-left: 0; }
     .reference-item:nth-child(even) { padding-left: 0; border-left: 0; }
   }
 </style>
@@ -465,6 +537,7 @@
       <img class="project-mark" src="assets/field-ledger-mark.svg" alt="">
       <h1>Columbus Micromobility — Observer View</h1>
       <span class="badge">Independent observer · public data only</span>
+      <button type="button" class="guide-button" id="openSiteGuide" aria-haspopup="dialog">How to use this site</button>
     </div>
     <p class="desc">An independent, public-data-only look at Columbus shared-scooter operations — 311 requests, published vehicle positions, and policy boundaries. Built from public sources only; not affiliated with or using data from any employer.</p>
     <div class="caveat">
@@ -476,6 +549,29 @@
     </div>
   </div>
 </header>
+
+<dialog class="site-guide" id="siteGuide" aria-labelledby="site-guide-title">
+  <div class="guide-shell">
+    <div class="guide-header">
+      <div><p class="eyebrow">Reader guide</p><h2 id="site-guide-title">How to use this site</h2></div>
+      <button type="button" class="guide-close" id="closeSiteGuide" aria-label="Close guide">×</button>
+    </div>
+    <p class="guide-lede">Start with snapshot age, then use the map layers to ask a specific question. Every view is read-only and evidence-limited: proximity and reported conditions are review signals, not proof of a violation or vendor intent.</p>
+    <div class="guide-grid">
+      <section class="guide-item"><h3>1 · Check data age</h3><p>The four summary cards show record counts, the last refresh timestamp, and relative age for the 311, GBFS, pile-up, and policy snapshots.</p></section>
+      <section class="guide-item"><h3>2 · Toggle map layers</h3><p>Turn 311 requests, GBFS positions, cross-vendor flags, policy boundaries, Columbus Ride Hubs, and vendor observation areas on or off independently.</p></section>
+      <section class="guide-item"><h3>3 · Read marker shapes</h3><p>311 reports use diamonds with priority colors. GBFS vehicles use vendor-colored circles. Ride Hubs use the purple hub sign, while pile-ups use outlined flags.</p></section>
+      <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow GBFS vehicle positions. Ride Hub proximity counts continue to use the complete current snapshot, independent of those display filters.</p></section>
+      <section class="guide-item"><h3>5 · Navigate to findings</h3><p>Select a cross-vendor pile-up entry to fly to its coordinates. Select a geographic vendor observation to enable its layer, focus the review area, and open its summary.</p></section>
+      <section class="guide-item"><h3>6 · Inspect Ride Hubs</h3><p>Enable Columbus Ride Hubs and select a hub icon to see station capacity plus the number of Veo and Spin vehicles published within 100 metres.</p></section>
+      <section class="guide-item"><h3>7 · Research a 311 case</h3><p>Select a 311 diamond for its CAS ID, address, status, source link, and a button that copies a complete case-lookup prompt for your AI tool.</p></section>
+      <section class="guide-item"><h3>8 · Install the lookup workflow</h3><p>Below the observation log, download the native Claude skill ZIP or portable Markdown instructions for a ChatGPT Project or Gemini Gem.</p></section>
+      <section class="guide-item"><h3>9 · Follow vendor changes</h3><p>The running observation log compares GBFS snapshots for fleet size, published range, availability, and geographic concentration without using 311 reports.</p></section>
+      <section class="guide-item"><h3>10 · Use reference artifacts</h3><p>The final library contains downloadable forecast guides, inventories, project cards, and analysis charts with visible source provenance.</p></section>
+    </div>
+    <p class="guide-footnote">This is an independent public-data observer view—not a live dispatch system, official City record system, or confirmed-violation ledger.</p>
+  </div>
+</dialog>
 
 <main>
   <div class="stat-grid" id="statGrid"></div>
@@ -543,6 +639,58 @@
     </div>
     <div id="gbfsObservationLog"></div>
     <p class="observation-method">Point-in-time public GBFS observations; changes do not establish deployment intent, demand, service quality, or causation.</p>
+  </section>
+
+  <section class="skill-library" aria-labelledby="skill-library-title">
+    <p class="eyebrow">Open workflow · public portal</p>
+    <h2 id="skill-library-title">Install the Columbus 311 case lookup</h2>
+    <p class="skill-intro">A portable, read-only workflow for finding a Columbus 311 case by address and CAS ID, then separating portal facts from vendor and accessibility evidence. Claude accepts the ZIP as a native custom skill; ChatGPT and Gemini use the same Markdown as reusable project or Gem context.</p>
+
+    <div class="skill-downloads" aria-label="Skill downloads">
+      <a href="downloads/columbus-311-case-lookup.zip" download>Download skill · ZIP</a>
+      <a href="downloads/columbus-311-case-lookup.md" download>Download instructions · Markdown</a>
+      <a href="downloads/columbus-311-case-lookup/INSTALL.md">Read full installation guide</a>
+    </div>
+
+    <div class="skill-install-grid">
+      <article class="skill-install">
+        <h3>Claude</h3>
+        <div class="install-mode">Native custom skill</div>
+        <ol>
+          <li>Download the ZIP package.</li>
+          <li>Enable code execution in Settings → Capabilities.</li>
+          <li>Open Customize → Skills → + Create skill → Upload a skill.</li>
+          <li>Upload, enable, and invoke it with a CAS ID and address.</li>
+        </ol>
+        <p><a href="https://support.claude.com/en/articles/12512180-use-skills-in-claude">Claude’s official skill guide</a></p>
+      </article>
+
+      <article class="skill-install">
+        <h3>ChatGPT</h3>
+        <div class="install-mode">Project instructions + source</div>
+        <ol>
+          <li>Download the Markdown instructions.</li>
+          <li>Create a Project and upload the file as a source.</li>
+          <li>Add a Project instruction to follow the workflow for Columbus CAS IDs.</li>
+          <li>Supply both the case ID and address; allow web access when asked.</li>
+        </ol>
+        <p><a href="https://help.openai.com/en/articles/10169521-projects-in-chatgpt">OpenAI’s official Projects guide</a></p>
+      </article>
+
+      <article class="skill-install">
+        <h3>Gemini</h3>
+        <div class="install-mode">Gem instructions + knowledge</div>
+        <ol>
+          <li>Download the Markdown instructions.</li>
+          <li>Open Gems → New Gem in the Gemini web app.</li>
+          <li>Add the workflow to the Gem instructions and upload the file under Knowledge.</li>
+          <li>Save, then supply both the case ID and address.</li>
+        </ol>
+        <p><a href="https://support.google.com/gemini/answer/15146780?co=GENIE.Platform%3DDesktop&amp;hl=en">Google’s official Gems guide</a></p>
+      </article>
+    </div>
+
+    <p class="skill-note">Review AI instruction packages before installing them. This workflow uses a public, read-only portal, requires no login, and should never submit, edit, or comment on a 311 request.</p>
   </section>
 
   <section class="reference-library" aria-labelledby="reference-library-title">
