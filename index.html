@@ -516,8 +516,29 @@
     color: var(--slate-900);
     box-shadow: 0 18px 60px rgba(15, 23, 42, .22);
   }
-  .site-guide::backdrop { background: rgba(15, 23, 42, .58); }
+  .site-guide::backdrop, .hub-dashboard::backdrop { background: rgba(15, 23, 42, .58); }
   .guide-shell { padding: 24px; }
+  .hub-dashboard { width: min(980px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 1px solid var(--slate-900); border-radius: 0; background: var(--paper); color: var(--slate-900); box-shadow: 0 18px 60px rgba(15, 23, 42, .22); }
+  .hub-dashboard-shell { padding: 24px; }
+  .hub-dashboard-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 24px; }
+  .hub-dashboard-stat { padding: 14px 16px; border: 1px solid var(--slate-300); background: var(--source-sheet); }
+  .hub-dashboard-stat strong { display: block; font: 500 2rem var(--display); }
+  .hub-dashboard-stat span { color: var(--slate-600); font: 600 .68rem var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+  .hub-dashboard-section + .hub-dashboard-section { margin-top: 28px; }
+  .hub-dashboard-section h3 { margin: 0 0 10px; font: 500 1.35rem var(--display); }
+  .hub-dashboard-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--slate-300); }
+  .hub-dashboard-list li { border-bottom: 1px solid var(--slate-300); }
+  .hub-dashboard-list li:nth-child(even) { border-left: 1px solid var(--slate-300); }
+  .hub-map-link { width: 100%; padding: 10px 12px; border: 0; background: transparent; color: var(--slate-800); font: inherit; text-align: left; cursor: pointer; }
+  .hub-map-link:hover { background: var(--amber-100); color: var(--slate-900); }
+  .hub-dashboard-table-wrap { overflow-x: auto; }
+  .hub-dashboard-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .hub-dashboard-table th, .hub-dashboard-table td { padding: 9px 10px; border-bottom: 1px solid var(--slate-300); text-align: right; }
+  .hub-dashboard-table th { color: var(--slate-500); font: 600 .64rem var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+  .hub-dashboard-table th:first-child, .hub-dashboard-table td:first-child { text-align: left; }
+  .hub-dashboard-note { margin: 22px 0 0; padding-top: 14px; border-top: 1px solid var(--slate-300); color: var(--slate-500); font-size: .74rem; font-style: italic; }
+  .hub-dashboard-button { width: 100%; margin: 2px 0 12px; padding: 9px 10px; border: 1px solid var(--violet-600); background: transparent; color: var(--violet-600); font: 600 .68rem var(--mono); cursor: pointer; }
+  .hub-dashboard-button:hover { background: var(--amber-100); color: var(--slate-900); border-color: var(--slate-900); }
   .guide-header { display: flex; justify-content: space-between; gap: 24px; align-items: start; padding-bottom: 18px; border-bottom: 1px solid var(--slate-300); }
   .guide-header .eyebrow { margin: 0 0 6px; color: var(--red-600); }
   .guide-header h2 { margin: 0; font: 500 clamp(1.65rem, 4vw, 2.35rem)/1.05 var(--display); }
@@ -549,6 +570,8 @@
     .guide-shell { padding: 18px; }
     .guide-grid { grid-template-columns: 1fr; }
     .guide-item:nth-child(even) { padding-left: 0; border-left: 0; }
+    .hub-dashboard-summary, .hub-dashboard-list { grid-template-columns: 1fr; }
+    .hub-dashboard-list li:nth-child(even) { border-left: 0; }
     #map { height: 62vh; }
     .skill-install-grid, .reference-grid, .forecast-visuals { grid-template-columns: 1fr; }
     .skill-install + .skill-install { padding-left: 0; border-left: 0; }
@@ -596,13 +619,25 @@
       <section class="guide-item"><h3>3 · Read marker shapes</h3><p>311 reports use diamonds with priority colors. GBFS vehicles use vendor-colored circles. Ride Hubs use the purple hub sign, while pile-ups use outlined flags.</p></section>
       <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow GBFS vehicle positions. Ride Hub proximity counts continue to use the complete current snapshot, independent of those display filters.</p></section>
       <section class="guide-item"><h3>5 · Navigate to findings</h3><p>Select a cross-vendor pile-up entry to fly to its coordinates. Select a geographic vendor observation to enable its layer, focus the review area, and open its summary.</p></section>
-      <section class="guide-item"><h3>6 · Inspect Ride Hubs</h3><p>Enable Columbus Ride Hubs and select a hub icon to see station capacity plus the number of Veo and Spin vehicles published within 100 metres.</p></section>
+      <section class="guide-item"><h3>6 · Inspect Ride Hubs</h3><p>Open the Ride Hub Status dashboard to compare empty and capacity-exceeding proximity signals. Select any row to enable the hub layer and jump to its map marker.</p></section>
       <section class="guide-item"><h3>7 · Research a 311 case</h3><p>Select a 311 diamond for its CAS ID, address, status, source link, and a button that copies a complete case-lookup prompt for your AI tool.</p></section>
       <section class="guide-item"><h3>8 · Install the lookup workflow</h3><p>Below the observation log, download the native Claude skill ZIP or portable Markdown instructions for a ChatGPT Project or Gemini Gem.</p></section>
       <section class="guide-item"><h3>9 · Follow vendor changes</h3><p>The perpetual observation history preserves every committed GBFS comparison for fleet size, published range, availability, and geographic concentration without using 311 reports.</p></section>
       <section class="guide-item"><h3>10 · Use research artifacts</h3><p>Open the separate Research Library for downloadable forecast guides, inventories, project cards, and analysis charts with visible source provenance.</p></section>
     </div>
     <p class="guide-footnote">This is an independent public-data observer view—not a live dispatch system, official City record system, or confirmed-violation ledger.</p>
+  </div>
+</dialog>
+
+<dialog class="hub-dashboard" id="rideHubDashboard" aria-labelledby="ride-hub-dashboard-title">
+  <div class="hub-dashboard-shell">
+    <div class="guide-header">
+      <div><p class="eyebrow">Columbus Ride Hubs · current GBFS proximity</p><h2 id="ride-hub-dashboard-title">Ride Hub status</h2></div>
+      <button type="button" class="guide-close" id="closeRideHubDashboard" aria-label="Close Ride Hub dashboard">×</button>
+    </div>
+    <p class="guide-lede" id="rideHubDashboardLede"></p>
+    <div id="rideHubDashboardContent"></div>
+    <p class="hub-dashboard-note">Vehicle totals count public GBFS positions within 100 metres. “Empty” and “over capacity” are proximity signals—not proof that vehicles are physically parked inside a hub or that dock capacity applies to every nearby device.</p>
   </div>
 </dialog>
 
@@ -633,6 +668,7 @@
         <label><input type="checkbox" id="togglePileups" checked> Cross-vendor flags</label>
         <label><input type="checkbox" id="togglePolicy" checked> Policy boundaries</label>
         <label><input type="checkbox" id="toggleRideHubs"> Columbus Ride Hubs (100 m counts)</label>
+        <button type="button" class="hub-dashboard-button" id="openRideHubDashboard" aria-haspopup="dialog">Open Ride Hub status dashboard</button>
         <label><input type="checkbox" id="toggleVendorObservations"> Vendor observation log</label>
         <div class="field">
           <label for="operatorFilter">Operator</label>
@@ -170589,7 +170625,8 @@
   // ---- Columbus Ride Hubs layer ----
   const HUB_VEHICLE_RADIUS_M = 100;
   const layerRideHubs = L.layerGroup();
-  rideHubs.forEach(feature => {
+  const rideHubSummaries = [];
+  rideHubs.forEach((feature, hubIndex) => {
     const coordinates = feature.geometry && feature.geometry.coordinates;
     if (!Array.isArray(coordinates) || coordinates.length < 2) return;
     const [lng, lat] = coordinates;
@@ -170635,6 +170672,54 @@
       <div class="review-note">Counts use all vehicles in the current GBFS snapshot, independent of map filters. Proximity does not establish that a vehicle is parked at or using the hub.</div>
     `);
     marker.addTo(layerRideHubs);
+    rideHubSummaries.push({
+      index: hubIndex,
+      name: properties.SITE_NAME || "Columbus Ride Hub",
+      capacity: Number(properties.DOCKS) || 0,
+      total: nearbyVehicles.length,
+      veo: vendorCounts.Veo || 0,
+      spin: vendorCounts.Spin || 0,
+      lat,
+      lng,
+      marker
+    });
+  });
+
+  // ---- Ride Hub status dashboard ----
+  const rideHubDashboard = document.getElementById("rideHubDashboard");
+  function buildRideHubDashboard() {
+    const empty = rideHubSummaries.filter(hub => hub.total === 0).sort((a, b) => a.name.localeCompare(b.name));
+    const overCapacity = rideHubSummaries.filter(hub => hub.capacity > 0 && hub.total > hub.capacity).sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
+    const snapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
+    document.getElementById("rideHubDashboardLede").textContent = snapshotAt
+      ? `Based on the GBFS snapshot from ${fmtDateTime(snapshotAt.toISOString())}. Hub capacity comes from the City-published Ride Hub layer.`
+      : "Based on the current embedded GBFS snapshot and City-published Ride Hub capacity.";
+    const emptyRows = empty.map(hub => `<li><button type="button" class="hub-map-link" data-hub-index="${hub.index}">${esc(hub.name)}</button></li>`).join("");
+    const overRows = overCapacity.map(hub => `<tr><td><button type="button" class="hub-map-link" data-hub-index="${hub.index}">${esc(hub.name)}</button></td><td>${hub.capacity}</td><td><strong>${hub.total}</strong></td><td>${hub.veo}</td><td>${hub.spin}</td></tr>`).join("");
+    document.getElementById("rideHubDashboardContent").innerHTML = `
+      <div class="hub-dashboard-summary">
+        <div class="hub-dashboard-stat"><strong>${empty.length}</strong><span>Empty proximity signals</span></div>
+        <div class="hub-dashboard-stat"><strong>${overCapacity.length}</strong><span>Over-capacity proximity signals</span></div>
+      </div>
+      <section class="hub-dashboard-section"><h3>Empty hubs</h3><ul class="hub-dashboard-list">${emptyRows || '<li><span class="hub-map-link">None in this snapshot.</span></li>'}</ul></section>
+      <section class="hub-dashboard-section"><h3>Over-capacity hubs</h3><div class="hub-dashboard-table-wrap"><table class="hub-dashboard-table"><thead><tr><th>Hub</th><th>Capacity</th><th>Nearby</th><th>Veo</th><th>Spin</th></tr></thead><tbody>${overRows || '<tr><td colspan="5">None in this snapshot.</td></tr>'}</tbody></table></div></section>
+    `;
+  }
+  buildRideHubDashboard();
+  document.getElementById("openRideHubDashboard").addEventListener("click", () => rideHubDashboard.showModal());
+  document.getElementById("closeRideHubDashboard").addEventListener("click", () => rideHubDashboard.close());
+  rideHubDashboard.addEventListener("click", event => {
+    if (event.target === rideHubDashboard) rideHubDashboard.close();
+    const link = event.target.closest("[data-hub-index]");
+    if (!link) return;
+    const hub = rideHubSummaries.find(candidate => candidate.index === Number(link.dataset.hubIndex));
+    if (!hub) return;
+    rideHubDashboard.close();
+    setLayerVisibility("hubs", true);
+    updatePresetState();
+    document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+    map.flyTo([hub.lat, hub.lng], Math.max(map.getZoom(), 17), { duration: .6 });
+    hub.marker.openPopup();
   });
 
   // ---- Policy boundaries layer ----
