@@ -418,6 +418,27 @@
   .leaflet-popup-content { font-size: 0.82rem; line-height: 1.45; }
   .leaflet-popup-content b { color: var(--slate-900); }
   .popup-title { font-weight: 700; margin-bottom: 4px; font-size: 0.88rem; }
+  .case-lookup-callout {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid var(--slate-300);
+    border-left: 3px solid var(--blue-700);
+    background: var(--slate-100);
+  }
+  .case-lookup-callout strong { display: block; margin-bottom: 3px; }
+  .case-lookup-callout p { margin: 0 0 8px; color: var(--slate-600); font-size: .76rem; line-height: 1.45; }
+  .case-lookup-button {
+    padding: 7px 9px;
+    border: 1px solid var(--blue-700);
+    border-radius: 0;
+    background: var(--source-sheet);
+    color: var(--blue-700);
+    font: 600 .7rem var(--mono);
+    cursor: pointer;
+  }
+  .case-lookup-button:hover { background: var(--blue-100); }
+  .case-lookup-button:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
+  .case-lookup-status { display: block; min-height: 1.2em; margin-top: 6px; color: var(--teal-600); font-size: .7rem; }
   .review-note {
     margin-top: 6px;
     font-size: 0.75rem;
@@ -170307,12 +170328,41 @@
       <div><b>Reported:</b> ${esc(fmtDateTime(rec.reported_at))}</div>
       <div><b>Council district:</b> ${esc(rec.council_district || "unknown")}</div>
       <div>${rec.source_url ? `<a href="${esc(rec.source_url)}" target="_blank" rel="noopener">Source record</a>` : ""}</div>
+      <div class="case-lookup-callout">
+        <strong>Look up full case details?</strong>
+        <p>The public portal must be searched by this address, then matched to the CAS ID.</p>
+        <button type="button" class="case-lookup-button" data-case-id="${esc(rec.source_id || "")}" data-case-address="${esc(rec.address || "")}">Copy $columbus-311-case-lookup prompt</button>
+        <span class="case-lookup-status" aria-live="polite"></span>
+      </div>
       <div class="review-note">Review signal, not a confirmed violation. Not an official City record system.</div>
     `;
     marker.bindPopup(popup);
     marker.addTo(layer311);
   });
   layer311.addTo(map);
+  document.getElementById("map").addEventListener("click", async event => {
+    const button = event.target.closest(".case-lookup-button");
+    if (!button) return;
+    const caseId = button.dataset.caseId;
+    const address = button.dataset.caseAddress;
+    const prompt = `Use $columbus-311-case-lookup to look up Columbus 311 case ${caseId} at ${address}, Columbus, OH. Return the request type, status, full address, description, vendor(s) or device(s) identified with the evidence method, ADA blocking status with supporting evidence, and created/updated timestamps.`;
+    const status = button.parentElement.querySelector(".case-lookup-status");
+    try {
+      await navigator.clipboard.writeText(prompt);
+      status.textContent = "Lookup prompt copied. Paste it into Codex.";
+    } catch (error) {
+      const textarea = document.createElement("textarea");
+      textarea.value = prompt;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      status.textContent = copied ? "Lookup prompt copied. Paste it into Codex." : "Copy failed. Select the case ID and address, then ask Codex to use $columbus-311-case-lookup.";
+    }
+  });
 
   // ---- GBFS layer ----
   let gbfsMarkers = []; // {marker, vehicle}
