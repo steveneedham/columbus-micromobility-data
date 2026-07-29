@@ -745,7 +745,7 @@
       <section class="guide-item"><h3>2 · Toggle map layers</h3><p>On phones, select Layers &amp; filters over the map to open the control sheet. On larger screens, the controls remain beside the map. Layers include 311 requests, GBFS vehicles, Ride Hubs, vendor review areas, pile-ups, policy boundaries, and published MDS geographies.</p></section>
       <section class="guide-item"><h3>3 · Read map symbols</h3><p>311 requests use priority-colored diamonds; GBFS vehicles use vendor-colored circles; Ride Hubs use signed markers with nearby-vehicle badges. Dashed circles mark vendor review areas, outlined rings mark pile-ups, dashed lines mark policy boundaries, and shaded polygons mark MDS geographies.</p></section>
       <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow the GBFS positions shown on the map. Ride Hub counts and distribution tables continue to use the complete active snapshot, independent of those display filters.</p></section>
-      <section class="guide-item"><h3>5 · Review insights</h3><p>Use the Ride Hubs, CBD distribution, Opportunity zones, Vendor changes, and Pile-ups tabs. Select a linked hub, geography, review area, or pile-up to enable its layer and return to the relevant map area.</p></section>
+      <section class="guide-item"><h3>5 · Review insights</h3><p>Use the Ride Hubs, CBD distribution, Opportunity zones, Ohio State, Vendor changes, and Pile-ups tabs. Select a linked hub, geography, review area, or pile-up to enable its layer and return to the relevant map area.</p></section>
       <section class="guide-item"><h3>6 · Read distribution status</h3><p>CBD status uses a 30% maximum: red is above 30%, yellow is 27–30%, and green is below 27%. Opportunity-zone status uses the supplied 5% minimum: red is below 4.5%, yellow is 4.5% to under 5%, and green is 5% or more. These point-in-time indicators remain provisional; read the note below each table for timing and source limitations.</p></section>
       <section class="guide-item"><h3>7 · Inspect Ride Hubs</h3><p>Open the Ride Hub Status dashboard to compare empty and capacity-exceeding proximity signals. Select any row to enable the hub layer and jump to its map marker.</p></section>
       <section class="guide-item"><h3>8 · Follow vendor changes</h3><p>The perpetual observation history preserves every committed GBFS comparison for fleet size, published range, availability, and geographic concentration without using 311 reports. Each entry shows ↑ Up, ↓ Down, or — Unchanged; geographic entries also jump to their review area on the map.</p></section>
@@ -798,6 +798,7 @@
         <label><input type="checkbox" id="togglePileups" checked> Cross-vendor flags</label>
         <label><input type="checkbox" id="togglePolicy" checked> Policy boundaries</label>
         <label><input type="checkbox" id="toggleMdsGeographies"> Populus MDS Geographies (110)</label>
+        <label><input type="checkbox" id="toggleOsuBoundary"> The Ohio State University boundary</label>
         <label><input type="checkbox" id="toggleRideHubs"> Columbus Ride Hubs (100 m counts)</label>
         <button type="button" class="hub-dashboard-button" id="openRideHubDashboard" aria-haspopup="dialog">Open Ride Hub status dashboard</button>
         <label><input type="checkbox" id="toggleVendorObservations"> Vendor observation log</label>
@@ -832,6 +833,7 @@
           <div class="legend-row"><span class="swatch ring"></span> Cross-vendor pile-up flag</div>
           <div class="legend-row"><span class="swatch line"></span> Policy boundary</div>
           <div class="legend-row"><span class="swatch geography"></span> Populus MDS geography</div>
+          <div class="legend-row"><span class="swatch" style="background:#a94728;border:1px dashed #82341f;"></span> The Ohio State University municipal boundary</div>
         </div>
       </details>
     </div>
@@ -840,12 +842,13 @@
   <section class="insights" id="insights" aria-labelledby="insights-title">
     <div class="insights-header">
       <div><p class="eyebrow">Current snapshot signals</p><h2 id="insights-title">Insights</h2></div>
-      <p>Review Ride Hub capacity signals, fleet distribution, vendor changes between snapshots, or cross-vendor pile-ups. Every relevant result can take you back to the map.</p>
+      <p>Review Ride Hub capacity signals, fleet distribution, municipal geography counts, vendor changes between snapshots, or cross-vendor pile-ups. Every relevant result can take you back to the map.</p>
     </div>
     <div class="insight-tabs" role="tablist" aria-label="Insight views">
       <button type="button" class="insight-tab" role="tab" id="tab-ride-hubs" aria-controls="panel-ride-hubs" aria-selected="true" data-insight="ride-hubs">Ride Hubs</button>
       <button type="button" class="insight-tab" role="tab" id="tab-cbd-distribution" aria-controls="panel-cbd-distribution" aria-selected="false" data-insight="cbd-distribution">CBD distribution</button>
       <button type="button" class="insight-tab" role="tab" id="tab-opportunity-distribution" aria-controls="panel-opportunity-distribution" aria-selected="false" data-insight="opportunity-distribution">Opportunity zones</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-osu-boundary" aria-controls="panel-osu-boundary" aria-selected="false" data-insight="osu-boundary">Ohio State</button>
       <button type="button" class="insight-tab" role="tab" id="tab-vendor-changes" aria-controls="panel-vendor-changes" aria-selected="false" data-insight="vendor-changes">Vendor changes</button>
       <button type="button" class="insight-tab" role="tab" id="tab-pileups" aria-controls="panel-pileups" aria-selected="false" data-insight="pileups">Pile-ups</button>
     </div>
@@ -862,6 +865,12 @@
       <div class="cbd-insight-card">
         <div class="cbd-insight-header"><h3>Opportunity Zone Distribution</h3><p>Active devices in each published opportunity-zone geography compared with each vendor’s active citywide fleet.</p></div>
         <div id="opportunityDistributionInsight"><p class="cbd-insight-note">Loading the Populus MDS geography export…</p></div>
+      </div>
+    </div>
+    <div class="insight-panel" id="panel-osu-boundary" role="tabpanel" aria-labelledby="tab-osu-boundary" data-insight-panel="osu-boundary" hidden>
+      <div class="cbd-insight-card">
+        <div class="cbd-insight-header"><h3>The Ohio State University municipal boundary</h3><p>This area is the municipality boundary. It denotes the area that can set policies for, and is provided to operators via the policy API. Percentage based deployment policies use this area to determine total deployment.</p></div>
+        <div id="osuBoundaryInsight"><p class="cbd-insight-note">Calculating current published vehicle positions…</p></div>
       </div>
     </div>
     <div class="insight-panel observation-log" id="panel-vendor-changes" role="tabpanel" aria-labelledby="tab-vendor-changes" data-insight-panel="vendor-changes" hidden>
@@ -171002,6 +171011,332 @@
 }
 </script>
 
+<script type="application/json" id="data-osu-boundary">
+{
+  "name": "The Ohio State University municipal boundary",
+  "description": "This area is the municipality boundary. It denotes the area that can set policies for, and is provided to operators via the policy API. Percentage based deployment policies use this area to determine total deployment.",
+  "source_file": "osu-spin-osu_expanded_campus_boundary_export.geojson",
+  "source_type": "supplied GeoJSON policy geography export",
+  "feature_collection": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "name": "The Ohio State University municipal boundary",
+          "description": "This area is the municipality boundary. It denotes the area that can set policies for, and is provided to operators via the policy API. Percentage based deployment policies use this area to determine total deployment."
+        },
+        "geometry": {
+          "type": "MultiPolygon",
+          "coordinates": [
+            [
+              [
+                [
+                  -83.0238968,
+                  39.9908608
+                ],
+                [
+                  -83.0257636,
+                  39.990943
+                ],
+                [
+                  -83.0246264,
+                  39.9961542
+                ],
+                [
+                  -83.0244547,
+                  39.9971076
+                ],
+                [
+                  -83.0248409,
+                  39.9978144
+                ],
+                [
+                  -83.0277163,
+                  39.99885
+                ],
+                [
+                  -83.02836,
+                  39.9993925
+                ],
+                [
+                  -83.029182,
+                  40.000323
+                ],
+                [
+                  -83.0314714,
+                  40.0003458
+                ],
+                [
+                  -83.0316216,
+                  39.9991459
+                ],
+                [
+                  -83.0320078,
+                  39.9991788
+                ],
+                [
+                  -83.0322009,
+                  39.99765
+                ],
+                [
+                  -83.0369216,
+                  39.9978309
+                ],
+                [
+                  -83.0371362,
+                  39.9961048
+                ],
+                [
+                  -83.0383593,
+                  39.996072
+                ],
+                [
+                  -83.0446893,
+                  39.9965487
+                ],
+                [
+                  -83.0446249,
+                  39.9974035
+                ],
+                [
+                  -83.0485517,
+                  39.9976007
+                ],
+                [
+                  -83.0484015,
+                  40.0002143
+                ],
+                [
+                  -83.047836,
+                  40.007408
+                ],
+                [
+                  -83.0473715,
+                  40.0192298
+                ],
+                [
+                  -83.0378657,
+                  40.0188355
+                ],
+                [
+                  -83.0330163,
+                  40.0186711
+                ],
+                [
+                  -83.0340463,
+                  40.0199693
+                ],
+                [
+                  -83.034486,
+                  40.020792
+                ],
+                [
+                  -83.026734,
+                  40.02046
+                ],
+                [
+                  -83.026902,
+                  40.018323
+                ],
+                [
+                  -83.0259782,
+                  40.018096
+                ],
+                [
+                  -83.024264,
+                  40.016723
+                ],
+                [
+                  -83.02336,
+                  40.016262
+                ],
+                [
+                  -83.02316,
+                  40.01607
+                ],
+                [
+                  -83.0223948,
+                  40.0142834
+                ],
+                [
+                  -83.022314,
+                  40.0121
+                ],
+                [
+                  -83.0219441,
+                  40.0120647
+                ],
+                [
+                  -83.0171162,
+                  40.0117853
+                ],
+                [
+                  -83.0172878,
+                  40.0108157
+                ],
+                [
+                  -83.0179745,
+                  40.0097145
+                ],
+                [
+                  -83.0190474,
+                  40.0086955
+                ],
+                [
+                  -83.0202919,
+                  40.0081696
+                ],
+                [
+                  -83.0201846,
+                  40.0075779
+                ],
+                [
+                  -83.0112368,
+                  40.0071342
+                ],
+                [
+                  -83.0113441,
+                  40.0080874
+                ],
+                [
+                  -83.0096489,
+                  40.0081203
+                ],
+                [
+                  -83.0094987,
+                  40.0074629
+                ],
+                [
+                  -83.0087691,
+                  40.0073643
+                ],
+                [
+                  -83.0084687,
+                  40.0060658
+                ],
+                [
+                  -83.0082542,
+                  40.0050139
+                ],
+                [
+                  -83.0074388,
+                  40.0049646
+                ],
+                [
+                  -83.0074173,
+                  40.0040277
+                ],
+                [
+                  -83.0081898,
+                  40.0040935
+                ],
+                [
+                  -83.0078465,
+                  40.0030744
+                ],
+                [
+                  -83.0070096,
+                  39.9989815
+                ],
+                [
+                  -83.0061513,
+                  39.9947569
+                ],
+                [
+                  -83.0044776,
+                  39.9946911
+                ],
+                [
+                  -83.004516,
+                  39.993945
+                ],
+                [
+                  -83.00453,
+                  39.99373
+                ],
+                [
+                  -83.004733,
+                  39.993738
+                ],
+                [
+                  -83.004749,
+                  39.993481
+                ],
+                [
+                  -83.0067521,
+                  39.9935733
+                ],
+                [
+                  -83.0066877,
+                  39.992965
+                ],
+                [
+                  -83.0142623,
+                  39.9932609
+                ],
+                [
+                  -83.0137259,
+                  39.9905649
+                ],
+                [
+                  -83.0238968,
+                  39.9908608
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  -83.02010522519096,
+                  40.02187420531346
+                ],
+                [
+                  -83.01694813787262,
+                  40.02139354150029
+                ],
+                [
+                  -83.01596496189113,
+                  40.020508683116944
+                ],
+                [
+                  -83.01576832669484,
+                  40.01903391914472
+                ],
+                [
+                  -83.01650024659217,
+                  40.01738436833133
+                ],
+                [
+                  -83.0171556972465,
+                  40.01715496060231
+                ],
+                [
+                  -83.01783299625596,
+                  40.01746083757433
+                ],
+                [
+                  -83.01857584033087,
+                  40.01834569595767
+                ],
+                [
+                  -83.02043295051811,
+                  40.01831292342496
+                ],
+                [
+                  -83.02010522519096,
+                  40.02187420531346
+                ]
+              ]
+            ]
+          ]
+        }
+      }
+    ]
+  }
+}
+</script>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function () {
@@ -171036,6 +171371,7 @@
   const dataPolicy = JSON.parse(document.getElementById("data-policy").textContent);
   const dataRideHubs = JSON.parse(document.getElementById("data-ride-hubs").textContent);
   const dataGbfsObservations = JSON.parse(document.getElementById("data-gbfs-observations").textContent);
+  const dataOsuBoundary = JSON.parse(document.getElementById("data-osu-boundary").textContent);
 
   const records311 = data311.records || [];
   const vehicles = (dataGbfs.vehicles || []).map(v => ({ ...v }));
@@ -171392,6 +171728,42 @@
     return typeof vehicle.lng === "number" && typeof vehicle.lat === "number" &&
       (featureCollection.features || []).some(feature => pointInGeometry(vehicle.lng, vehicle.lat, feature.geometry));
   }
+  // ---- The Ohio State University municipal boundary ----
+  const layerOsuBoundary = L.geoJSON(dataOsuBoundary.feature_collection, {
+    style: { color: "#a94728", weight: 2, dashArray: "8,5", fillColor: "#a94728", fillOpacity: .08 },
+    onEachFeature: (feature, featureLayer) => featureLayer.bindPopup(`
+      <div class="popup-title">${esc(dataOsuBoundary.name || "The Ohio State University municipal boundary")}</div>
+      <div><b>Geometry:</b> ${esc(feature.geometry && feature.geometry.type || "unknown")}</div>
+      <div><b>Description:</b> ${esc(dataOsuBoundary.description || "")}</div>
+      <div class="review-note">Published policy geography. A point-in-time vehicle count does not establish policy compliance, operator intent, or average deployment.</div>`)
+  });
+  const osuVendorRows = [...new Set(vehicles.map(vehicle => vehicle.company).filter(Boolean))].sort().map(vendor => {
+    const vendorVehicles = vehicles.filter(vehicle => vehicle.company === vendor);
+    const inside = vendorVehicles.filter(vehicle => vehicleInsideFeatureCollection(vehicle, dataOsuBoundary.feature_collection));
+    return {
+      vendor,
+      inside: inside.length,
+      available: inside.filter(vehicle => vehicle.available && !vehicle.disabled && !vehicle.reserved).length,
+      citywide: vendorVehicles.length,
+      share: vendorVehicles.length ? inside.length / vendorVehicles.length * 100 : 0
+    };
+  });
+  const osuSnapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
+  const osuTimeLabel = osuSnapshotAt ? fmtDateTime(osuSnapshotAt.toISOString()) : "current embedded snapshot";
+  document.getElementById("osuBoundaryInsight").innerHTML = `
+    <div class="hub-dashboard-table-wrap"><table class="cbd-insight-table"><thead><tr><th>Vendor</th><th>Inside boundary</th><th>Available</th><th>Citywide published</th><th>Inside share</th></tr></thead><tbody>
+    ${osuVendorRows.map(row => `<tr><td><button type="button" class="cbd-map-button" data-osu-map>${esc(row.vendor)}</button></td><td><strong>${row.inside.toLocaleString()}</strong></td><td>${row.available.toLocaleString()}</td><td>${row.citywide.toLocaleString()}</td><td>${row.share.toFixed(1)}%</td></tr>`).join("")}
+    </tbody></table></div>
+    <p class="cbd-insight-note">Snapshot: ${esc(osuTimeLabel)}. Counts use all published GBFS positions in the supplied boundary, independent of map filters. “Available” excludes disabled and reserved devices. This point-in-time snapshot is not an average and does not determine policy compliance.</p>`;
+  document.querySelectorAll("[data-osu-map]").forEach(button => button.addEventListener("click", () => {
+    setLayerVisibility("osu", true);
+    updatePresetState();
+    document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+    map.flyToBounds(layerOsuBoundary.getBounds(), { padding: [28, 28], duration: .6 });
+    const firstFeatureLayer = layerOsuBoundary.getLayers()[0];
+    if (firstFeatureLayer) setTimeout(() => firstFeatureLayer.openPopup(), 650);
+  }));
+
   function cbdCompliance(percent) {
     if (percent > 30) return { level: "red", label: "Out of compliance" };
     if (percent >= 27) return { level: "yellow", label: "Borderline" };
@@ -171552,6 +171924,7 @@
     pileups: { checkbox: document.getElementById("togglePileups"), layer: layerPileups },
     policy: { checkbox: document.getElementById("togglePolicy"), layer: layerPolicy },
     geographies: { checkbox: document.getElementById("toggleMdsGeographies"), layer: layerMdsGeographies },
+    osu: { checkbox: document.getElementById("toggleOsuBoundary"), layer: layerOsuBoundary },
     hubs: { checkbox: document.getElementById("toggleRideHubs"), layer: layerRideHubs },
     observations: { checkbox: document.getElementById("toggleVendorObservations"), layer: layerVendorObservations }
   };
