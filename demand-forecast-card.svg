@@ -1,58 +1,54 @@
-<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img">
-<title>Columbus Micromobility Demand Forecast — project card</title>
-<desc>Dark portfolio project card with a bike icon, title "Columbus Micromobility Demand Forecast," and a one-line descriptor, styled in Steven Needham's dark-ops design system with a teal systems-track accent.</desc>
-
-<defs>
-  <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#1B1F27"/>
-    <stop offset="1" stop-color="#14171C"/>
-  </linearGradient>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">ChatGPT Forecast — Columbus micromobility demand context</title>
+  <desc id="desc">Editorial project card using the Field Ledger design system, summarizing event, home-game, ISO-week, and weather layers.</desc>
   <style>
-    .display { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; }
-    .body { font-family: 'Inter', Arial, Helvetica, sans-serif; }
-    .mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+    .display{font-family:Newsreader,Georgia,'Times New Roman',serif}
+    .body{font-family:'IBM Plex Sans',Arial,sans-serif}
+    .mono{font-family:'IBM Plex Mono','Courier New',monospace}
   </style>
-</defs>
+  <rect width="1200" height="630" fill="#F3F0E8"/>
+  <rect x="1" y="1" width="1198" height="628" fill="none" stroke="#D5D0C5" stroke-width="2"/>
 
-<rect width="1200" height="630" fill="#14171C"/>
-<rect x="0" y="0" width="1200" height="630" fill="url(#edge)" opacity="0.6"/>
-<rect x="1" y="1" width="1198" height="628" fill="none" stroke="#282E38" stroke-width="2"/>
+  <g transform="translate(78 64)">
+    <rect x="0" y="0" width="44" height="44" rx="2" fill="#FBFAF6" stroke="#C8C2B5" stroke-width="2"/>
+    <path d="M12 1v42M12 14h22M12 32h22" fill="none" stroke="#A94728" stroke-width="2"/>
+    <path d="M20 23h16" fill="none" stroke="#236A73" stroke-width="2"/>
+    <circle cx="36" cy="23" r="4" fill="#202A2E" stroke="#236A73" stroke-width="2"/>
+  </g>
+  <text x="144" y="82" class="mono" font-size="13" font-weight="600" letter-spacing="1.8" fill="#A94728">COLUMBUS MICROMOBILITY DATA</text>
+  <text x="144" y="104" class="mono" font-size="11" letter-spacing="1.4" fill="#5D696D">FIELD LEDGER · INDEPENDENT OBSERVER</text>
 
-<g opacity="0.5">
-  <circle cx="1040" cy="90" r="2" fill="#2C6A64"/>
-  <circle cx="1080" cy="130" r="2" fill="#2C6A64"/>
-  <circle cx="1000" cy="140" r="2" fill="#2C6A64"/>
-  <circle cx="1120" cy="90" r="2" fill="#2C6A64"/>
-</g>
+  <line x1="78" y1="142" x2="1122" y2="142" stroke="#C8C2B5" stroke-width="1"/>
+  <text x="78" y="188" class="mono" font-size="13" font-weight="600" letter-spacing="2" fill="#A94728">PROJECT · FORECASTING</text>
+  <text x="76" y="282" class="display" font-size="72" font-weight="500" fill="#202A2E">ChatGPT Forecast</text>
+  <text x="80" y="326" class="body" font-size="20" fill="#3E4A4F">Columbus events, home games, weather, and ISO-week demand context</text>
 
-<text x="80" y="120" class="mono" font-size="15" letter-spacing="2.5" fill="#4FD1C5">PROJECT · FORECASTING</text>
+  <line x1="80" y1="366" x2="720" y2="366" stroke="#236A73" stroke-width="2"/>
+  <g transform="translate(80 402)">
+    <text x="0" y="0" class="mono" font-size="11" letter-spacing="1" fill="#5D696D">CANONICAL EVENTS</text>
+    <text x="0" y="47" class="display" font-size="42" font-weight="500" fill="#202A2E">90</text>
+    <text x="210" y="0" class="mono" font-size="11" letter-spacing="1" fill="#5D696D">HOME GAMES</text>
+    <text x="210" y="47" class="display" font-size="42" font-weight="500" fill="#202A2E">569</text>
+    <text x="430" y="0" class="mono" font-size="11" letter-spacing="1" fill="#5D696D">WEATHER-RISK DAYS</text>
+    <text x="430" y="47" class="display" font-size="42" font-weight="500" fill="#A94728">37</text>
+  </g>
 
-<text x="78" y="230" class="display" font-weight="500" font-size="64" fill="#EDEAE2">Columbus Micromobility</text>
-<text x="78" y="300" class="display" font-weight="500" font-size="64" fill="#EDEAE2">Demand Forecast</text>
+  <g transform="translate(800 184)">
+    <rect x="0" y="0" width="322" height="278" fill="#E8E4DA" stroke="#C8C2B5"/>
+    <text x="26" y="38" class="mono" font-size="11" font-weight="600" letter-spacing="1.2" fill="#236A73">THE WEEKLY JOIN</text>
+    <line x1="26" y1="55" x2="296" y2="55" stroke="#9CC6C9"/>
+    <g class="body" font-size="16" fill="#202A2E">
+      <circle cx="34" cy="91" r="5" fill="#236A73"/><text x="52" y="97">Major events</text>
+      <circle cx="34" cy="132" r="5" fill="#236A73"/><text x="52" y="138">Routine home games</text>
+      <circle cx="34" cy="173" r="5" fill="#A94728"/><text x="52" y="179">Weather disruption</text>
+    </g>
+    <line x1="34" y1="196" x2="34" y2="222" stroke="#5D696D"/>
+    <path d="M30 218l4 6 4-6" fill="none" stroke="#5D696D" stroke-width="1.5"/>
+    <text x="52" y="226" class="mono" font-size="12" fill="#3E4A4F">ISO YEAR · ISO WEEK</text>
+    <text x="26" y="258" class="body" font-size="12" fill="#5D696D">Observed and projected records remain separate.</text>
+  </g>
 
-<text x="80" y="360" class="body" font-size="21" fill="#8B93A1">Predicting where 311 complaint pressure will build next —</text>
-<text x="80" y="392" class="body" font-size="21" fill="#8B93A1">from public 311 and GBFS signals only, no operator data.</text>
-
-<g class="mono" font-size="13" letter-spacing="1">
-  <rect x="80" y="430" width="100" height="34" rx="4" fill="none" stroke="#282E38"/>
-  <text x="98" y="452" fill="#8B93A1">311 DATA</text>
-
-  <rect x="192" y="430" width="88" height="34" rx="4" fill="none" stroke="#282E38"/>
-  <text x="210" y="452" fill="#8B93A1">GBFS</text>
-
-  <rect x="292" y="430" width="130" height="34" rx="4" fill="none" stroke="#282E38"/>
-  <text x="310" y="452" fill="#8B93A1">FORECASTING</text>
-</g>
-
-<g transform="translate(920,420) scale(2.1)" fill="none" stroke="#4FD1C5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="18" cy="46" r="13"/>
-  <circle cx="66" cy="46" r="13"/>
-  <path d="M18,46 L38,20 L58,46 M38,20 L32,10 M28,10 L38,10"/>
-  <path d="M38,20 L66,46"/>
-  <path d="M18,46 L52,46"/>
-  <circle cx="52" cy="46" r="2.6" fill="#4FD1C5"/>
-</g>
-
-<text x="80" y="576" class="mono" font-size="13" letter-spacing="1.5" fill="#5B6270">STEVENEEDHAM.GITHUB.IO · INDEPENDENT PROJECT</text>
-
+  <line x1="78" y1="536" x2="1122" y2="536" stroke="#C8C2B5"/>
+  <text x="80" y="570" class="mono" font-size="11" letter-spacing="1" fill="#5D696D">2024–2026 · PUBLIC DATA ONLY · UPDATED 28 JULY 2026</text>
+  <text x="1120" y="570" text-anchor="end" class="mono" font-size="11" fill="#A94728">SEASONAL PLANNING, NOT A DAY-SPECIFIC FORECAST</text>
 </svg>

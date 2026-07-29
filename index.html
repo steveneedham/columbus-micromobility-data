@@ -186,6 +186,89 @@
   .pileup-item .id { font-weight: 700; color: var(--red-600); font-size: 0.8rem; }
   .pileup-item .meta { color: var(--slate-600); margin-top: 2px; }
   .empty-note { color: var(--slate-500); font-style: italic; }
+  .reference-library {
+    margin-top: 52px;
+    padding-top: 34px;
+    border-top: 1px solid var(--slate-300);
+  }
+  .reference-library .eyebrow {
+    margin: 0 0 8px;
+    color: var(--red-600);
+    font: 500 0.7rem var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .reference-library h2 {
+    margin: 0;
+    color: var(--slate-900);
+    font: 500 clamp(1.7rem, 3vw, 2.4rem)/1.1 var(--display);
+  }
+  .reference-intro {
+    max-width: 760px;
+    margin: 12px 0 24px;
+    color: var(--slate-600);
+  }
+  .reference-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--slate-300);
+  }
+  .reference-item {
+    padding: 20px 22px 22px 0;
+    border-bottom: 1px solid var(--slate-300);
+  }
+  .reference-item:nth-child(even) {
+    padding-left: 22px;
+    border-left: 1px solid var(--slate-300);
+  }
+  .reference-label {
+    color: var(--slate-600);
+    font: 500 0.66rem var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .reference-item h3 {
+    margin: 8px 0 6px;
+    color: var(--slate-900);
+    font: 500 1.25rem/1.2 var(--display);
+  }
+  .reference-item p {
+    margin: 0 0 10px;
+    color: var(--slate-600);
+    font-size: 0.88rem;
+  }
+  .reference-links {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font: 500 0.72rem var(--mono);
+  }
+  .reference-links a {
+    text-underline-offset: 0.22em;
+  }
+  .forecast-visuals {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 18px;
+    margin-top: 26px;
+  }
+  .forecast-visual {
+    margin: 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--slate-300);
+  }
+  .forecast-visual img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--slate-300);
+    background: var(--source-sheet);
+  }
+  .forecast-visual figcaption {
+    margin-top: 8px;
+    color: var(--slate-600);
+    font: 0.68rem/1.5 var(--mono);
+  }
   footer {
     text-align: center;
     padding: 24px;
@@ -209,6 +292,8 @@
     .project-mark { width: 32px; height: 32px; }
     h1 { flex-basis: calc(100% - 50px); }
     #map { height: 62vh; }
+    .reference-grid, .forecast-visuals { grid-template-columns: 1fr; }
+    .reference-item:nth-child(even) { padding-left: 0; border-left: 0; }
   }
 </style>
 </head>
@@ -287,6 +372,45 @@
       </div>
     </div>
   </div>
+
+  <section class="reference-library" aria-labelledby="reference-library-title">
+    <p class="eyebrow">Reference artifacts · July 2026</p>
+    <h2 id="reference-library-title">Forecast source guides and inventories</h2>
+    <p class="reference-intro">Downloadable working artifacts document the event, home-game, ISO-week, and weather context used for demand planning. The ChatGPT and Claude files are retained as separate reference sets so their provenance remains visible.</p>
+
+    <div class="reference-grid">
+      <article class="reference-item">
+        <div class="reference-label">ChatGPT · Field Ledger edition</div>
+        <h3>ChatGPT Forecast</h3>
+        <p>Branded operating guide with event and game separation, ISO-week correlation, historical weather, projected weather-risk caveats, and source methodology.</p>
+        <div class="reference-links">
+          <a href="ChatGPT%20Forecast.docx" download>Word guide</a>
+          <a href="ChatGPT%20Forecast.xlsx" download>Excel inventory</a>
+        </div>
+      </article>
+
+      <article class="reference-item">
+        <div class="reference-label">Claude · Reference edition</div>
+        <h3>Claude Forecast</h3>
+        <p>Companion source guide and historical event workbook retained as supplied for comparison and reference.</p>
+        <div class="reference-links">
+          <a href="Claude%20Forecast%20-%20Columbus_Micromobility_Event_Demand_Sources_branded.docx" download>Word guide</a>
+          <a href="Claude%20Forecast%200%20Columbus_Micromobility_Events_Historical_2024-2026.xlsx" download>Excel inventory</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="forecast-visuals" aria-label="ChatGPT Forecast visual references">
+      <figure class="forecast-visual">
+        <img src="demand-forecast-card.svg" alt="ChatGPT Forecast project card summarizing canonical events, home games, weather-risk days, and the ISO-week join">
+        <figcaption>Project card · <a href="demand-forecast-card.svg">SVG</a> · <a href="demand-forecast-card.png">PNG</a></figcaption>
+      </figure>
+      <figure class="forecast-visual">
+        <img src="demand-forecast-chart.svg" alt="Illustrative weekly demand signals chart with separate major-event, home-game, and weather-risk layers">
+        <figcaption>Illustrative chart · not model output · <a href="demand-forecast-chart.svg">SVG</a> · <a href="demand-forecast-chart.png">PNG</a></figcaption>
+      </figure>
+    </div>
+  </section>
 </main>
 
 <footer>© 2026 Steven Needham · Independent project, public data only.</footer>
