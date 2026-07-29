@@ -1,0 +1,70 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - link "← Observer View" [ref=f3e4] [cursor=pointer]:
+        - /url: index.html#overview
+      - paragraph [ref=f3e5]: Columbus Micromobility Data
+      - heading "Research library" [level=1] [ref=f3e6]
+      - paragraph [ref=f3e7]: Forecast guides, source inventories, project cards, and comparable analysis charts. Each artifact remains labeled by source so its provenance is visible.
+  - main [ref=f3e8]:
+    - region "Forecast source guides and inventories" [ref=f3e9]:
+      - paragraph [ref=f3e10]: Reference artifacts · July 2026
+      - paragraph [ref=f3e11]: Downloadable working artifacts document the event, home-game, ISO-week, and weather context used for demand planning. The ChatGPT and Claude files are retained as separate reference sets so their provenance remains visible.
+      - generic [ref=f3e12]:
+        - article [ref=f3e13]:
+          - generic [ref=f3e14]: ChatGPT · Field Ledger edition
+          - heading "ChatGPT Forecast" [level=3] [ref=f3e15]
+          - paragraph [ref=f3e16]: Branded operating guide with event and game separation, ISO-week correlation, historical weather, projected weather-risk caveats, and source methodology.
+          - generic [ref=f3e17]:
+            - link "Word guide" [ref=f3e18] [cursor=pointer]:
+              - /url: ChatGPT%20Forecast.docx
+            - link "Excel inventory" [ref=f3e19] [cursor=pointer]:
+              - /url: ChatGPT%20Forecast.xlsx
+        - article [ref=f3e20]:
+          - generic [ref=f3e21]: Claude · Reference edition
+          - heading "Claude Forecast" [level=3] [ref=f3e22]
+          - paragraph [ref=f3e23]: Companion source guide and historical event workbook retained as supplied for comparison and reference.
+          - generic [ref=f3e24]:
+            - link "Word guide" [ref=f3e25] [cursor=pointer]:
+              - /url: Claude%20Forecast%20-%20Columbus_Micromobility_Event_Demand_Sources_branded.docx
+            - link "Excel inventory" [ref=f3e26] [cursor=pointer]:
+              - /url: Claude%20Forecast%200%20Columbus_Micromobility_Events_Historical_2024-2026.xlsx
+      - generic "Forecast project cards" [ref=f3e27]:
+        - figure [ref=f3e28]:
+          - img "ChatGPT Forecast project card summarizing canonical events, home games, weather-risk days, and the ISO-week join" [ref=f3e29]
+          - generic [ref=f3e30]:
+            - text: ChatGPT Forecast card ·
+            - link "SVG" [ref=f3e31] [cursor=pointer]:
+              - /url: demand-forecast-card.svg
+            - text: ·
+            - link "PNG" [ref=f3e32] [cursor=pointer]:
+              - /url: demand-forecast-card.png
+        - figure [ref=f3e33]:
+          - img "Claude Forecast project card summarizing event records, ISO-week series, projected weeks, and the weekly join" [ref=f3e34]
+          - generic [ref=f3e35]:
+            - text: Claude Forecast card ·
+            - link "SVG" [ref=f3e36] [cursor=pointer]:
+              - /url: claude-demand-forecast-card.svg
+            - text: ·
+            - link "PNG" [ref=f3e37] [cursor=pointer]:
+              - /url: claude-demand-forecast-card.png
+      - generic "Comparable ChatGPT and Claude analysis charts" [ref=f3e38]:
+        - figure [ref=f3e39]:
+          - img "ChatGPT Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026" [ref=f3e40]
+          - generic [ref=f3e41]:
+            - text: ChatGPT Analysis · workbook-derived projection ·
+            - link "SVG" [ref=f3e42] [cursor=pointer]:
+              - /url: demand-forecast-chart.svg
+            - text: ·
+            - link "PNG" [ref=f3e43] [cursor=pointer]:
+              - /url: demand-forecast-chart.png
+        - figure [ref=f3e44]:
+          - img "Claude Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026" [ref=f3e45]
+          - generic [ref=f3e46]:
+            - text: Claude Analysis · workbook-derived projection ·
+            - link "SVG" [ref=f3e47] [cursor=pointer]:
+              - /url: claude-demand-forecast-chart.svg
+            - text: ·
+            - link "PNG" [ref=f3e48] [cursor=pointer]:
+              - /url: claude-demand-forecast-chart.png
+  - contentinfo [ref=f3e49]: © 2026 Steven Needham · Independent project, public data only.

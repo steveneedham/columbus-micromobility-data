@@ -1,0 +1,701 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - heading "Columbus Micromobility — Observer View" [level=1] [ref=e5]
+        - generic [ref=e6]: Independent observer · public data only
+        - button "How to use this site" [ref=e7] [cursor=pointer]
+      - paragraph [ref=e8]: An independent, public-data-only look at Columbus shared-scooter operations — 311 requests, published vehicle positions, and policy boundaries. Built from public sources only; not affiliated with or using data from any employer.
+      - generic [ref=e9]:
+        - strong [ref=e10]: Current public snapshots.
+        - text: The complete read-only 311, GBFS, and published Populus policy datasets are embedded below. Counts and source timestamps appear in the stat cards and JSON metadata. These snapshots support operational review, not confirmed violations or a complete account of citywide conditions. This dashboard itself is destined for
+        - link "github.com/steveneedham/columbus-micromobility-data" [ref=e11] [cursor=pointer]:
+          - /url: https://github.com/steveneedham/columbus-micromobility-data
+        - text: . Not an official Spin, Veo, or City of Columbus tool — not a confirmed-violation record system.
+  - dialog [ref=e4273]:
+    - generic [ref=e4274]:
+      - generic [ref=e4275]:
+        - generic [ref=e4276]:
+          - paragraph [ref=e4277]: Reader guide
+          - heading "How to use this site" [level=2] [ref=e4278]
+        - button "Close guide" [active] [ref=e4279] [cursor=pointer]: ×
+      - paragraph [ref=e4280]: "Start with snapshot age, then use the map layers to ask a specific question. Every view is read-only and evidence-limited: proximity and reported conditions are review signals, not proof of a violation or vendor intent."
+      - generic [ref=e4281]:
+        - generic [ref=e4282]:
+          - heading "1 · Check data age" [level=3] [ref=e4283]
+          - paragraph [ref=e4284]: The four summary cards show record counts, the last refresh timestamp, and relative age for the 311, GBFS, pile-up, and policy snapshots.
+        - generic [ref=e4285]:
+          - heading "2 · Toggle map layers" [level=3] [ref=e4286]
+          - paragraph [ref=e4287]: Turn 311 requests, GBFS positions, cross-vendor flags, policy boundaries, Columbus Ride Hubs, and vendor observation areas on or off independently.
+        - generic [ref=e4288]:
+          - heading "3 · Read marker shapes" [level=3] [ref=e4289]
+          - paragraph [ref=e4290]: 311 reports use diamonds with priority colors. GBFS vehicles use vendor-colored circles. Ride Hubs use the purple hub sign, while pile-ups use outlined flags.
+        - generic [ref=e4291]:
+          - heading "4 · Filter vehicles" [level=3] [ref=e4292]
+          - paragraph [ref=e4293]: Use Operator and Availability to narrow GBFS vehicle positions. Ride Hub proximity counts continue to use the complete current snapshot, independent of those display filters.
+        - generic [ref=e4294]:
+          - heading "5 · Navigate to findings" [level=3] [ref=e4295]
+          - paragraph [ref=e4296]: Select a cross-vendor pile-up entry to fly to its coordinates. Select a geographic vendor observation to enable its layer, focus the review area, and open its summary.
+        - generic [ref=e4297]:
+          - heading "6 · Inspect Ride Hubs" [level=3] [ref=e4298]
+          - paragraph [ref=e4299]: Enable Columbus Ride Hubs and select a hub icon to see station capacity plus the number of Veo and Spin vehicles published within 100 metres.
+        - generic [ref=e4300]:
+          - heading "7 · Research a 311 case" [level=3] [ref=e4301]
+          - paragraph [ref=e4302]: Select a 311 diamond for its CAS ID, address, status, source link, and a button that copies a complete case-lookup prompt for your AI tool.
+        - generic [ref=e4303]:
+          - heading "8 · Install the lookup workflow" [level=3] [ref=e4304]
+          - paragraph [ref=e4305]: Below the observation log, download the native Claude skill ZIP or portable Markdown instructions for a ChatGPT Project or Gemini Gem.
+        - generic [ref=e4306]:
+          - heading "9 · Follow vendor changes" [level=3] [ref=e4307]
+          - paragraph [ref=e4308]: The running observation log compares GBFS snapshots for fleet size, published range, availability, and geographic concentration without using 311 reports.
+        - generic [ref=e4309]:
+          - heading "10 · Use reference artifacts" [level=3] [ref=e4310]
+          - paragraph [ref=e4311]: The final library contains downloadable forecast guides, inventories, project cards, and analysis charts with visible source provenance.
+      - paragraph [ref=e4312]: This is an independent public-data observer view—not a live dispatch system, official City record system, or confirmed-violation ledger.
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: 311 records loaded
+        - generic [ref=e16]: "130"
+        - generic [ref=e17]: "Received: 17 · Resolved: 113"
+        - generic [ref=e18]: refreshed 1 hour ago · Jul 29, 2026, 12:08 AM EDT
+      - generic [ref=e19]:
+        - generic [ref=e20]: GBFS vehicles loaded
+        - generic [ref=e21]: "3528"
+        - generic [ref=e22]: "Veo: 2239 · Spin: 1289"
+        - generic [ref=e23]: refreshed 1 hour ago · Jul 29, 2026, 12:10 AM EDT
+      - generic [ref=e24]:
+        - generic [ref=e25]: Cross-vendor pile-ups detected
+        - generic [ref=e26]: "69"
+        - generic [ref=e27]: ≥4 vehicles, 2+ companies, within 20m
+        - generic [ref=e28]: refreshed 1 hour ago · Jul 29, 2026, 12:10 AM EDT
+      - generic [ref=e29]:
+        - generic [ref=e30]: Policy boundaries loaded
+        - generic [ref=e31]: "52"
+        - generic [ref=e32]: of 52 published (complete snapshot)
+        - generic [ref=e33]: refreshed 1 hour ago · Jul 29, 2026, 12:08 AM EDT
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]: Map — source-labeled, public-data only
+        - generic [ref=e37]:
+          - generic:
+            - generic:
+              - button "CAS-3091820-J0C1Q5 — high priority" [ref=e3553] [cursor=pointer]
+              - button "CAS-3091780-R3Q3J7 — high priority" [ref=e3555] [cursor=pointer]
+              - button "CAS-3091353-G4S8B1 — high priority" [ref=e3557] [cursor=pointer]
+              - button "CAS-3090744-M9N8F8 — high priority" [ref=e3559] [cursor=pointer]
+              - button "CAS-3090629-L4K7D8 — high priority" [ref=e3561] [cursor=pointer]
+              - button "CAS-3090129-L3M4F0 — high priority" [ref=e3563] [cursor=pointer]
+              - button "CAS-3090108-S6C3J1 — high priority" [ref=e3565] [cursor=pointer]
+              - button "CAS-3090046-L1Z6G0 — high priority" [ref=e3567] [cursor=pointer]
+              - button "CAS-3089925-K4G4H8 — high priority" [ref=e3569] [cursor=pointer]
+              - button "CAS-3089766-F4Y9V7 — high priority" [ref=e3571] [cursor=pointer]
+              - button "CAS-3089754-S8D8Q5 — high priority" [ref=e3573] [cursor=pointer]
+              - button "CAS-3089741-Q0R3F3 — high priority" [ref=e3575] [cursor=pointer]
+              - button "CAS-3089738-Y9V4N1 — high priority" [ref=e3577] [cursor=pointer]
+              - button "CAS-3089579-L6N6Q9 — high priority" [ref=e3579] [cursor=pointer]
+              - button "CAS-3089245-F0H9F4 — high priority" [ref=e3581] [cursor=pointer]
+              - button "CAS-3089136-T1F8X2 — high priority" [ref=e3583] [cursor=pointer]
+              - button "CAS-3087557-H3P5S0 — high priority" [ref=e3585] [cursor=pointer]
+              - button "CAS-3087048-K0S5X0 — high priority" [ref=e3587] [cursor=pointer]
+              - button "CAS-3086080-R4G2Q8 — high priority" [ref=e3589] [cursor=pointer]
+              - button "CAS-3086077-R7M0K7 — high priority" [ref=e3591] [cursor=pointer]
+              - button "CAS-3085935-H5M2M1 — high priority" [ref=e3593] [cursor=pointer]
+              - button "CAS-3085657-R4J3G9 — high priority" [ref=e3595] [cursor=pointer]
+              - button "CAS-3085543-X4L9D8 — high priority" [ref=e3597] [cursor=pointer]
+              - button "CAS-3084355-W6D4C7 — high priority" [ref=e3599] [cursor=pointer]
+              - button "CAS-3083605-R6C1M7 — high priority" [ref=e3601] [cursor=pointer]
+              - button "CAS-3083237-J3H2W3 — high priority" [ref=e3603] [cursor=pointer]
+              - button "CAS-3083190-N0R8Q5 — high priority" [ref=e3605] [cursor=pointer]
+              - button "CAS-3082644-P9D1M0 — high priority" [ref=e3607] [cursor=pointer]
+              - button "CAS-3082559-V2F0Y6 — high priority" [ref=e3609] [cursor=pointer]
+              - button "CAS-3080338-F7J6S3 — high priority" [ref=e3611] [cursor=pointer]
+              - button "CAS-3080336-R3K9V6 — high priority" [ref=e3613] [cursor=pointer]
+              - button "CAS-3080271-C9W2L2 — high priority" [ref=e3615] [cursor=pointer]
+              - button "CAS-3080114-R7B8P3 — high priority" [ref=e3617] [cursor=pointer]
+              - button "CAS-3080008-R7Z5H2 — high priority" [ref=e3619] [cursor=pointer]
+              - button "CAS-3079929-Q8C8R9 — high priority" [ref=e3621] [cursor=pointer]
+              - button "CAS-3079843-Q2Y0Q4 — high priority" [ref=e3623] [cursor=pointer]
+              - button "CAS-3079661-Q1X3L8 — high priority" [ref=e3625] [cursor=pointer]
+              - button "CAS-3078210-Y0M9K9 — high priority" [ref=e3627] [cursor=pointer]
+              - button "CAS-3077832-P0V8H3 — high priority" [ref=e3629] [cursor=pointer]
+              - button "CAS-3077232-N2K5Z4 — high priority" [ref=e3631] [cursor=pointer]
+              - button "CAS-3076981-L7J7P9 — high priority" [ref=e3633] [cursor=pointer]
+              - button "CAS-3076912-P1V3Q5 — high priority" [ref=e3635] [cursor=pointer]
+              - button "CAS-3076311-N4H8D7 — high priority" [ref=e3637] [cursor=pointer]
+              - button "CAS-3076307-V8C4S4 — high priority" [ref=e3639] [cursor=pointer]
+              - button "CAS-3076005-Y8J0X6 — high priority" [ref=e3641] [cursor=pointer]
+              - button "CAS-3074997-C7M7D9 — high priority" [ref=e3643] [cursor=pointer]
+              - button "CAS-3074538-R9F4Y0 — high priority" [ref=e3645] [cursor=pointer]
+              - button "CAS-3073524-F5F3T1 — high priority" [ref=e3647] [cursor=pointer]
+              - button "CAS-3073227-J4M9Q5 — high priority" [ref=e3649] [cursor=pointer]
+              - button "CAS-3073064-S4P9K4 — high priority" [ref=e3651] [cursor=pointer]
+              - button "CAS-3072569-V5V8Q4 — high priority" [ref=e3653] [cursor=pointer]
+              - button "CAS-3072483-B6C5K7 — high priority" [ref=e3655] [cursor=pointer]
+              - button "CAS-3072477-V9D9S3 — high priority" [ref=e3657] [cursor=pointer]
+              - button "CAS-3071961-Y0Q8Q6 — high priority" [ref=e3659] [cursor=pointer]
+              - button "CAS-3071302-L0Q8N1 — high priority" [ref=e3661] [cursor=pointer]
+              - button "CAS-3071296-K7L9D2 — high priority" [ref=e3663] [cursor=pointer]
+              - button "CAS-3071294-Q3Q6Q2 — high priority" [ref=e3665] [cursor=pointer]
+              - button "CAS-3071262-J0Q7X3 — high priority" [ref=e3667] [cursor=pointer]
+              - button "CAS-3071259-J5J1L5 — high priority" [ref=e3669] [cursor=pointer]
+              - button "CAS-3071258-C4L1Q7 — high priority" [ref=e3671] [cursor=pointer]
+              - button "CAS-3071257-K3Y6M9 — high priority" [ref=e3673] [cursor=pointer]
+              - button "CAS-3071070-F6T1C5 — high priority" [ref=e3675] [cursor=pointer]
+              - button "CAS-3071068-H0R4N8 — high priority" [ref=e3677] [cursor=pointer]
+              - button "CAS-3071066-N3C0Q4 — high priority" [ref=e3679] [cursor=pointer]
+              - button "CAS-3071064-X1D6J1 — high priority" [ref=e3681] [cursor=pointer]
+              - button "CAS-3071052-Y4B5X8 — high priority" [ref=e3683] [cursor=pointer]
+              - button "CAS-3071006-Q0X0L0 — high priority" [ref=e3685] [cursor=pointer]
+              - button "CAS-3070558-P1C4L9 — high priority" [ref=e3687] [cursor=pointer]
+              - button "CAS-3070487-P6Y7P1 — high priority" [ref=e3689] [cursor=pointer]
+              - button "CAS-3070248-F5H2F3 — high priority" [ref=e3691] [cursor=pointer]
+              - button "CAS-3068191-R8D1V4 — high priority" [ref=e3693] [cursor=pointer]
+              - button "CAS-3069071-F7C9Y0 — high priority" [ref=e3695] [cursor=pointer]
+              - button "CAS-3069062-D0N1Y9 — high priority" [ref=e3697] [cursor=pointer]
+              - button "CAS-3069052-Y5S7K0 — high priority" [ref=e3699] [cursor=pointer]
+              - button "CAS-3069006-B0L1V1 — high priority" [ref=e3701] [cursor=pointer]
+              - button "CAS-3068994-P7V6F1 — high priority" [ref=e3703] [cursor=pointer]
+              - button "CAS-3068755-B2K8W5 — high priority" [ref=e3705] [cursor=pointer]
+              - button "CAS-3068747-Z3S4H2 — high priority" [ref=e3707] [cursor=pointer]
+              - button "CAS-3067606-W6F5F9 — high priority" [ref=e3709] [cursor=pointer]
+              - button "CAS-3067475-G5V9K6 — high priority" [ref=e3711] [cursor=pointer]
+              - button "CAS-3067154-T8D9S5 — high priority" [ref=e3713] [cursor=pointer]
+              - button "CAS-3066918-X4T3F2 — high priority" [ref=e3715] [cursor=pointer]
+              - button "CAS-3065901-J5N1Q4 — high priority" [ref=e3717] [cursor=pointer]
+              - button "CAS-3065579-N1V8Y0 — high priority" [ref=e3719] [cursor=pointer]
+              - button "CAS-3065576-M7M6B6 — high priority" [ref=e3721] [cursor=pointer]
+              - button "CAS-3065274-T2V2M8 — high priority" [ref=e3723] [cursor=pointer]
+              - button "CAS-3063941-Q6C1W1 — high priority" [ref=e3725] [cursor=pointer]
+              - button "CAS-3063693-Z5B1F6 — high priority" [ref=e3727] [cursor=pointer]
+              - button "CAS-3063614-P1N2V1 — high priority" [ref=e3729] [cursor=pointer]
+              - button "CAS-3063612-T2F6C0 — high priority" [ref=e3731] [cursor=pointer]
+              - button "CAS-3063259-V7M1J7 — high priority" [ref=e3733] [cursor=pointer]
+              - button "CAS-3062786-V3F2G0 — high priority" [ref=e3735] [cursor=pointer]
+              - button "CAS-3061606-T4S5K7 — high priority" [ref=e3737] [cursor=pointer]
+              - button "CAS-3061075-P4Z9R9 — high priority" [ref=e3739] [cursor=pointer]
+              - button "CAS-3060740-K0H6V9 — high priority" [ref=e3741] [cursor=pointer]
+              - button "CAS-3060704-D5F3X2 — high priority" [ref=e3743] [cursor=pointer]
+              - button "CAS-3060037-L4V1H2 — high priority" [ref=e3745] [cursor=pointer]
+              - button "CAS-3059833-C0S4N2 — high priority" [ref=e3747] [cursor=pointer]
+              - button "CAS-3059564-F2B6S9 — high priority" [ref=e3749] [cursor=pointer]
+              - button "CAS-3059377-K0Z4W9 — high priority" [ref=e3751] [cursor=pointer]
+              - button "CAS-3059200-R6P9B1 — high priority" [ref=e3753] [cursor=pointer]
+              - button "CAS-3058633-Q1Q7X8 — high priority" [ref=e3755] [cursor=pointer]
+              - button "CAS-3058576-C1K4W6 — high priority" [ref=e3757] [cursor=pointer]
+              - button "CAS-3058575-N7H9G5 — high priority" [ref=e3759] [cursor=pointer]
+              - button "CAS-3058502-C8C6S3 — high priority" [ref=e3761] [cursor=pointer]
+              - button "CAS-3058468-B3M6W3 — high priority" [ref=e3763] [cursor=pointer]
+              - button "CAS-3058462-M7L2Z3 — high priority" [ref=e3765] [cursor=pointer]
+              - button "CAS-3057985-W9N2Q8 — high priority" [ref=e3767] [cursor=pointer]
+              - button "CAS-3057473-H9D7F3 — high priority" [ref=e3769] [cursor=pointer]
+              - button "CAS-3056910-D5T4N1 — high priority" [ref=e3771] [cursor=pointer]
+              - button "CAS-3056697-L9M3Z9 — high priority" [ref=e3773] [cursor=pointer]
+              - button "CAS-3055197-Y8J3G3 — high priority" [ref=e3775] [cursor=pointer]
+              - button "CAS-3055163-R7Z4D1 — high priority" [ref=e3777] [cursor=pointer]
+              - button "CAS-3055071-G8T2J3 — high priority" [ref=e3779] [cursor=pointer]
+              - button "CAS-3054327-Q5H5B2 — high priority" [ref=e3781] [cursor=pointer]
+              - button "CAS-3054322-P6C1D8 — high priority" [ref=e3783] [cursor=pointer]
+              - button "CAS-3053829-W2L8X7 — high priority" [ref=e3785] [cursor=pointer]
+              - button "CAS-3053500-N0Y8C6 — high priority" [ref=e3787] [cursor=pointer]
+              - button "CAS-3053402-K2H4W2 — high priority" [ref=e3789] [cursor=pointer]
+              - button "CAS-3053120-M9K7J6 — high priority" [ref=e3791] [cursor=pointer]
+              - button "CAS-3053119-V9Q6R5 — high priority" [ref=e3793] [cursor=pointer]
+              - button "CAS-3053069-X6X9P1 — high priority" [ref=e3795] [cursor=pointer]
+              - button "CAS-3052813-T5Z3K5 — high priority" [ref=e3797] [cursor=pointer]
+              - button "CAS-3052764-R1R3D9 — high priority" [ref=e3799] [cursor=pointer]
+              - button "CAS-3052658-P6B2D9 — high priority" [ref=e3801] [cursor=pointer]
+              - button "CAS-3052656-M0G2L3 — high priority" [ref=e3803] [cursor=pointer]
+              - button "CAS-3052654-C5G9V4 — high priority" [ref=e3805] [cursor=pointer]
+              - button "CAS-3052653-C8M3Q4 — high priority" [ref=e3807] [cursor=pointer]
+              - button "CAS-3052595-L1F2F4 — high priority" [ref=e3809] [cursor=pointer]
+              - button "CAS-3052594-F3Z2R7 — high priority" [ref=e3811] [cursor=pointer]
+          - generic:
+            - generic [ref=e3813]:
+              - button "Zoom in" [ref=e3814] [cursor=pointer]: +
+              - button "Zoom out" [ref=e3815] [cursor=pointer]: −
+            - generic [ref=e3816]:
+              - link "Leaflet" [ref=e3817] [cursor=pointer]:
+                - /url: https://leafletjs.com
+              - text: "| ©"
+              - link "OpenStreetMap" [ref=e3822] [cursor=pointer]:
+                - /url: https://www.openstreetmap.org/copyright
+              - text: contributors
+      - generic [ref=e3823]:
+        - generic [ref=e3824]:
+          - generic [ref=e3825]: Layers & filters
+          - generic [ref=e3826] [cursor=pointer]:
+            - checkbox "311 requests (review signal, not confirmed violations)" [checked] [ref=e3827]
+            - text: 311 requests (review signal, not confirmed violations)
+          - generic [ref=e3828] [cursor=pointer]:
+            - checkbox "GBFS vehicle positions" [checked] [ref=e3829]
+            - text: GBFS vehicle positions
+          - generic [ref=e3830] [cursor=pointer]:
+            - checkbox "Cross-vendor flags" [checked] [ref=e3831]
+            - text: Cross-vendor flags
+          - generic [ref=e3832] [cursor=pointer]:
+            - checkbox "Policy boundaries" [checked] [ref=e3833]
+            - text: Policy boundaries
+          - generic [ref=e3834] [cursor=pointer]:
+            - checkbox "Columbus Ride Hubs (100 m counts)" [ref=e3835]
+            - text: Columbus Ride Hubs (100 m counts)
+          - generic [ref=e3836] [cursor=pointer]:
+            - checkbox "Vendor observation log" [ref=e3837]
+            - text: Vendor observation log
+          - generic [ref=e3838]:
+            - generic [ref=e3839] [cursor=pointer]: Operator
+            - combobox "Operator" [ref=e3840]:
+              - option "All" [selected]
+              - option "Veo"
+              - option "Spin"
+          - generic [ref=e3841]:
+            - generic [ref=e3842] [cursor=pointer]: Availability
+            - combobox "Availability" [ref=e3843]:
+              - option "All" [selected]
+              - option "Available"
+              - option "Unavailable"
+        - generic [ref=e3844]:
+          - generic [ref=e3845]: Legend
+          - generic [ref=e3846]: 311 — critical (ADA ramp/entrance)
+          - generic [ref=e3848]: 311 — high (ADA concern / sidewalk pile)
+          - generic [ref=e3850]: 311 — standard
+          - generic [ref=e3852]: GBFS — Veo
+          - generic [ref=e3854]: GBFS — Spin
+          - generic [ref=e3856]: Columbus Ride Hub · badge = vehicles within 100 m
+          - generic [ref=e3858]: Vendor observation review area
+          - generic [ref=e3860]: Cross-vendor pile-up flag
+          - generic [ref=e3862]: Policy boundary
+        - generic [ref=e3864]:
+          - generic [ref=e3865]: Cross-vendor pile-ups
+          - generic [ref=e3866]:
+            - button "Show GBFS-FLAG-007 on the map" [ref=e3867] [cursor=pointer]:
+              - generic [ref=e3868]: GBFS-FLAG-007
+              - generic [ref=e3869]: 22 vehicles · Veo, Spin
+              - generic [ref=e3870]: 39.96615, -83.00160
+            - button "Show GBFS-FLAG-018 on the map" [ref=e3871] [cursor=pointer]:
+              - generic [ref=e3872]: GBFS-FLAG-018
+              - generic [ref=e3873]: 22 vehicles · Veo, Spin
+              - generic [ref=e3874]: 39.96221, -83.00419
+            - button "Show GBFS-FLAG-043 on the map" [ref=e3875] [cursor=pointer]:
+              - generic [ref=e3876]: GBFS-FLAG-043
+              - generic [ref=e3877]: 22 vehicles · Veo, Spin
+              - generic [ref=e3878]: 39.99709, -83.00759
+            - button "Show GBFS-FLAG-012 on the map" [ref=e3879] [cursor=pointer]:
+              - generic [ref=e3880]: GBFS-FLAG-012
+              - generic [ref=e3881]: 21 vehicles · Veo, Spin
+              - generic [ref=e3882]: 40.00380, -83.01297
+            - button "Show GBFS-FLAG-002 on the map" [ref=e3883] [cursor=pointer]:
+              - generic [ref=e3884]: GBFS-FLAG-002
+              - generic [ref=e3885]: 17 vehicles · Veo, Spin
+              - generic [ref=e3886]: 39.99929, -83.02150
+            - button "Show GBFS-FLAG-004 on the map" [ref=e3887] [cursor=pointer]:
+              - generic [ref=e3888]: GBFS-FLAG-004
+              - generic [ref=e3889]: 17 vehicles · Veo, Spin
+              - generic [ref=e3890]: 39.95850, -83.00278
+            - button "Show GBFS-FLAG-005 on the map" [ref=e3891] [cursor=pointer]:
+              - generic [ref=e3892]: GBFS-FLAG-005
+              - generic [ref=e3893]: 17 vehicles · Veo, Spin
+              - generic [ref=e3894]: 39.95880, -82.99998
+            - button "Show GBFS-FLAG-021 on the map" [ref=e3895] [cursor=pointer]:
+              - generic [ref=e3896]: GBFS-FLAG-021
+              - generic [ref=e3897]: 16 vehicles · Veo, Spin
+              - generic [ref=e3898]: 39.97048, -83.00230
+            - button "Show GBFS-FLAG-019 on the map" [ref=e3899] [cursor=pointer]:
+              - generic [ref=e3900]: GBFS-FLAG-019
+              - generic [ref=e3901]: 14 vehicles · Veo, Spin
+              - generic [ref=e3902]: 39.97440, -83.02231
+            - button "Show GBFS-FLAG-029 on the map" [ref=e3903] [cursor=pointer]:
+              - generic [ref=e3904]: GBFS-FLAG-029
+              - generic [ref=e3905]: 14 vehicles · Veo, Spin
+              - generic [ref=e3906]: 39.99201, -83.00651
+            - button "Show GBFS-FLAG-009 on the map" [ref=e3907] [cursor=pointer]:
+              - generic [ref=e3908]: GBFS-FLAG-009
+              - generic [ref=e3909]: 12 vehicles · Veo, Spin
+              - generic [ref=e3910]: 39.96342, -82.99799
+            - button "Show GBFS-FLAG-024 on the map" [ref=e3911] [cursor=pointer]:
+              - generic [ref=e3912]: GBFS-FLAG-024
+              - generic [ref=e3913]: 12 vehicles · Veo, Spin
+              - generic [ref=e3914]: 39.96362, -83.00070
+            - button "Show GBFS-FLAG-013 on the map" [ref=e3915] [cursor=pointer]:
+              - generic [ref=e3916]: GBFS-FLAG-013
+              - generic [ref=e3917]: 11 vehicles · Veo, Spin
+              - generic [ref=e3918]: 39.96200, -83.00047
+            - button "Show GBFS-FLAG-036 on the map" [ref=e3919] [cursor=pointer]:
+              - generic [ref=e3920]: GBFS-FLAG-036
+              - generic [ref=e3921]: 11 vehicles · Veo, Spin
+              - generic [ref=e3922]: 39.97340, -83.00472
+            - button "Show GBFS-FLAG-045 on the map" [ref=e3923] [cursor=pointer]:
+              - generic [ref=e3924]: GBFS-FLAG-045
+              - generic [ref=e3925]: 11 vehicles · Veo, Spin
+              - generic [ref=e3926]: 39.97163, -83.00245
+            - button "Show GBFS-FLAG-026 on the map" [ref=e3927] [cursor=pointer]:
+              - generic [ref=e3928]: GBFS-FLAG-026
+              - generic [ref=e3929]: 10 vehicles · Veo, Spin
+              - generic [ref=e3930]: 39.99405, -83.00698
+            - button "Show GBFS-FLAG-032 on the map" [ref=e3931] [cursor=pointer]:
+              - generic [ref=e3932]: GBFS-FLAG-032
+              - generic [ref=e3933]: 10 vehicles · Veo, Spin
+              - generic [ref=e3934]: 40.01469, -83.00020
+            - button "Show GBFS-FLAG-006 on the map" [ref=e3935] [cursor=pointer]:
+              - generic [ref=e3936]: GBFS-FLAG-006
+              - generic [ref=e3937]: 9 vehicles · Veo, Spin
+              - generic [ref=e3938]: 39.96413, -82.99854
+            - button "Show GBFS-FLAG-017 on the map" [ref=e3939] [cursor=pointer]:
+              - generic [ref=e3940]: GBFS-FLAG-017
+              - generic [ref=e3941]: 9 vehicles · Veo, Spin
+              - generic [ref=e3942]: 39.99012, -83.00591
+            - button "Show GBFS-FLAG-039 on the map" [ref=e3943] [cursor=pointer]:
+              - generic [ref=e3944]: GBFS-FLAG-039
+              - generic [ref=e3945]: 9 vehicles · Veo, Spin
+              - generic [ref=e3946]: 39.98406, -83.00513
+            - button "Show GBFS-FLAG-059 on the map" [ref=e3947] [cursor=pointer]:
+              - generic [ref=e3948]: GBFS-FLAG-059
+              - generic [ref=e3949]: 9 vehicles · Veo, Spin
+              - generic [ref=e3950]: 39.96079, -83.01271
+            - button "Show GBFS-FLAG-003 on the map" [ref=e3951] [cursor=pointer]:
+              - generic [ref=e3952]: GBFS-FLAG-003
+              - generic [ref=e3953]: 8 vehicles · Veo, Spin
+              - generic [ref=e3954]: 40.00592, -83.00931
+            - button "Show GBFS-FLAG-008 on the map" [ref=e3955] [cursor=pointer]:
+              - generic [ref=e3956]: GBFS-FLAG-008
+              - generic [ref=e3957]: 8 vehicles · Veo, Spin
+              - generic [ref=e3958]: 39.97878, -83.00405
+            - button "Show GBFS-FLAG-016 on the map" [ref=e3959] [cursor=pointer]:
+              - generic [ref=e3960]: GBFS-FLAG-016
+              - generic [ref=e3961]: 8 vehicles · Veo, Spin
+              - generic [ref=e3962]: 39.99393, -82.98337
+            - button "Show GBFS-FLAG-054 on the map" [ref=e3963] [cursor=pointer]:
+              - generic [ref=e3964]: GBFS-FLAG-054
+              - generic [ref=e3965]: 8 vehicles · Veo, Spin
+              - generic [ref=e3966]: 40.00316, -82.99845
+            - button "Show GBFS-FLAG-001 on the map" [ref=e3967] [cursor=pointer]:
+              - generic [ref=e3968]: GBFS-FLAG-001
+              - generic [ref=e3969]: 7 vehicles · Veo, Spin
+              - generic [ref=e3970]: 39.97853, -83.00547
+            - button "Show GBFS-FLAG-014 on the map" [ref=e3971] [cursor=pointer]:
+              - generic [ref=e3972]: GBFS-FLAG-014
+              - generic [ref=e3973]: 7 vehicles · Veo, Spin
+              - generic [ref=e3974]: 39.97455, -83.00335
+            - button "Show GBFS-FLAG-041 on the map" [ref=e3975] [cursor=pointer]:
+              - generic [ref=e3976]: GBFS-FLAG-041
+              - generic [ref=e3977]: 7 vehicles · Veo, Spin
+              - generic [ref=e3978]: 39.95214, -82.98259
+            - button "Show GBFS-FLAG-046 on the map" [ref=e3979] [cursor=pointer]:
+              - generic [ref=e3980]: GBFS-FLAG-046
+              - generic [ref=e3981]: 7 vehicles · Veo, Spin
+              - generic [ref=e3982]: 39.99593, -83.00736
+            - button "Show GBFS-FLAG-057 on the map" [ref=e3983] [cursor=pointer]:
+              - generic [ref=e3984]: GBFS-FLAG-057
+              - generic [ref=e3985]: 7 vehicles · Veo, Spin
+              - generic [ref=e3986]: 39.97693, -83.00262
+            - button "Show GBFS-FLAG-015 on the map" [ref=e3987] [cursor=pointer]:
+              - generic [ref=e3988]: GBFS-FLAG-015
+              - generic [ref=e3989]: 6 vehicles · Veo, Spin
+              - generic [ref=e3990]: 39.98014, -83.00492
+            - button "Show GBFS-FLAG-025 on the map" [ref=e3991] [cursor=pointer]:
+              - generic [ref=e3992]: GBFS-FLAG-025
+              - generic [ref=e3993]: 6 vehicles · Veo, Spin
+              - generic [ref=e3994]: 39.96029, -82.98683
+            - button "Show GBFS-FLAG-027 on the map" [ref=e3995] [cursor=pointer]:
+              - generic [ref=e3996]: GBFS-FLAG-027
+              - generic [ref=e3997]: 6 vehicles · Veo, Spin
+              - generic [ref=e3998]: 39.99417, -83.00577
+            - button "Show GBFS-FLAG-035 on the map" [ref=e3999] [cursor=pointer]:
+              - generic [ref=e4000]: GBFS-FLAG-035
+              - generic [ref=e4001]: 6 vehicles · Veo, Spin
+              - generic [ref=e4002]: 39.97745, -83.00272
+            - button "Show GBFS-FLAG-040 on the map" [ref=e4003] [cursor=pointer]:
+              - generic [ref=e4004]: GBFS-FLAG-040
+              - generic [ref=e4005]: 6 vehicles · Veo, Spin
+              - generic [ref=e4006]: 39.95860, -83.00174
+            - button "Show GBFS-FLAG-048 on the map" [ref=e4007] [cursor=pointer]:
+              - generic [ref=e4008]: GBFS-FLAG-048
+              - generic [ref=e4009]: 6 vehicles · Veo, Spin
+              - generic [ref=e4010]: 39.97806, -83.00263
+            - button "Show GBFS-FLAG-052 on the map" [ref=e4011] [cursor=pointer]:
+              - generic [ref=e4012]: GBFS-FLAG-052
+              - generic [ref=e4013]: 6 vehicles · Veo, Spin
+              - generic [ref=e4014]: 40.00602, -83.00885
+            - button "Show GBFS-FLAG-066 on the map" [ref=e4015] [cursor=pointer]:
+              - generic [ref=e4016]: GBFS-FLAG-066
+              - generic [ref=e4017]: 6 vehicles · Veo, Spin
+              - generic [ref=e4018]: 39.96908, -83.00129
+            - button "Show GBFS-FLAG-011 on the map" [ref=e4019] [cursor=pointer]:
+              - generic [ref=e4020]: GBFS-FLAG-011
+              - generic [ref=e4021]: 5 vehicles · Veo, Spin
+              - generic [ref=e4022]: 39.95615, -83.01099
+            - button "Show GBFS-FLAG-033 on the map" [ref=e4023] [cursor=pointer]:
+              - generic [ref=e4024]: GBFS-FLAG-033
+              - generic [ref=e4025]: 5 vehicles · Veo, Spin
+              - generic [ref=e4026]: 39.97250, -83.00474
+            - button "Show GBFS-FLAG-038 on the map" [ref=e4027] [cursor=pointer]:
+              - generic [ref=e4028]: GBFS-FLAG-038
+              - generic [ref=e4029]: 5 vehicles · Veo, Spin
+              - generic [ref=e4030]: 39.97579, -83.00258
+            - button "Show GBFS-FLAG-042 on the map" [ref=e4031] [cursor=pointer]:
+              - generic [ref=e4032]: GBFS-FLAG-042
+              - generic [ref=e4033]: 5 vehicles · Veo, Spin
+              - generic [ref=e4034]: 39.95716, -83.00363
+            - button "Show GBFS-FLAG-047 on the map" [ref=e4035] [cursor=pointer]:
+              - generic [ref=e4036]: GBFS-FLAG-047
+              - generic [ref=e4037]: 5 vehicles · Veo, Spin
+              - generic [ref=e4038]: 39.99407, -83.00635
+            - button "Show GBFS-FLAG-050 on the map" [ref=e4039] [cursor=pointer]:
+              - generic [ref=e4040]: GBFS-FLAG-050
+              - generic [ref=e4041]: 5 vehicles · Veo, Spin
+              - generic [ref=e4042]: 39.95644, -82.99966
+            - button "Show GBFS-FLAG-053 on the map" [ref=e4043] [cursor=pointer]:
+              - generic [ref=e4044]: GBFS-FLAG-053
+              - generic [ref=e4045]: 5 vehicles · Veo, Spin
+              - generic [ref=e4046]: 39.95836, -83.00318
+            - button "Show GBFS-FLAG-055 on the map" [ref=e4047] [cursor=pointer]:
+              - generic [ref=e4048]: GBFS-FLAG-055
+              - generic [ref=e4049]: 5 vehicles · Veo, Spin
+              - generic [ref=e4050]: 40.00484, -83.00902
+            - button "Show GBFS-FLAG-056 on the map" [ref=e4051] [cursor=pointer]:
+              - generic [ref=e4052]: GBFS-FLAG-056
+              - generic [ref=e4053]: 5 vehicles · Veo, Spin
+              - generic [ref=e4054]: 39.97091, -83.00098
+            - button "Show GBFS-FLAG-058 on the map" [ref=e4055] [cursor=pointer]:
+              - generic [ref=e4056]: GBFS-FLAG-058
+              - generic [ref=e4057]: 5 vehicles · Veo, Spin
+              - generic [ref=e4058]: 39.96296, -82.99761
+            - button "Show GBFS-FLAG-060 on the map" [ref=e4059] [cursor=pointer]:
+              - generic [ref=e4060]: GBFS-FLAG-060
+              - generic [ref=e4061]: 5 vehicles · Veo, Spin
+              - generic [ref=e4062]: 39.97223, -83.00262
+            - button "Show GBFS-FLAG-063 on the map" [ref=e4063] [cursor=pointer]:
+              - generic [ref=e4064]: GBFS-FLAG-063
+              - generic [ref=e4065]: 5 vehicles · Veo, Spin
+              - generic [ref=e4066]: 39.99801, -83.00771
+            - button "Show GBFS-FLAG-064 on the map" [ref=e4067] [cursor=pointer]:
+              - generic [ref=e4068]: GBFS-FLAG-064
+              - generic [ref=e4069]: 5 vehicles · Veo, Spin
+              - generic [ref=e4070]: 39.95764, -83.00634
+            - button "Show GBFS-FLAG-068 on the map" [ref=e4071] [cursor=pointer]:
+              - generic [ref=e4072]: GBFS-FLAG-068
+              - generic [ref=e4073]: 5 vehicles · Veo, Spin
+              - generic [ref=e4074]: 40.01290, -82.96806
+            - button "Show GBFS-FLAG-010 on the map" [ref=e4075] [cursor=pointer]:
+              - generic [ref=e4076]: GBFS-FLAG-010
+              - generic [ref=e4077]: 4 vehicles · Veo, Spin
+              - generic [ref=e4078]: 39.94657, -83.00027
+            - button "Show GBFS-FLAG-020 on the map" [ref=e4079] [cursor=pointer]:
+              - generic [ref=e4080]: GBFS-FLAG-020
+              - generic [ref=e4081]: 4 vehicles · Veo, Spin
+              - generic [ref=e4082]: 39.96160, -83.00203
+            - button "Show GBFS-FLAG-022 on the map" [ref=e4083] [cursor=pointer]:
+              - generic [ref=e4084]: GBFS-FLAG-022
+              - generic [ref=e4085]: 4 vehicles · Veo, Spin
+              - generic [ref=e4086]: 39.98416, -83.01912
+            - button "Show GBFS-FLAG-023 on the map" [ref=e4087] [cursor=pointer]:
+              - generic [ref=e4088]: GBFS-FLAG-023
+              - generic [ref=e4089]: 4 vehicles · Veo, Spin
+              - generic [ref=e4090]: 39.97705, -83.00355
+            - button "Show GBFS-FLAG-028 on the map" [ref=e4091] [cursor=pointer]:
+              - generic [ref=e4092]: GBFS-FLAG-028
+              - generic [ref=e4093]: 4 vehicles · Veo, Spin
+              - generic [ref=e4094]: 39.95991, -83.00867
+            - button "Show GBFS-FLAG-030 on the map" [ref=e4095] [cursor=pointer]:
+              - generic [ref=e4096]: GBFS-FLAG-030
+              - generic [ref=e4097]: 4 vehicles · Veo, Spin
+              - generic [ref=e4098]: 39.95038, -83.00318
+            - button "Show GBFS-FLAG-031 on the map" [ref=e4099] [cursor=pointer]:
+              - generic [ref=e4100]: GBFS-FLAG-031
+              - generic [ref=e4101]: 4 vehicles · Veo, Spin
+              - generic [ref=e4102]: 39.97534, -83.00469
+            - button "Show GBFS-FLAG-034 on the map" [ref=e4103] [cursor=pointer]:
+              - generic [ref=e4104]: GBFS-FLAG-034
+              - generic [ref=e4105]: 4 vehicles · Veo, Spin
+              - generic [ref=e4106]: 39.98569, -82.99989
+            - button "Show GBFS-FLAG-037 on the map" [ref=e4107] [cursor=pointer]:
+              - generic [ref=e4108]: GBFS-FLAG-037
+              - generic [ref=e4109]: 4 vehicles · Veo, Spin
+              - generic [ref=e4110]: 39.96843, -83.00371
+            - button "Show GBFS-FLAG-044 on the map" [ref=e4111] [cursor=pointer]:
+              - generic [ref=e4112]: GBFS-FLAG-044
+              - generic [ref=e4113]: 4 vehicles · Veo, Spin
+              - generic [ref=e4114]: 39.99341, -83.00648
+            - button "Show GBFS-FLAG-049 on the map" [ref=e4115] [cursor=pointer]:
+              - generic [ref=e4116]: GBFS-FLAG-049
+              - generic [ref=e4117]: 4 vehicles · Veo, Spin
+              - generic [ref=e4118]: 39.99629, -83.02749
+            - button "Show GBFS-FLAG-051 on the map" [ref=e4119] [cursor=pointer]:
+              - generic [ref=e4120]: GBFS-FLAG-051
+              - generic [ref=e4121]: 4 vehicles · Veo, Spin
+              - generic [ref=e4122]: 39.96438, -82.99990
+            - button "Show GBFS-FLAG-061 on the map" [ref=e4123] [cursor=pointer]:
+              - generic [ref=e4124]: GBFS-FLAG-061
+              - generic [ref=e4125]: 4 vehicles · Veo, Spin
+              - generic [ref=e4126]: 39.96294, -83.00056
+            - button "Show GBFS-FLAG-062 on the map" [ref=e4127] [cursor=pointer]:
+              - generic [ref=e4128]: GBFS-FLAG-062
+              - generic [ref=e4129]: 4 vehicles · Veo, Spin
+              - generic [ref=e4130]: 39.97136, -83.00256
+            - button "Show GBFS-FLAG-065 on the map" [ref=e4131] [cursor=pointer]:
+              - generic [ref=e4132]: GBFS-FLAG-065
+              - generic [ref=e4133]: 4 vehicles · Veo, Spin
+              - generic [ref=e4134]: 39.95752, -83.00152
+            - button "Show GBFS-FLAG-067 on the map" [ref=e4135] [cursor=pointer]:
+              - generic [ref=e4136]: GBFS-FLAG-067
+              - generic [ref=e4137]: 4 vehicles · Veo, Spin
+              - generic [ref=e4138]: 40.00287, -83.00881
+            - button "Show GBFS-FLAG-069 on the map" [ref=e4139] [cursor=pointer]:
+              - generic [ref=e4140]: GBFS-FLAG-069
+              - generic [ref=e4141]: 4 vehicles · Veo, Spin
+              - generic [ref=e4142]: 39.97155, -83.00486
+    - region [ref=e4143]:
+      - generic [ref=e4144]:
+        - generic [ref=e4145]:
+          - paragraph [ref=e4146]: GBFS snapshot-to-snapshot
+          - heading "Vendor observation log" [level=2] [ref=e4147]
+        - paragraph [ref=e4148]: A running record of what each vendor’s published fleet appears to be doing between snapshots—fleet size, range, availability, and geographic concentration. No 311 signals are used.
+      - article [ref=e4150]:
+        - generic [ref=e4151]:
+          - strong [ref=e4152]: Snapshot Jul 29, 2026, 12:10 AM
+          - generic [ref=e4153]: Compared with Jul 27, 2026, 12:39 PM
+        - list [ref=e4154]:
+          - listitem [ref=e4155]:
+            - generic [ref=e4156]:
+              - generic [ref=e4157]: Spin
+              - paragraph [ref=e4158]: Spin published 1,289 vehicles, down 50 (3.7%) from the prior snapshot.
+              - generic [ref=e4159]: Fleet Size
+          - listitem [ref=e4160]:
+            - generic [ref=e4161]:
+              - generic [ref=e4162]: Spin
+              - paragraph [ref=e4163]: Spin’s median published range was essentially unchanged at 16.1 miles (-0.1 miles versus the prior snapshot).
+              - generic [ref=e4164]: Published Range
+          - listitem [ref=e4165]:
+            - button "Show Downtown review area on the map" [ref=e4166] [cursor=pointer]:
+              - generic [ref=e4167]: Spin
+              - paragraph [ref=e4168]: Spin had 313 vehicles in the Downtown review area, down 55 (14.9%) from the prior snapshot.
+              - generic [ref=e4169]: Geographic Concentration · map
+          - listitem [ref=e4170]:
+            - button "Show Short North review area on the map" [ref=e4171] [cursor=pointer]:
+              - generic [ref=e4172]: Spin
+              - paragraph [ref=e4173]: Spin had 210 vehicles in the Short North review area, down 43 (17.0%) from the prior snapshot.
+              - generic [ref=e4174]: Geographic Concentration · map
+          - listitem [ref=e4175]:
+            - generic [ref=e4176]:
+              - generic [ref=e4177]: Veo
+              - paragraph [ref=e4178]: Veo published 2,239 vehicles, up 32 (1.4%) from the prior snapshot.
+              - generic [ref=e4179]: Fleet Size
+          - listitem [ref=e4180]:
+            - generic [ref=e4181]:
+              - generic [ref=e4182]: Veo
+              - paragraph [ref=e4183]: Veo’s median published range was higher at 21.8 miles (+1.4 miles versus the prior snapshot).
+              - generic [ref=e4184]: Published Range
+          - listitem [ref=e4185]:
+            - button "Show Arena District review area on the map" [ref=e4186] [cursor=pointer]:
+              - generic [ref=e4187]: Veo
+              - paragraph [ref=e4188]: Veo had 150 vehicles in the Arena District review area, down 25 (14.3%) from the prior snapshot.
+              - generic [ref=e4189]: Geographic Concentration · map
+      - paragraph [ref=e4190]: Point-in-time public GBFS observations; changes do not establish deployment intent, demand, service quality, or causation.
+    - region [ref=e4191]:
+      - paragraph [ref=e4192]: Open workflow · public portal
+      - heading "Install the Columbus 311 case lookup" [level=2] [ref=e4193]
+      - paragraph [ref=e4194]: A portable, read-only workflow for finding a Columbus 311 case by address and CAS ID, then separating portal facts from vendor and accessibility evidence. Claude accepts the ZIP as a native custom skill; ChatGPT and Gemini use the same Markdown as reusable project or Gem context.
+      - generic "Skill downloads" [ref=e4195]:
+        - link "Download skill · ZIP" [ref=e4196] [cursor=pointer]:
+          - /url: downloads/columbus-311-case-lookup.zip
+        - link "Download instructions · Markdown" [ref=e4197] [cursor=pointer]:
+          - /url: downloads/columbus-311-case-lookup.txt
+        - link "Read full installation guide" [ref=e4198] [cursor=pointer]:
+          - /url: downloads/columbus-311-case-lookup/INSTALL.md
+      - generic [ref=e4199]:
+        - article [ref=e4200]:
+          - heading "Claude" [level=3] [ref=e4201]
+          - generic [ref=e4202]: Native custom skill
+          - list [ref=e4203]:
+            - listitem [ref=e4204]: Download the ZIP package.
+            - listitem [ref=e4205]: Enable code execution in Settings → Capabilities.
+            - listitem [ref=e4206]: Open Customize → Skills → + Create skill → Upload a skill.
+            - listitem [ref=e4207]: Upload, enable, and invoke it with a CAS ID and address.
+          - paragraph [ref=e4208]:
+            - link "Claude’s official skill guide" [ref=e4209] [cursor=pointer]:
+              - /url: https://support.claude.com/en/articles/12512180-use-skills-in-claude
+        - article [ref=e4210]:
+          - heading "ChatGPT" [level=3] [ref=e4211]
+          - generic [ref=e4212]: Project instructions + source
+          - list [ref=e4213]:
+            - listitem [ref=e4214]: Download the Markdown instructions.
+            - listitem [ref=e4215]: Create a Project and upload the file as a source.
+            - listitem [ref=e4216]: Add a Project instruction to follow the workflow for Columbus CAS IDs.
+            - listitem [ref=e4217]: Supply both the case ID and address; allow web access when asked.
+          - paragraph [ref=e4218]:
+            - link "OpenAI’s official Projects guide" [ref=e4219] [cursor=pointer]:
+              - /url: https://help.openai.com/en/articles/10169521-projects-in-chatgpt
+        - article [ref=e4220]:
+          - heading "Gemini" [level=3] [ref=e4221]
+          - generic [ref=e4222]: Gem instructions + knowledge
+          - list [ref=e4223]:
+            - listitem [ref=e4224]: Download the Markdown instructions.
+            - listitem [ref=e4225]: Open Gems → New Gem in the Gemini web app.
+            - listitem [ref=e4226]: Add the workflow to the Gem instructions and upload the file under Knowledge.
+            - listitem [ref=e4227]: Save, then supply both the case ID and address.
+          - paragraph [ref=e4228]:
+            - link "Google’s official Gems guide" [ref=e4229] [cursor=pointer]:
+              - /url: https://support.google.com/gemini/answer/15146780?co=GENIE.Platform%3DDesktop&hl=en
+      - paragraph [ref=e4230]: Review AI instruction packages before installing them. This workflow uses a public, read-only portal, requires no login, and should never submit, edit, or comment on a 311 request.
+    - region [ref=e4231]:
+      - paragraph [ref=e4232]: Reference artifacts · July 2026
+      - heading "Forecast source guides and inventories" [level=2] [ref=e4233]
+      - paragraph [ref=e4234]: Downloadable working artifacts document the event, home-game, ISO-week, and weather context used for demand planning. The ChatGPT and Claude files are retained as separate reference sets so their provenance remains visible.
+      - generic [ref=e4235]:
+        - article [ref=e4236]:
+          - generic [ref=e4237]: ChatGPT · Field Ledger edition
+          - heading "ChatGPT Forecast" [level=3] [ref=e4238]
+          - paragraph [ref=e4239]: Branded operating guide with event and game separation, ISO-week correlation, historical weather, projected weather-risk caveats, and source methodology.
+          - generic [ref=e4240]:
+            - link "Word guide" [ref=e4241] [cursor=pointer]:
+              - /url: ChatGPT%20Forecast.docx
+            - link "Excel inventory" [ref=e4242] [cursor=pointer]:
+              - /url: ChatGPT%20Forecast.xlsx
+        - article [ref=e4243]:
+          - generic [ref=e4244]: Claude · Reference edition
+          - heading "Claude Forecast" [level=3] [ref=e4245]
+          - paragraph [ref=e4246]: Companion source guide and historical event workbook retained as supplied for comparison and reference.
+          - generic [ref=e4247]:
+            - link "Word guide" [ref=e4248] [cursor=pointer]:
+              - /url: Claude%20Forecast%20-%20Columbus_Micromobility_Event_Demand_Sources_branded.docx
+            - link "Excel inventory" [ref=e4249] [cursor=pointer]:
+              - /url: Claude%20Forecast%200%20Columbus_Micromobility_Events_Historical_2024-2026.xlsx
+      - generic "Forecast project cards" [ref=e4250]:
+        - figure [ref=e4251]:
+          - img "ChatGPT Forecast project card summarizing canonical events, home games, weather-risk days, and the ISO-week join" [ref=e4252]
+          - generic [ref=e4253]:
+            - text: ChatGPT Forecast card ·
+            - link "SVG" [ref=e4254] [cursor=pointer]:
+              - /url: demand-forecast-card.svg
+            - text: ·
+            - link "PNG" [ref=e4255] [cursor=pointer]:
+              - /url: demand-forecast-card.png
+        - figure [ref=e4256]:
+          - img "Claude Forecast project card summarizing event records, ISO-week series, projected weeks, and the weekly join" [ref=e4257]
+          - generic [ref=e4258]:
+            - text: Claude Forecast card ·
+            - link "SVG" [ref=e4259] [cursor=pointer]:
+              - /url: claude-demand-forecast-card.svg
+            - text: ·
+            - link "PNG" [ref=e4260] [cursor=pointer]:
+              - /url: claude-demand-forecast-card.png
+      - generic "Comparable ChatGPT and Claude analysis charts" [ref=e4261]:
+        - figure [ref=e4262]:
+          - img "ChatGPT Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026" [ref=e4263]
+          - generic [ref=e4264]:
+            - text: ChatGPT Analysis · workbook-derived projection ·
+            - link "SVG" [ref=e4265] [cursor=pointer]:
+              - /url: demand-forecast-chart.svg
+            - text: ·
+            - link "PNG" [ref=e4266] [cursor=pointer]:
+              - /url: demand-forecast-chart.png
+        - figure [ref=e4267]:
+          - img "Claude Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026" [ref=e4268]
+          - generic [ref=e4269]:
+            - text: Claude Analysis · workbook-derived projection ·
+            - link "SVG" [ref=e4270] [cursor=pointer]:
+              - /url: claude-demand-forecast-chart.svg
+            - text: ·
+            - link "PNG" [ref=e4271] [cursor=pointer]:
+              - /url: claude-demand-forecast-chart.png
+  - contentinfo [ref=e4272]: © 2026 Steven Needham · Independent project, public data only.

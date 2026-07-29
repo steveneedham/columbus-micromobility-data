@@ -1,0 +1,155 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - heading "Columbus Micromobility — Observer View" [level=1] [ref=e5]
+        - generic [ref=e6]: Independent observer · public data only
+        - button "How to use this site" [ref=e7] [cursor=pointer]
+      - paragraph [ref=e8]: An independent, public-data-only look at Columbus shared-scooter operations — 311 requests, published vehicle positions, and policy boundaries. Built from public sources only; not affiliated with or using data from any employer.
+      - generic [ref=e9]:
+        - strong [ref=e10]: Snapshot, not live operations.
+        - text: Counts and timestamps describe public point-in-time data. Proximity, reports, and observations are review signals—not confirmed violations or vendor intent. Open “How to use this site” for methods and evidence boundaries.
+  - navigation "Site sections" [ref=e11]:
+    - generic [ref=e12]:
+      - link "Overview" [ref=e13] [cursor=pointer]:
+        - /url: "#overview"
+      - link "Map" [ref=e14] [cursor=pointer]:
+        - /url: "#map-workspace"
+      - link "Insights" [ref=e15] [cursor=pointer]:
+        - /url: "#insights"
+      - link "Tools" [ref=e16] [cursor=pointer]:
+        - /url: "#lookup-tool"
+      - link "Research library" [ref=e17] [cursor=pointer]:
+        - /url: research-library.html
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]: Map — source-labeled, public-data only
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]: Layers & filters
+          - generic "Map focus presets" [ref=e27]:
+            - generic [ref=e28]: Focus preset
+            - generic [ref=e29]:
+              - button "Overview" [ref=e30] [cursor=pointer]
+              - button "311 review" [ref=e31] [cursor=pointer]
+              - button "Fleet activity" [ref=e32] [cursor=pointer]
+              - button "Ride Hubs" [ref=e33] [cursor=pointer]
+            - button "Copy view link" [ref=e35] [cursor=pointer]
+          - generic [ref=e36] [cursor=pointer]:
+            - checkbox "311 requests (review signal, not confirmed violations)" [checked] [ref=e37]
+            - text: 311 requests (review signal, not confirmed violations)
+          - generic [ref=e38] [cursor=pointer]:
+            - checkbox "GBFS vehicle positions" [checked] [ref=e39]
+            - text: GBFS vehicle positions
+          - generic [ref=e40] [cursor=pointer]:
+            - checkbox "Cross-vendor flags" [checked] [ref=e41]
+            - text: Cross-vendor flags
+          - generic [ref=e42] [cursor=pointer]:
+            - checkbox "Policy boundaries" [checked] [ref=e43]
+            - text: Policy boundaries
+          - generic [ref=e44] [cursor=pointer]:
+            - checkbox "Populus MDS Geographies (110)" [ref=e45]
+            - text: Populus MDS Geographies (110)
+          - generic [ref=e46] [cursor=pointer]:
+            - checkbox "Columbus Ride Hubs (100 m counts)" [ref=e47]
+            - text: Columbus Ride Hubs (100 m counts)
+          - button "Open Ride Hub status dashboard" [ref=e48] [cursor=pointer]
+          - generic [ref=e49] [cursor=pointer]:
+            - checkbox "Vendor observation log" [ref=e50]
+            - text: Vendor observation log
+          - generic [ref=e51]:
+            - generic [ref=e52] [cursor=pointer]: Operator
+            - combobox "Operator" [ref=e53]:
+              - option "All" [selected]
+              - option "Veo"
+              - option "Spin"
+          - generic [ref=e54]:
+            - generic [ref=e55] [cursor=pointer]: Availability
+            - combobox "Availability" [ref=e56]:
+              - option "All" [selected]
+              - option "Available"
+              - option "Unavailable"
+        - group [ref=e57]:
+          - generic "Legend −" [ref=e58] [cursor=pointer]
+          - generic [ref=e59]:
+            - generic [ref=e60]: 311 — critical (ADA ramp/entrance)
+            - generic [ref=e62]: 311 — high (ADA concern / sidewalk pile)
+            - generic [ref=e64]: 311 — standard
+            - generic [ref=e66]: GBFS — Veo
+            - generic [ref=e68]: GBFS — Spin
+            - generic [ref=e70]: Columbus Ride Hub · badge = vehicles within 100 m
+            - generic [ref=e72]: Vendor observation review area
+            - generic [ref=e74]: Cross-vendor pile-up flag
+            - generic [ref=e76]: Policy boundary
+            - generic [ref=e78]: Populus MDS geography
+    - region [ref=e80]:
+      - generic [ref=e81]:
+        - generic [ref=e82]:
+          - paragraph [ref=e83]: Current snapshot signals
+          - heading "Insights" [level=2] [ref=e84]
+        - paragraph [ref=e85]: Review Ride Hub capacity signals, vendor changes between snapshots, or cross-vendor pile-ups. Every relevant result can take you back to the map.
+      - tablist "Insight views" [ref=e86]:
+        - tab "Ride Hubs" [selected] [ref=e87] [cursor=pointer]
+        - tab "CBD distribution" [ref=e88] [cursor=pointer]
+        - tab "Vendor changes" [ref=e89] [cursor=pointer]
+        - tab "Pile-ups" [ref=e90] [cursor=pointer]
+      - tabpanel "Ride Hubs" [ref=e91]:
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - heading "Ride Hub status dashboard" [level=3] [ref=e94]
+            - paragraph [ref=e95]: Compare empty and over-capacity proximity signals from the current GBFS snapshot.
+          - button "Open Ride Hub status" [ref=e96] [cursor=pointer]
+    - region [ref=e97]:
+      - paragraph [ref=e98]: Open workflow · public portal
+      - heading "Install the Columbus 311 case lookup" [level=2] [ref=e99]
+      - paragraph [ref=e100]: A portable, read-only workflow for finding a Columbus 311 case by address and CAS ID, then separating portal facts from vendor and accessibility evidence. Claude accepts the ZIP as a native custom skill; ChatGPT and Gemini use the same Markdown as reusable project or Gem context.
+      - generic "Skill downloads" [ref=e101]:
+        - link "Download skill · ZIP" [ref=e102] [cursor=pointer]:
+          - /url: downloads/columbus-311-case-lookup.zip
+        - link "Download instructions · Markdown" [ref=e103] [cursor=pointer]:
+          - /url: downloads/columbus-311-case-lookup.txt
+        - link "Read full installation guide" [ref=e104] [cursor=pointer]:
+          - /url: downloads/columbus-311-case-lookup/INSTALL.md
+      - generic [ref=e105]:
+        - article [ref=e106]:
+          - heading "Claude" [level=3] [ref=e107]
+          - generic [ref=e108]: Native custom skill
+          - list [ref=e109]:
+            - listitem [ref=e110]: Download the ZIP package.
+            - listitem [ref=e111]: Enable code execution in Settings → Capabilities.
+            - listitem [ref=e112]: Open Customize → Skills → + Create skill → Upload a skill.
+            - listitem [ref=e113]: Upload, enable, and invoke it with a CAS ID and address.
+          - paragraph [ref=e114]:
+            - link "Claude’s official skill guide" [ref=e115] [cursor=pointer]:
+              - /url: https://support.claude.com/en/articles/12512180-use-skills-in-claude
+        - article [ref=e116]:
+          - heading "ChatGPT" [level=3] [ref=e117]
+          - generic [ref=e118]: Project instructions + source
+          - list [ref=e119]:
+            - listitem [ref=e120]: Download the Markdown instructions.
+            - listitem [ref=e121]: Create a Project and upload the file as a source.
+            - listitem [ref=e122]: Add a Project instruction to follow the workflow for Columbus CAS IDs.
+            - listitem [ref=e123]: Supply both the case ID and address; allow web access when asked.
+          - paragraph [ref=e124]:
+            - link "OpenAI’s official Projects guide" [ref=e125] [cursor=pointer]:
+              - /url: https://help.openai.com/en/articles/10169521-projects-in-chatgpt
+        - article [ref=e126]:
+          - heading "Gemini" [level=3] [ref=e127]
+          - generic [ref=e128]: Gem instructions + knowledge
+          - list [ref=e129]:
+            - listitem [ref=e130]: Download the Markdown instructions.
+            - listitem [ref=e131]: Open Gems → New Gem in the Gemini web app.
+            - listitem [ref=e132]: Add the workflow to the Gem instructions and upload the file under Knowledge.
+            - listitem [ref=e133]: Save, then supply both the case ID and address.
+          - paragraph [ref=e134]:
+            - link "Google’s official Gems guide" [ref=e135] [cursor=pointer]:
+              - /url: https://support.google.com/gemini/answer/15146780?co=GENIE.Platform%3DDesktop&hl=en
+      - paragraph [ref=e136]: Review AI instruction packages before installing them. This workflow uses a public, read-only portal, requires no login, and should never submit, edit, or comment on a 311 request.
+    - region [ref=e137]:
+      - generic [ref=e138]:
+        - paragraph [ref=e139]: Separate reference collection
+        - heading "Research library" [level=2] [ref=e140]
+        - paragraph [ref=e141]: Forecast guides, source inventories, project cards, and comparable analysis charts now live in their own quieter reading space.
+      - link "Open research library →" [ref=e142] [cursor=pointer]:
+        - /url: research-library.html
+  - contentinfo [ref=e143]: © 2026 Steven Needham · Independent project, public data only.
