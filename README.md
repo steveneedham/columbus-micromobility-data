@@ -2,6 +2,13 @@
 
 An independent, public-data-only look at shared-scooter operations in Columbus, Ohio — 311 complaint activity, published vehicle positions, and city policy boundaries. Built and maintained by Steven Needham as a personal project. **Not affiliated with, endorsed by, or built using data from any current or former employer** — everything here comes from public sources: the City of Columbus 311 feed, published GBFS vehicle-position data, and Columbus's published mobility policy boundaries.
 
+## Project identity
+
+This project uses **Field Ledger**, an independent observer-oriented design system derived from Steven Needham's evidence-first practice while maintaining its own typography, palette, mark, and publication voice.
+
+- [Living design-system reference](design-system.html)
+- [Implementation guide](DESIGN_SYSTEM.md)
+
 ## Architecture
 
 ![Architecture diagram: public data sources feed the companion 311-Intel repo, which is the source for this repo's JSON snapshots, which are embedded into a single self-contained dashboard rendered in the browser](architecture.svg)
