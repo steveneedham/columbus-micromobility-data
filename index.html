@@ -12,6 +12,22 @@
   gtag('js', new Date());
   gtag('config', 'G-76JHMZJ82N');
 </script>
+<!-- PostHog product analytics · session replay disabled -->
+<script>
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+
+  if (location.protocol === "https:" && location.hostname === "steveneedham.github.io") {
+    posthog.init('phc_rshqFPsvRswuFx5GRpkifRgNwG8X7nA7fSbLnQPgUT3W', {
+      api_host: 'https://us.i.posthog.com',
+      defaults: '2026-05-30',
+      person_profiles: 'never',
+      disable_session_recording: true,
+      respect_dnt: true,
+      capture_pageview: true,
+      capture_pageleave: true
+    });
+  }
+</script>
 <link rel="icon" type="image/svg+xml" href="assets/field-ledger-mark.svg">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
@@ -712,20 +728,22 @@
       <div><p class="eyebrow">Reader guide</p><h2 id="site-guide-title">How to use this site</h2></div>
       <button type="button" class="guide-close" id="closeSiteGuide" aria-label="Close guide">×</button>
     </div>
-    <p class="guide-lede">Start with snapshot age, then use the map layers to ask a specific question. Every view is read-only and evidence-limited: proximity and reported conditions are review signals, not proof of a violation or vendor intent.</p>
+    <p class="guide-lede">Start with snapshot age, then use the map layers to ask a specific question. Every view is read-only and evidence-limited: proximity, distribution status, and reported conditions are review signals—not proof of a violation, enforcement action, or vendor intent.</p>
     <div class="guide-grid">
-      <section class="guide-item"><h3>1 · Check data age</h3><p>The four summary cards show record counts, the last refresh timestamp, and relative age for the 311, GBFS, pile-up, and policy snapshots.</p></section>
-      <section class="guide-item"><h3>2 · Toggle map layers</h3><p>On phones, select Layers &amp; filters over the map to open the control sheet. On larger screens, the controls remain beside the map.</p></section>
-      <section class="guide-item"><h3>3 · Read marker shapes</h3><p>311 reports use diamonds with priority colors. GBFS vehicles use vendor-colored circles. Ride Hubs use the purple hub sign, while pile-ups use outlined flags.</p></section>
-      <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow GBFS vehicle positions. Ride Hub proximity counts continue to use the complete current snapshot, independent of those display filters.</p></section>
-      <section class="guide-item"><h3>5 · Review insights</h3><p>Use the Ride Hubs, CBD distribution, Vendor changes, and Pile-ups tabs. Select any geographic finding to enable its layer and return to the relevant map area.</p></section>
-      <section class="guide-item"><h3>6 · Inspect Ride Hubs</h3><p>Open the Ride Hub Status dashboard to compare empty and capacity-exceeding proximity signals. Select any row to enable the hub layer and jump to its map marker.</p></section>
-      <section class="guide-item"><h3>7 · Research a 311 case</h3><p>Select a 311 diamond for its CAS ID, address, status, source link, and a button that copies a complete case-lookup prompt for your AI tool.</p></section>
-      <section class="guide-item"><h3>8 · Install the lookup workflow</h3><p>Below the observation log, download the native Claude skill ZIP or portable Markdown instructions for a ChatGPT Project or Gemini Gem.</p></section>
-      <section class="guide-item"><h3>9 · Follow vendor changes</h3><p>The perpetual observation history preserves every committed GBFS comparison for fleet size, published range, availability, and geographic concentration without using 311 reports.</p></section>
-      <section class="guide-item"><h3>10 · Use research artifacts</h3><p>Open the separate Research Library for downloadable forecast guides, inventories, project cards, and analysis charts with visible source provenance.</p></section>
+      <section class="guide-item"><h3>1 · Check data age</h3><p>The four summary cards show record counts, the last refresh timestamp, and relative age for the 311, GBFS, pile-up, and policy snapshots. Interpret every finding in the context of its collection time.</p></section>
+      <section class="guide-item"><h3>2 · Toggle map layers</h3><p>On phones, select Layers &amp; filters over the map to open the control sheet. On larger screens, the controls remain beside the map. Layers include 311 requests, GBFS vehicles, Ride Hubs, vendor review areas, pile-ups, policy boundaries, and published MDS geographies.</p></section>
+      <section class="guide-item"><h3>3 · Read map symbols</h3><p>311 requests use priority-colored diamonds; GBFS vehicles use vendor-colored circles; Ride Hubs use signed markers with nearby-vehicle badges. Dashed circles mark vendor review areas, outlined rings mark pile-ups, dashed lines mark policy boundaries, and shaded polygons mark MDS geographies.</p></section>
+      <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow the GBFS positions shown on the map. Ride Hub counts and distribution tables continue to use the complete active snapshot, independent of those display filters.</p></section>
+      <section class="guide-item"><h3>5 · Review insights</h3><p>Use the Ride Hubs, CBD distribution, Opportunity zones, Vendor changes, and Pile-ups tabs. Select a linked hub, geography, review area, or pile-up to enable its layer and return to the relevant map area.</p></section>
+      <section class="guide-item"><h3>6 · Read distribution status</h3><p>CBD status uses a 30% maximum: red is above 30%, yellow is 27–30%, and green is below 27%. Opportunity-zone status uses the supplied 5% minimum: red is below 4.5%, yellow is 4.5% to under 5%, and green is 5% or more. These point-in-time indicators remain provisional; read the note below each table for timing and source limitations.</p></section>
+      <section class="guide-item"><h3>7 · Inspect Ride Hubs</h3><p>Open the Ride Hub Status dashboard to compare empty and capacity-exceeding proximity signals. Select any row to enable the hub layer and jump to its map marker.</p></section>
+      <section class="guide-item"><h3>8 · Follow vendor changes</h3><p>The perpetual observation history preserves every committed GBFS comparison for fleet size, published range, availability, and geographic concentration without using 311 reports. Each entry shows ↑ Up, ↓ Down, or — Unchanged; geographic entries also jump to their review area on the map.</p></section>
+      <section class="guide-item"><h3>9 · Research a 311 case</h3><p>Select a 311 diamond for its CAS ID, address, status, source link, and a button that copies a complete case-lookup prompt for your AI tool.</p></section>
+      <section class="guide-item"><h3>10 · Install the lookup workflow</h3><p>Below the Insights section, download the native Claude skill ZIP or portable Markdown instructions for a ChatGPT Project or Gemini Gem.</p></section>
+      <section class="guide-item"><h3>11 · Focus and share a view</h3><p>Use a focus preset to select a purposeful layer combination. Copy view link preserves the active layers, vehicle filters, map center, and zoom so another reader can reopen the same workspace.</p></section>
+      <section class="guide-item"><h3>12 · Use research artifacts</h3><p>Open the separate Research Library for downloadable forecast guides, inventories, project cards, and analysis charts with visible source provenance.</p></section>
     </div>
-    <p class="guide-footnote">This is an independent public-data observer view—not a live dispatch system, official City record system, or confirmed-violation ledger. The site uses Google Analytics to measure aggregate usage.</p>
+    <p class="guide-footnote">This is an independent public-data observer view—not a live dispatch system, official City record system, or confirmed-violation ledger. The site uses Google Analytics 4 and PostHog to measure aggregate usage and interaction patterns. PostHog person profiles and session replay are disabled, and its integration respects browser Do Not Track settings.</p>
   </div>
 </dialog>
 
@@ -907,7 +925,7 @@
   </section>
 </main>
 
-<footer>© 2026 Steven Needham · Independent project, public data only · Google Analytics enabled.</footer>
+<footer>© 2026 Steven Needham · Independent project, public data only · GA4 + privacy-limited PostHog analytics enabled.</footer>
 
 <script type="application/json" id="data-311">
 {
