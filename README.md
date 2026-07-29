@@ -18,13 +18,14 @@ Four public sources → complete snapshots stored as `data-*.json` → embedded 
 ## What's here
 
 ### `index.html`
-A single self-contained HTML dashboard — no build step, no server required. Open it directly in a browser. It renders a Leaflet map of Columbus with five layers you can toggle independently:
+A single self-contained HTML dashboard — no build step, no server required. Open it directly in a browser. It renders a Leaflet map of Columbus with six layers you can toggle independently:
 
 - **311 requests** — shared bike/scooter complaints from the City's public feed, color-coded by a priority heuristic (critical / high / standard) derived from complaint type. Click a marker for source ID, address, zone, status, and a link back to the source record.
 - **GBFS vehicle positions** — published Veo and Spin vehicle locations, filterable by operator and availability.
 - **Cross-vendor pile-ups** — clusters of four or more vehicles from more than one operator within ~20 metres of each other, flagged as a review signal (not a confirmed violation).
 - **Policy boundaries** — published no-parking, mandatory-parking, and no-ride zones.
 - **Columbus Ride Hubs** — official City-published CoGo station locations and dock capacity, with a badge and popup breakdown counting each vendor’s published vehicles within 100 metres in the current GBFS snapshot.
+- **Vendor observation log** — the latest snapshot’s geographically relevant vendor changes rendered as toggleable review-area circles; selecting a matching log entry enables and focuses this layer.
 
 Summary stat cards and a legend sit above the map. A running GBFS vendor observation log below the map compares each new snapshot with its prior archived snapshot without using 311 signals. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
 

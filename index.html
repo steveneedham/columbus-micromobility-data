@@ -239,6 +239,7 @@
   .hub-vehicle-counts { margin: 8px 0; padding: 7px 9px; background: var(--slate-100); border: 1px solid var(--slate-200); }
   .hub-vehicle-counts strong { display: block; margin-bottom: 3px; }
   .hub-vehicle-counts span { display: block; }
+  .swatch.observation { background: rgba(169, 71, 40, .08); border: 2px dashed var(--red-600); }
   .swatch.ring { background: transparent; border: 2px solid var(--red-600); }
   .swatch.line { width: 18px; height: 0; border-top: 2px dashed var(--violet-600); border-radius: 0; }
   .pileup-list { padding: 12px 16px; max-height: 260px; overflow-y: auto; font-size: 0.82rem; }
@@ -472,6 +473,7 @@
         <label><input type="checkbox" id="togglePileups" checked> Cross-vendor flags</label>
         <label><input type="checkbox" id="togglePolicy" checked> Policy boundaries</label>
         <label><input type="checkbox" id="toggleRideHubs"> Columbus Ride Hubs (100 m counts)</label>
+        <label><input type="checkbox" id="toggleVendorObservations"> Vendor observation log</label>
         <div class="field">
           <label for="operatorFilter">Operator</label>
           <select id="operatorFilter">
@@ -498,6 +500,7 @@
         <div class="legend-row"><span class="swatch" style="background:#0d9488;"></span> GBFS — Veo</div>
         <div class="legend-row"><span class="swatch" style="background:#f97316;"></span> GBFS — Spin</div>
         <div class="legend-row"><span class="swatch hub"></span> Columbus Ride Hub · badge = vehicles within 100 m</div>
+        <div class="legend-row"><span class="swatch observation"></span> Vendor observation review area</div>
         <div class="legend-row"><span class="swatch ring"></span> Cross-vendor pile-up flag</div>
         <div class="legend-row"><span class="swatch line"></span> Policy boundary</div>
       </div>
@@ -170452,6 +170455,38 @@
   );
   layerPolicy.addTo(map);
 
+  // ---- Vendor observation layer ----
+  const layerVendorObservations = L.layerGroup();
+  const observationAreaLayers = new Map();
+  const latestVendorSnapshot = (dataGbfsObservations.snapshots || [])[0];
+  const latestAreaObservations = new Map();
+  (latestVendorSnapshot?.observations || []).forEach(observation => {
+    if (!observation.area) return;
+    if (!latestAreaObservations.has(observation.area)) latestAreaObservations.set(observation.area, []);
+    latestAreaObservations.get(observation.area).push(observation);
+  });
+  latestAreaObservations.forEach((observations, areaName) => {
+    const area = dataGbfsObservations.method.review_areas[areaName];
+    if (!area) return;
+    const circle = L.circle([area.lat, area.lng], {
+      radius: area.radius_m,
+      color: "#a94728",
+      weight: 2,
+      dashArray: "7,5",
+      fillColor: "#a94728",
+      fillOpacity: 0.06
+    });
+    const notes = observations.map(observation => `<li><b>${esc(observation.vendor)}:</b> ${esc(observation.text)}</li>`).join("");
+    circle.bindPopup(`
+      <div class="popup-title">${esc(areaName)}</div>
+      <div><b>Comparison radius:</b> ${area.radius_m.toLocaleString()} m</div>
+      <ul>${notes}</ul>
+      <div class="review-note">Latest snapshot comparison only. This defined review area is not an official neighborhood boundary.</div>
+    `);
+    circle.addTo(layerVendorObservations);
+    observationAreaLayers.set(areaName, circle);
+  });
+
   // ---- Toggles ----
   document.getElementById("toggle311").addEventListener("change", e => {
     if (e.target.checked) map.addLayer(layer311); else map.removeLayer(layer311);
@@ -170467,6 +170502,9 @@
   });
   document.getElementById("toggleRideHubs").addEventListener("change", e => {
     if (e.target.checked) map.addLayer(layerRideHubs); else map.removeLayer(layerRideHubs);
+  });
+  document.getElementById("toggleVendorObservations").addEventListener("change", e => {
+    if (e.target.checked) map.addLayer(layerVendorObservations); else map.removeLayer(layerVendorObservations);
   });
   document.getElementById("operatorFilter").addEventListener("change", () => {
     buildGbfsLayer();
@@ -170604,30 +170642,18 @@
     }).join("");
   }
   buildGbfsObservationLog();
-  let observationAreaHighlight = null;
   document.getElementById("gbfsObservationLog").addEventListener("click", event => {
     const link = event.target.closest("[data-observation-area]");
     if (!link) return;
-    const areaName = link.dataset.observationArea;
-    const area = dataGbfsObservations.method.review_areas[areaName];
-    if (!area) return;
-    if (observationAreaHighlight) map.removeLayer(observationAreaHighlight);
-    observationAreaHighlight = L.circle([area.lat, area.lng], {
-      radius: area.radius_m,
-      color: "#a94728",
-      weight: 2,
-      dashArray: "7,5",
-      fillColor: "#a94728",
-      fillOpacity: 0.06
-    }).addTo(map);
-    observationAreaHighlight.bindPopup(`
-      <div class="popup-title">${esc(areaName)}</div>
-      <div><b>Comparison radius:</b> ${area.radius_m.toLocaleString()} m</div>
-      <div class="review-note">Defined review area used for snapshot-to-snapshot GBFS vendor counts; not an official neighborhood boundary.</div>
-    `);
+    const areaLayer = observationAreaLayers.get(link.dataset.observationArea);
+    if (!areaLayer) return;
+    if (!map.hasLayer(layerVendorObservations)) {
+      layerVendorObservations.addTo(map);
+      document.getElementById("toggleVendorObservations").checked = true;
+    }
     document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
-    map.flyToBounds(observationAreaHighlight.getBounds(), { padding: [36, 36], duration: 0.6 });
-    observationAreaHighlight.openPopup();
+    map.flyToBounds(areaLayer.getBounds(), { padding: [36, 36], duration: 0.6 });
+    areaLayer.openPopup();
   });
 
   // ---- Sidebar pile-up list ----
