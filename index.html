@@ -185,12 +185,26 @@
   .swatch.line { width: 18px; height: 0; border-top: 2px dashed var(--violet-600); border-radius: 0; }
   .pileup-list { padding: 12px 16px; max-height: 260px; overflow-y: auto; font-size: 0.82rem; }
   .pileup-item {
+    display: block;
+    width: 100%;
     border: 1px solid var(--slate-300);
     border-left: 2px solid var(--red-600);
     border-radius: 0;
     padding: 8px 10px;
     margin-bottom: 8px;
     background: var(--paper);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .pileup-item:hover {
+    border-color: var(--red-600);
+    background: var(--red-100);
+  }
+  .pileup-item:focus-visible {
+    outline: 2px solid var(--red-600);
+    outline-offset: 2px;
   }
   .pileup-item .id { font-weight: 700; color: var(--red-600); font-size: 0.8rem; }
   .pileup-item .meta { color: var(--slate-600); margin-top: 2px; }
@@ -168511,6 +168525,7 @@
 
   // ---- Pile-up layer ----
   const layerPileups = L.layerGroup();
+  const pileupMarkers = new Map();
   pileups.forEach(cluster => {
     const marker = L.circleMarker([cluster.lat, cluster.lng], {
       radius: 14,
@@ -168527,6 +168542,7 @@
     `;
     marker.bindPopup(popup);
     marker.addTo(layerPileups);
+    pileupMarkers.set(cluster.id, marker);
   });
   layerPileups.addTo(map);
 
@@ -168677,14 +168693,28 @@
       return;
     }
     list.innerHTML = pileups.map(c => `
-      <div class="pileup-item">
+      <button type="button" class="pileup-item" data-pileup-id="${esc(c.id)}" aria-label="Show ${esc(c.id)} on the map">
         <div class="id">${esc(c.id)}</div>
         <div class="meta">${c.vehicles.length} vehicles · ${esc(c.companies.join(", "))}</div>
         <div class="meta">${c.lat.toFixed(5)}, ${c.lng.toFixed(5)}</div>
-      </div>
+      </button>
     `).join("");
   }
   buildPileupList();
+  document.getElementById("pileupList").addEventListener("click", event => {
+    const item = event.target.closest("[data-pileup-id]");
+    if (!item) return;
+    const cluster = pileups.find(candidate => candidate.id === item.dataset.pileupId);
+    const marker = pileupMarkers.get(item.dataset.pileupId);
+    if (!cluster || !marker) return;
+    if (!map.hasLayer(layerPileups)) {
+      layerPileups.addTo(map);
+      document.getElementById("togglePileups").checked = true;
+    }
+    document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+    map.flyTo([cluster.lat, cluster.lng], Math.max(map.getZoom(), 17), { duration: 0.6 });
+    marker.openPopup();
+  });
 
 })();
 </script>
