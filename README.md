@@ -13,30 +13,32 @@ This project uses **Field Ledger**, an independent observer-oriented design syst
 
 ![Architecture diagram: public data sources feed the companion 311-Intel repo, which is the source for this repo's JSON snapshots, which are embedded into a single self-contained dashboard rendered in the browser](architecture.svg)
 
-Three public sources → full snapshots committed in the companion [`311-Intel`](https://github.com/steveneedham/311-Intel) repo → complete snapshots copied into this repo as `data-*.json` → embedded directly into `columbus-observer-dashboard.html` → rendered client-side in the browser. No server, no database, no build step. The dashed line marks the fastest path to a full refresh: swap the full files from `311-Intel` into this repo's `data-*.json` and reload.
+Four public sources → complete snapshots stored as `data-*.json` → embedded directly into `index.html` → rendered client-side in the browser. The 311, GBFS, and policy analysis snapshots are built through the companion [`311-Intel`](https://github.com/steveneedham/311-Intel) repo; Columbus Ride Hubs come directly from the City of Columbus public CoGo station layer. No server, no database, no build step. The dashed line marks the fastest path to a full refresh: swap the full files from `311-Intel` into this repo's `data-*.json` and reload.
 
 ## What's here
 
-### `columbus-observer-dashboard.html`
-A single self-contained HTML dashboard — no build step, no server required. Open it directly in a browser. It renders a Leaflet map of Columbus with four layers you can toggle independently:
+### `index.html`
+A single self-contained HTML dashboard — no build step, no server required. Open it directly in a browser. It renders a Leaflet map of Columbus with five layers you can toggle independently:
 
 - **311 requests** — shared bike/scooter complaints from the City's public feed, color-coded by a priority heuristic (critical / high / standard) derived from complaint type. Click a marker for source ID, address, zone, status, and a link back to the source record.
 - **GBFS vehicle positions** — published Veo and Spin vehicle locations, filterable by operator and availability.
 - **Cross-vendor pile-ups** — clusters of four or more vehicles from more than one operator within ~20 metres of each other, flagged as a review signal (not a confirmed violation).
 - **Policy boundaries** — published no-parking, mandatory-parking, and no-ride zones.
+- **Columbus Ride Hubs** — official City-published CoGo station locations and dock capacity, shown as an optional infrastructure layer without live bike availability.
 
 Summary stat cards and a legend sit above the map. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
 
-### `data-311.json`, `data-gbfs.json`, `data-policy.json`
-The data snapshots the dashboard is built from, pulled from the companion prototype repo [`steveneedham/311-Intel`](https://github.com/steveneedham/311-Intel). Each file documents its own source (query URL, fetch timestamp, method) inline.
+### `data-311.json`, `data-gbfs.json`, `data-policy.json`, `data-ride-hubs.json`
+The data snapshots the dashboard is built from. The operational snapshots are pulled from the companion prototype repo [`steveneedham/311-Intel`](https://github.com/steveneedham/311-Intel); the Ride Hubs snapshot comes from the official City ArcGIS layer. Each file documents its own source (query URL, fetch timestamp, method) inline.
 
-**These files contain complete snapshots** from the three public feeds at their documented fetch times. Refresh by replacing them with the corresponding full outputs from `311-Intel`, then embed the same payloads in `index.html`:
+**These files contain complete snapshots** from the four public feeds at their documented fetch times. Refresh by replacing them with the corresponding full outputs from `311-Intel`, then embed the same payloads in `index.html`:
 
 | This repo | Full source in `311-Intel` |
 |---|---|
 | `data-311.json` | `columbus-311-current.json` |
 | `data-gbfs.json` | `gbfs-vehicle-positions.json` |
 | `data-policy.json` | `mobility-policy-boundaries.json` |
+| `data-ride-hubs.json` | City of Columbus `PublicService/MapServer/31` |
 
 The dashboard is self-contained and reads the embedded copies directly; no runtime fetch or build service is required.
 
@@ -52,6 +54,7 @@ This project sits alongside the market-monitoring "watch mode" work described in
 - **311 complaints** — City of Columbus 311 public map (`gis.columbus.gov/coc311map`), filtered to "Shared Electric Bike & Scooters" requests.
 - **Vehicle positions** — published GBFS feeds for Veo and Spin.
 - **Policy boundaries** — Columbus's published Populus mobility-policy export (no-parking, mandatory-parking, no-ride zones).
+- **Columbus Ride Hubs** — City of Columbus Recreation and Parks public CoGo bikeshare station layer (`PublicService/MapServer/31`).
 
 None of this requires or uses any operator- or employer-internal system, login, or dataset.
 
@@ -59,6 +62,7 @@ None of this requires or uses any operator- or employer-internal system, login, 
 
 - Cross-vendor proximity clusters are a spatial review signal, not a confirmed pile-up, complaint, or violation.
 - Policy-boundary proximity does not establish that a boundary caused a complaint or was active at the time of the report.
+- Columbus Ride Hubs show published station locations and dock capacity, not current bikes or open docks.
 - 311 status and vehicle availability reflect a single fetch timestamp (see each JSON file's `fetched_at` / `snapshot_id`) — not a live feed.
 
 ## Running locally
@@ -66,7 +70,7 @@ None of this requires or uses any operator- or employer-internal system, login, 
 No install needed:
 
 ```
-open columbus-observer-dashboard.html
+open index.html
 ```
 
 or serve the folder with any static file server if your browser blocks local file access to the embedded scripts.

@@ -201,6 +201,20 @@
     box-shadow: 0 0 0 1px rgba(32, 42, 47, 0.55);
     transform: rotate(45deg);
   }
+  .swatch.hub {
+    width: 12px;
+    height: 18px;
+    border-radius: 0;
+    background: url("assets/columbus-ride-hub-marker.svg") center / contain no-repeat;
+  }
+  .ride-hub-marker-shell { background: transparent; border: 0; }
+  .ride-hub-marker {
+    display: block;
+    width: 26px;
+    height: 39px;
+    background: url("assets/columbus-ride-hub-marker.svg") center / contain no-repeat;
+    filter: drop-shadow(0 1px 2px rgba(32, 42, 47, 0.45));
+  }
   .swatch.ring { background: transparent; border: 2px solid var(--red-600); }
   .swatch.line { width: 18px; height: 0; border-top: 2px dashed var(--violet-600); border-radius: 0; }
   .pileup-list { padding: 12px 16px; max-height: 260px; overflow-y: auto; font-size: 0.82rem; }
@@ -376,6 +390,7 @@
         <label><input type="checkbox" id="toggleGbfs" checked> GBFS vehicle positions</label>
         <label><input type="checkbox" id="togglePileups" checked> Cross-vendor flags</label>
         <label><input type="checkbox" id="togglePolicy" checked> Policy boundaries</label>
+        <label><input type="checkbox" id="toggleRideHubs"> Columbus Ride Hubs</label>
         <div class="field">
           <label for="operatorFilter">Operator</label>
           <select id="operatorFilter">
@@ -401,6 +416,7 @@
         <div class="legend-row"><span class="swatch request" style="background:#64748b;"></span> 311 — standard</div>
         <div class="legend-row"><span class="swatch" style="background:#0d9488;"></span> GBFS — Veo</div>
         <div class="legend-row"><span class="swatch" style="background:#f97316;"></span> GBFS — Spin</div>
+        <div class="legend-row"><span class="swatch hub"></span> Columbus Ride Hub</div>
         <div class="legend-row"><span class="swatch ring"></span> Cross-vendor pile-up flag</div>
         <div class="legend-row"><span class="swatch line"></span> Policy boundary</div>
       </div>
@@ -168370,6 +168386,1542 @@
 }
 </script>
 
+<script type="application/json" id="data-ride-hubs">
+{
+  "fetched_at": "2026-07-29T04:30:59Z",
+  "source": {
+    "name": "City of Columbus CoGo Bikeshare Locations",
+    "url": "https://maps2.columbus.gov/arcgis/rest/services/Schemas/PublicService/MapServer/31",
+    "mode": "read-only",
+    "publisher": "City of Columbus Recreation and Parks Department"
+  },
+  "station_count": 80,
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.9900696793518,
+          39.95751543173915
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 15,
+        "SITE_NAME": "Grant Ave & Main St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.04451869644582,
+          39.98516231689573
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 54,
+        "SITE_NAME": "Grandview Ave & 3rd Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01363963714502,
+          40.02252522215803
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 63,
+        "SITE_NAME": "High St & Crestview",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00235399971656,
+          39.97051199990621
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 12,
+        "SITE_NAME": "Convention Center",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.05167109957361,
+          40.00716352778264
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 51,
+        "SITE_NAME": "Wellesly Dr & Lane Ave",
+        "PROPERTY": "Upper Arlington",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.97934943820206,
+          39.970951191076864
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 79,
+        "SITE_NAME": "King Arts Complex",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00110184544383,
+          39.96201521747914
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 13,
+        "SITE_NAME": "High & Broad",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.04895676499466,
+          39.98192490729804
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 55,
+        "SITE_NAME": "Grandview Library at Oakland Ave",
+        "PROPERTY": "Grandview",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.05750991182902,
+          40.01897203363116
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 49,
+        "SITE_NAME": "Northwest Blvd & Zollinger Rd",
+        "PROPERTY": "Upper Arlington",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99535979110249,
+          39.94948851814743
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 10,
+        "SITE_NAME": "3rd & Sycamore",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01155230927449,
+          39.977414313864905
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 22,
+        "SITE_NAME": "Neil Ave & Buttles Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00160608744338,
+          39.968534293277926
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 16,
+        "SITE_NAME": "Sensenbrenner Park",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.03997681622579,
+          39.98475706404104
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 68,
+        "SITE_NAME": "Northwest Blvd & 3rd",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99954962572208,
+          39.98876530100623
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 35,
+        "SITE_NAME": "Weinland Park - 6th Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "Y",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99900347665847,
+          39.954638918251696
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 5,
+        "SITE_NAME": "Dorrian Commons & Mound St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00424520001786,
+          39.96307282982384
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 2,
+        "SITE_NAME": "City Hall",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.9811129905887,
+          39.993548581962045
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 72,
+        "SITE_NAME": "Linden Transit Center",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00115739800383,
+          40.00197000126331
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 60,
+        "SITE_NAME": "Summit St & 17th Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01108605877613,
+          40.01459333928075
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 62,
+        "SITE_NAME": "High St & Hudson St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00838390019904,
+          40.00110196397555
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 38,
+        "SITE_NAME": "High St & 17th Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.98625000040845,
+          39.960457999750815
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 29,
+        "SITE_NAME": "Topiary Park & Town St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "Y",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00904645853517,
+          39.945883779327545
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 4,
+        "SITE_NAME": "Scioto Audubon Center",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.04220999995815,
+          39.993576000452975
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 69,
+        "SITE_NAME": "Northwest Blvd & Chambers Rd",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00469699996549,
+          39.97338500018907
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 20,
+        "SITE_NAME": "North Market",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00034150679541,
+          39.94660234611638
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 8,
+        "SITE_NAME": "Bank St & Frankfort St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "Y",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.9692049998978,
+          39.95775099970936
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 32,
+        "SITE_NAME": "Champion Ave & Main St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.9813458825991,
+          39.963236301418505
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 30,
+        "SITE_NAME": "Parsons Ave & Oak St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00648663296948,
+          39.96116706445327
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 19,
+        "SITE_NAME": "COSI",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.98345246426243,
+          39.940476196104626
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 77,
+        "SITE_NAME": "Parsons Library Branch",
+        "PROPERTY": "Private",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99809857881088,
+          39.95761114081897
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 9,
+        "SITE_NAME": "Columbus Commons & Rich St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.98941413874614,
+          39.98589717080615
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 61,
+        "SITE_NAME": "Cleveland Ave & 4th Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99864524086692,
+          39.963975151385036
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 18,
+        "SITE_NAME": "3rd St & Gay St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.96176200050385,
+          39.9679889996779
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 65,
+        "SITE_NAME": "Taylor Ave & Long St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.98971100039223,
+          39.94448199980292
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 43,
+        "SITE_NAME": "Jaeger St & Whittier St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.0073201190385,
+          39.97106635858366
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 21,
+        "SITE_NAME": "Kilbourne St & Vine St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "Y",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.96827069773657,
+          40.00078667573106
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 73,
+        "SITE_NAME": "St. Stephen's Community House",
+        "PROPERTY": "Private",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00025507955483,
+          39.950151457271204
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 3,
+        "SITE_NAME": "Front St & Beck St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01138983810345,
+          39.95739775382447
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 31,
+        "SITE_NAME": "Lucas St & Town St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01260303038883,
+          39.960905525333246
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 80,
+        "SITE_NAME": "Broad St & McDowell St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01688775884105,
+          39.984094501277426
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 41,
+        "SITE_NAME": "Michigan Ave & 3rd Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01918218775421,
+          39.96738786176533
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 71,
+        "SITE_NAME": "Neiland Dr & W. Nationwide Blvd ",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.02743817779442,
+          39.98582109037015
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 45,
+        "SITE_NAME": "Market District & 3rd Ave",
+        "PROPERTY": "Private",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.02586599970574,
+          39.97702999970619
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 56,
+        "SITE_NAME": "Yard St & Burr Ave",
+        "PROPERTY": "Nationwide",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01429499961566,
+          39.99405199955946
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 39,
+        "SITE_NAME": "Neil Ave & 10th Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.06173500040029,
+          39.99881299986589
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 53,
+        "SITE_NAME": "Arlington Ave & S Mallway Dr",
+        "PROPERTY": "Upper Arlington",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.03269039394475,
+          39.9799640454864
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 57,
+        "SITE_NAME": "Northwest Blvd & 1st Ave",
+        "PROPERTY": "Grandview",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.049019172773,
+          39.99679208692236
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 52,
+        "SITE_NAME": "Northwest Blvd & North Star Ave",
+        "PROPERTY": "Upper Arlington",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00152593777496,
+          39.96587631886096
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 17,
+        "SITE_NAME": "High St & Spring St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.0002306438724,
+          40.01467773488865
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 64,
+        "SITE_NAME": "Summit St & Hudson St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.97911226047204,
+          39.95138955282206
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 14,
+        "SITE_NAME": "Livingston Park",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.9980189333555,
+          39.98056823391157
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 33,
+        "SITE_NAME": "4th & 1st - GO FITNESS IV",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.0032154919836,
+          39.95592737386496
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 1,
+        "SITE_NAME": "Bicentennial Park",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00879152802875,
+          39.96500009854173
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 67,
+        "SITE_NAME": "North Bank Park",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00582308960144,
+          39.99014251833752
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 36,
+        "SITE_NAME": "High St & King Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01906255308252,
+          40.04121457975717
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 75,
+        "SITE_NAME": "Whetstone Library Branch",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.98885342731641,
+          39.93589248233305
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 78,
+        "SITE_NAME": "Moeller Park At Bruck St.",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99542036884995,
+          39.957700773146975
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 42,
+        "SITE_NAME": "4th St & Rich St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99501616398709,
+          39.941994821262156
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 6,
+        "SITE_NAME": "Schiller Park Stewart Ave ",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00350699966006,
+          39.97750499996833
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 23,
+        "SITE_NAME": "Warren & High St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.92614775318948,
+          39.95697342668657
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 46,
+        "SITE_NAME": "Grandon Ave & Main St",
+        "PROPERTY": "Bexley",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.9363072081993,
+          39.955386475918374
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 47,
+        "SITE_NAME": "Pleasant Ridge Ave & Mound St",
+        "PROPERTY": "Bexley",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00546920640274,
+          39.98522286102432
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 34,
+        "SITE_NAME": "High St & 4th Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00944889694077,
+          39.9868921867103
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 70,
+        "SITE_NAME": "Thompson Park at Hunter Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "Y",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.9908520003429,
+          39.96156099988897
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 28,
+        "SITE_NAME": "Library Main Branch",
+        "PROPERTY": "Private",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.95325157093828,
+          39.96327230129554
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 66,
+        "SITE_NAME": "Franklin Park at Fairwood Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00403050203617,
+          39.969170719085184
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 11,
+        "SITE_NAME": "Nationwide Arena & Front St",
+        "PROPERTY": "Private",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99046331969603,
+          39.965156848914475
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 26,
+        "SITE_NAME": "Columbus College of Arts & Design",
+        "PROPERTY": "Private",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00853995059397,
+          39.968067190103156
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 7,
+        "SITE_NAME": "Neil Ave & Nationwide Blvd",
+        "PROPERTY": "Nationwide",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.0071208707195,
+          39.994723362915835
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 37,
+        "SITE_NAME": "High St & 11th Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00194971519956,
+          39.959090711394204
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 58,
+        "SITE_NAME": "Front St & Town St",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00918406491976,
+          40.00640010602562
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 59,
+        "SITE_NAME": "High St & Lane Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.01356514110164,
+          39.990230997001674
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 40,
+        "SITE_NAME": "Neil Ave & King Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "Y",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.06785962058004,
+          40.013515215513365
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 50,
+        "SITE_NAME": "Tremont Center at Tremont Rd",
+        "PROPERTY": "Upper Arlington",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.96814699947483,
+          40.01285100013766
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 74,
+        "SITE_NAME": "Library - Linden Branch",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.99081651217811,
+          39.9691931018123
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 25,
+        "SITE_NAME": "Cleveland Ave & Mt Vernon Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.02457706177177,
+          39.958921119902506
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 76,
+        "SITE_NAME": "W. Broad & Martin Ave",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.00473804861767,
+          39.98276720736032
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 24,
+        "SITE_NAME": "High & 2nd",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.94451352197747,
+          39.9713472349168
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 48,
+        "SITE_NAME": "Jeffery Park on Clifton Ave",
+        "PROPERTY": "Bexley",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.02046331863063,
+          40.00658321666589
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 44,
+        "SITE_NAME": "Lane Ave at Olentangy Trail",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.98715000049994,
+          39.96468600042191
+        ]
+      },
+      "properties": {
+        "BIKESHARE_ID": 27,
+        "SITE_NAME": "Columbus Museum of Art",
+        "PROPERTY": "Public",
+        "DOCKS": 9,
+        "CONFIGURATION": "",
+        "ON_STREET": "N",
+        "LAST_EDIT_DATE": null
+      }
+    }
+  ]
+}
+</script>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function () {
@@ -168379,10 +169931,12 @@
   const data311 = JSON.parse(document.getElementById("data-311").textContent);
   const dataGbfs = JSON.parse(document.getElementById("data-gbfs").textContent);
   const dataPolicy = JSON.parse(document.getElementById("data-policy").textContent);
+  const dataRideHubs = JSON.parse(document.getElementById("data-ride-hubs").textContent);
 
   const records311 = data311.records || [];
   const vehicles = (dataGbfs.vehicles || []).map(v => ({ ...v }));
   const boundaries = dataPolicy.boundaries || [];
+  const rideHubs = dataRideHubs.features || [];
 
   // ---- Priority heuristic (ported verbatim from source app) ----
   function normalizedPriority(complaintType) {
@@ -168570,6 +170124,37 @@
   });
   layerPileups.addTo(map);
 
+  // ---- Columbus Ride Hubs layer ----
+  const layerRideHubs = L.layerGroup();
+  rideHubs.forEach(feature => {
+    const coordinates = feature.geometry && feature.geometry.coordinates;
+    if (!Array.isArray(coordinates) || coordinates.length < 2) return;
+    const [lng, lat] = coordinates;
+    const properties = feature.properties || {};
+    const marker = L.marker([lat, lng], {
+      title: properties.SITE_NAME || "Columbus Ride Hub",
+      alt: `Columbus Ride Hub: ${properties.SITE_NAME || "unnamed station"}`,
+      icon: L.divIcon({
+        className: "ride-hub-marker-shell",
+        html: `<span class="ride-hub-marker" aria-hidden="true"></span>`,
+        iconSize: [26, 39],
+        iconAnchor: [13, 38],
+        popupAnchor: [0, -39]
+      })
+    });
+    marker.bindPopup(`
+      <div class="popup-title">${esc(properties.SITE_NAME || "Columbus Ride Hub")}</div>
+      <div><b>Station ID:</b> ${esc(properties.BIKESHARE_ID || "unknown")}</div>
+      <div><b>Dock capacity:</b> ${esc(properties.DOCKS == null ? "unknown" : properties.DOCKS)}</div>
+      <div><b>Property:</b> ${esc(properties.PROPERTY || "unknown")}</div>
+      <div><b>Configuration:</b> ${esc(properties.CONFIGURATION || "not specified")}</div>
+      <div><b>On street:</b> ${properties.ON_STREET === "Y" ? "Yes" : properties.ON_STREET === "N" ? "No" : "Unknown"}</div>
+      <div><a href="${esc(dataRideHubs.source.url)}" target="_blank" rel="noopener">City source layer</a></div>
+      <div class="review-note">Published Columbus Ride Hub location and dock capacity; live bike availability is not included.</div>
+    `);
+    marker.addTo(layerRideHubs);
+  });
+
   // ---- Policy boundaries layer ----
   const layerPolicy = L.geoJSON(
     boundaries.map(b => ({
@@ -168608,6 +170193,9 @@
   });
   document.getElementById("togglePolicy").addEventListener("change", e => {
     if (e.target.checked) map.addLayer(layerPolicy); else map.removeLayer(layerPolicy);
+  });
+  document.getElementById("toggleRideHubs").addEventListener("change", e => {
+    if (e.target.checked) map.addLayer(layerRideHubs); else map.removeLayer(layerRideHubs);
   });
   document.getElementById("operatorFilter").addEventListener("change", () => {
     buildGbfsLayer();
