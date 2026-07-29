@@ -208,13 +208,37 @@
     background: url("assets/columbus-ride-hub-marker.svg") center / contain no-repeat;
   }
   .ride-hub-marker-shell { background: transparent; border: 0; }
+  .ride-hub-marker-wrap { position: relative; display: block; width: 36px; height: 44px; }
   .ride-hub-marker {
+    position: absolute;
+    left: 0;
+    bottom: 0;
     display: block;
     width: 26px;
     height: 39px;
     background: url("assets/columbus-ride-hub-marker.svg") center / contain no-repeat;
     filter: drop-shadow(0 1px 2px rgba(32, 42, 47, 0.45));
   }
+  .ride-hub-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: grid;
+    place-items: center;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 4px;
+    border: 2px solid var(--paper);
+    border-radius: 10px;
+    background: var(--red-600);
+    color: white;
+    font: 700 9px var(--mono);
+    line-height: 1;
+    box-shadow: 0 1px 2px rgba(32, 42, 47, .35);
+  }
+  .hub-vehicle-counts { margin: 8px 0; padding: 7px 9px; background: var(--slate-100); border: 1px solid var(--slate-200); }
+  .hub-vehicle-counts strong { display: block; margin-bottom: 3px; }
+  .hub-vehicle-counts span { display: block; }
   .swatch.ring { background: transparent; border: 2px solid var(--red-600); }
   .swatch.line { width: 18px; height: 0; border-top: 2px dashed var(--violet-600); border-radius: 0; }
   .pileup-list { padding: 12px 16px; max-height: 260px; overflow-y: auto; font-size: 0.82rem; }
@@ -438,7 +462,7 @@
         <label><input type="checkbox" id="toggleGbfs" checked> GBFS vehicle positions</label>
         <label><input type="checkbox" id="togglePileups" checked> Cross-vendor flags</label>
         <label><input type="checkbox" id="togglePolicy" checked> Policy boundaries</label>
-        <label><input type="checkbox" id="toggleRideHubs"> Columbus Ride Hubs</label>
+        <label><input type="checkbox" id="toggleRideHubs"> Columbus Ride Hubs (100 m counts)</label>
         <div class="field">
           <label for="operatorFilter">Operator</label>
           <select id="operatorFilter">
@@ -464,7 +488,7 @@
         <div class="legend-row"><span class="swatch request" style="background:#64748b;"></span> 311 — standard</div>
         <div class="legend-row"><span class="swatch" style="background:#0d9488;"></span> GBFS — Veo</div>
         <div class="legend-row"><span class="swatch" style="background:#f97316;"></span> GBFS — Spin</div>
-        <div class="legend-row"><span class="swatch hub"></span> Columbus Ride Hub</div>
+        <div class="legend-row"><span class="swatch hub"></span> Columbus Ride Hub · badge = vehicles within 100 m</div>
         <div class="legend-row"><span class="swatch ring"></span> Cross-vendor pile-up flag</div>
         <div class="legend-row"><span class="swatch line"></span> Policy boundary</div>
       </div>
@@ -170343,32 +170367,52 @@
   layerPileups.addTo(map);
 
   // ---- Columbus Ride Hubs layer ----
+  const HUB_VEHICLE_RADIUS_M = 100;
   const layerRideHubs = L.layerGroup();
   rideHubs.forEach(feature => {
     const coordinates = feature.geometry && feature.geometry.coordinates;
     if (!Array.isArray(coordinates) || coordinates.length < 2) return;
     const [lng, lat] = coordinates;
     const properties = feature.properties || {};
+    const hubPoint = { lat, lng };
+    const nearbyVehicles = vehicles.filter(vehicle =>
+      typeof vehicle.lat === "number" && typeof vehicle.lng === "number" &&
+      distanceMeters(hubPoint, vehicle) <= HUB_VEHICLE_RADIUS_M
+    );
+    const vendorCounts = nearbyVehicles.reduce((counts, vehicle) => {
+      const vendor = vehicle.company || "Unknown";
+      counts[vendor] = (counts[vendor] || 0) + 1;
+      return counts;
+    }, {});
+    const vendorNames = [...new Set(["Veo", "Spin", ...Object.keys(vendorCounts)])];
+    const vendorRows = vendorNames.map(vendor =>
+      `<span><b>${esc(vendor)}:</b> ${vendorCounts[vendor] || 0}</span>`
+    ).join("");
     const marker = L.marker([lat, lng], {
-      title: properties.SITE_NAME || "Columbus Ride Hub",
-      alt: `Columbus Ride Hub: ${properties.SITE_NAME || "unnamed station"}`,
+      title: `${properties.SITE_NAME || "Columbus Ride Hub"} — ${nearbyVehicles.length} published vehicles within 100 m`,
+      alt: `Columbus Ride Hub: ${properties.SITE_NAME || "unnamed station"}; ${nearbyVehicles.length} published vehicles within 100 metres`,
       icon: L.divIcon({
         className: "ride-hub-marker-shell",
-        html: `<span class="ride-hub-marker" aria-hidden="true"></span>`,
-        iconSize: [26, 39],
-        iconAnchor: [13, 38],
-        popupAnchor: [0, -39]
+        html: `<span class="ride-hub-marker-wrap" aria-hidden="true"><span class="ride-hub-marker"></span><span class="ride-hub-count">${nearbyVehicles.length}</span></span>`,
+        iconSize: [36, 44],
+        iconAnchor: [13, 43],
+        popupAnchor: [0, -44]
       })
     });
     marker.bindPopup(`
       <div class="popup-title">${esc(properties.SITE_NAME || "Columbus Ride Hub")}</div>
+      <div class="hub-vehicle-counts">
+        <strong>Published vehicles within ${HUB_VEHICLE_RADIUS_M} m</strong>
+        ${vendorRows}
+        <span><b>Total:</b> ${nearbyVehicles.length}</span>
+      </div>
       <div><b>Station ID:</b> ${esc(properties.BIKESHARE_ID || "unknown")}</div>
       <div><b>Dock capacity:</b> ${esc(properties.DOCKS == null ? "unknown" : properties.DOCKS)}</div>
       <div><b>Property:</b> ${esc(properties.PROPERTY || "unknown")}</div>
       <div><b>Configuration:</b> ${esc(properties.CONFIGURATION || "not specified")}</div>
       <div><b>On street:</b> ${properties.ON_STREET === "Y" ? "Yes" : properties.ON_STREET === "N" ? "No" : "Unknown"}</div>
       <div><a href="${esc(dataRideHubs.source.url)}" target="_blank" rel="noopener">City source layer</a></div>
-      <div class="review-note">Published Columbus Ride Hub location and dock capacity; live bike availability is not included.</div>
+      <div class="review-note">Counts use all vehicles in the current GBFS snapshot, independent of map filters. Proximity does not establish that a vehicle is parked at or using the hub.</div>
     `);
     marker.addTo(layerRideHubs);
   });

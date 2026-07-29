@@ -24,7 +24,7 @@ A single self-contained HTML dashboard — no build step, no server required. Op
 - **GBFS vehicle positions** — published Veo and Spin vehicle locations, filterable by operator and availability.
 - **Cross-vendor pile-ups** — clusters of four or more vehicles from more than one operator within ~20 metres of each other, flagged as a review signal (not a confirmed violation).
 - **Policy boundaries** — published no-parking, mandatory-parking, and no-ride zones.
-- **Columbus Ride Hubs** — official City-published CoGo station locations and dock capacity, shown as an optional infrastructure layer without live bike availability.
+- **Columbus Ride Hubs** — official City-published CoGo station locations and dock capacity, with a badge and popup breakdown counting each vendor’s published vehicles within 100 metres in the current GBFS snapshot.
 
 Summary stat cards and a legend sit above the map. A running GBFS vendor observation log below the map compares each new snapshot with its prior archived snapshot without using 311 signals. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
 
@@ -74,7 +74,7 @@ None of this requires or uses any operator- or employer-internal system, login, 
 
 - Cross-vendor proximity clusters are a spatial review signal, not a confirmed pile-up, complaint, or violation.
 - Policy-boundary proximity does not establish that a boundary caused a complaint or was active at the time of the report.
-- Columbus Ride Hubs show published station locations and dock capacity, not current bikes or open docks.
+- Columbus Ride Hubs show published station locations and dock capacity. Nearby vendor counts use a 100-metre radius from the current point-in-time GBFS snapshot; proximity does not prove that a vehicle is parked at or using a hub, and open-dock availability is not included.
 - 311 status and vehicle availability reflect a single fetch timestamp (see each JSON file's `fetched_at` / `snapshot_id`) — not a live feed.
 
 ## Running locally
