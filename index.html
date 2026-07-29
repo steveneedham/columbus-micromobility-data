@@ -197,6 +197,46 @@
     letter-spacing: 0.02em;
     color: var(--slate-600);
   }
+  .refresh-alert {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: center;
+    margin: -4px 0 22px;
+    padding: 14px 16px;
+    border: 1px solid var(--slate-300);
+    border-left: 3px solid var(--blue-700);
+    background: var(--source-sheet);
+  }
+  .refresh-alert h2 {
+    margin: 0 0 3px;
+    color: var(--slate-900);
+    font: 500 1rem var(--display);
+  }
+  .refresh-alert p {
+    margin: 0;
+    max-width: 760px;
+    color: var(--slate-600);
+    font-size: .78rem;
+  }
+  .refresh-alert-actions { display: flex; align-items: center; gap: 10px; }
+  .refresh-alert-button {
+    border: 1px solid var(--blue-700);
+    border-radius: 0;
+    padding: 8px 10px;
+    background: var(--blue-700);
+    color: white;
+    font: 600 .66rem var(--mono);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .refresh-alert-button:hover { background: var(--slate-900); border-color: var(--slate-900); }
+  .refresh-alert-button[data-enabled="true"] { background: var(--source-sheet); color: var(--blue-700); }
+  .refresh-alert-status {
+    min-width: 7.5rem;
+    color: var(--slate-600);
+    font: 500 .64rem/1.4 var(--mono);
+  }
   .layout {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -205,6 +245,8 @@
   }
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }
+    .refresh-alert { grid-template-columns: 1fr; }
+    .refresh-alert-actions { justify-content: space-between; }
   }
   .panel {
     background: var(--source-sheet);
@@ -793,6 +835,16 @@
 
 <main id="overview">
   <div class="stat-grid" id="statGrid"></div>
+  <section class="refresh-alert" aria-labelledby="refresh-alert-title">
+    <div>
+      <h2 id="refresh-alert-title">Get a feed refresh alert</h2>
+      <p>Allow browser notifications and this open dashboard will check the public 311 and GBFS files for a newer timestamp. No email address or personal information is collected.</p>
+    </div>
+    <div class="refresh-alert-actions">
+      <button type="button" class="refresh-alert-button" id="toggleRefreshAlerts">Notify me</button>
+      <span class="refresh-alert-status" id="refreshAlertStatus" aria-live="polite"></span>
+    </div>
+  </section>
 
   <div class="layout" id="map-workspace">
     <div class="panel map-panel">
@@ -172140,6 +172192,139 @@
   }
   buildStats();
   setInterval(buildStats, 60000);
+
+  // ---- Optional in-browser feed refresh alerts ----
+  const refreshAlertButton = document.getElementById("toggleRefreshAlerts");
+  const refreshAlertStatus = document.getElementById("refreshAlertStatus");
+  const refreshAlertPreferenceKey = "columbus-micromobility-refresh-alerts-v1";
+  const refreshAlertBaselineKey = "columbus-micromobility-refresh-baseline-v1";
+  const refreshCheckInterval = 5 * 60 * 1000;
+  let refreshAlertTimer = null;
+
+  function currentRefreshBaseline() {
+    return {
+      "311": data311.fetched_at || "",
+      "GBFS": dataGbfs.snapshot_id || dataGbfs.fetched_at || ""
+    };
+  }
+
+  function readRefreshBaseline() {
+    try {
+      return JSON.parse(localStorage.getItem(refreshAlertBaselineKey)) || currentRefreshBaseline();
+    } catch {
+      return currentRefreshBaseline();
+    }
+  }
+
+  function writeRefreshBaseline(baseline) {
+    try { localStorage.setItem(refreshAlertBaselineKey, JSON.stringify(baseline)); } catch {}
+  }
+
+  function refreshAlertsEnabled() {
+    try { return localStorage.getItem(refreshAlertPreferenceKey) === "enabled"; } catch { return false; }
+  }
+
+  function setRefreshAlertsEnabled(enabled) {
+    try {
+      if (enabled) localStorage.setItem(refreshAlertPreferenceKey, "enabled");
+      else localStorage.removeItem(refreshAlertPreferenceKey);
+    } catch {}
+  }
+
+  function updateRefreshAlertUi(message = "") {
+    const enabled = refreshAlertsEnabled() && "Notification" in window && Notification.permission === "granted";
+    refreshAlertButton.textContent = enabled ? "Turn off alerts" : "Notify me";
+    refreshAlertButton.dataset.enabled = String(enabled);
+    refreshAlertButton.setAttribute("aria-pressed", String(enabled));
+    refreshAlertStatus.textContent = message || (enabled ? "Checking while open" : "");
+  }
+
+  async function fetchLatestRefreshBaseline() {
+    const cacheBust = `refresh-check=${Date.now()}`;
+    const [latest311, latestGbfs] = await Promise.all([
+      fetch(`data-311.json?${cacheBust}`, { cache: "no-store" }).then(response => {
+        if (!response.ok) throw new Error(`311 HTTP ${response.status}`);
+        return response.json();
+      }),
+      fetch(`data-gbfs.json?${cacheBust}`, { cache: "no-store" }).then(response => {
+        if (!response.ok) throw new Error(`GBFS HTTP ${response.status}`);
+        return response.json();
+      })
+    ]);
+    return {
+      "311": latest311.fetched_at || "",
+      "GBFS": latestGbfs.snapshot_id || latestGbfs.fetched_at || ""
+    };
+  }
+
+  function isNewerRefresh(candidate, baseline) {
+    const candidateDate = parseSnapshotTime(candidate);
+    const baselineDate = parseSnapshotTime(baseline);
+    return candidateDate && (!baselineDate || candidateDate.getTime() > baselineDate.getTime());
+  }
+
+  async function checkForFeedRefresh() {
+    if (!refreshAlertsEnabled() || !("Notification" in window) || Notification.permission !== "granted") return;
+    try {
+      const baseline = readRefreshBaseline();
+      const latest = await fetchLatestRefreshBaseline();
+      const refreshedFeeds = Object.keys(latest).filter(feed => isNewerRefresh(latest[feed], baseline[feed]));
+      writeRefreshBaseline(latest);
+      if (refreshedFeeds.length) {
+        const feedLabel = refreshedFeeds.length === 2 ? "311 and GBFS feeds" : `${refreshedFeeds[0]} feed`;
+        new Notification("Columbus mobility data refreshed", {
+          body: `A newer ${feedLabel} snapshot is available. Reopen or reload the dashboard to review it.`,
+          tag: "columbus-micromobility-feed-refresh"
+        });
+        updateRefreshAlertUi("New snapshot available");
+      } else {
+        updateRefreshAlertUi();
+      }
+    } catch {
+      updateRefreshAlertUi("Check unavailable");
+    }
+  }
+
+  function startRefreshAlertChecks() {
+    if (refreshAlertTimer) clearInterval(refreshAlertTimer);
+    checkForFeedRefresh();
+    refreshAlertTimer = setInterval(checkForFeedRefresh, refreshCheckInterval);
+  }
+
+  refreshAlertButton.addEventListener("click", async () => {
+    if (!("Notification" in window)) {
+      updateRefreshAlertUi("Not supported here");
+      return;
+    }
+    if (refreshAlertsEnabled() && Notification.permission === "granted") {
+      setRefreshAlertsEnabled(false);
+      if (refreshAlertTimer) clearInterval(refreshAlertTimer);
+      refreshAlertTimer = null;
+      updateRefreshAlertUi("Alerts off");
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      setRefreshAlertsEnabled(false);
+      updateRefreshAlertUi(permission === "denied" ? "Blocked in browser" : "Permission not granted");
+      return;
+    }
+    writeRefreshBaseline(currentRefreshBaseline());
+    setRefreshAlertsEnabled(true);
+    updateRefreshAlertUi("Alerts on");
+    startRefreshAlertChecks();
+  });
+
+  if (!("Notification" in window)) {
+    refreshAlertButton.disabled = true;
+    updateRefreshAlertUi("Not supported here");
+  } else if (refreshAlertsEnabled() && Notification.permission === "granted") {
+    updateRefreshAlertUi();
+    startRefreshAlertChecks();
+  } else {
+    setRefreshAlertsEnabled(false);
+    updateRefreshAlertUi(Notification.permission === "denied" ? "Blocked in browser" : "");
+  }
 
   // ---- GBFS vendor observation log ----
   function observationDirection(item) {
