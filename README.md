@@ -13,7 +13,7 @@ This project uses **Field Ledger**, an independent observer-oriented design syst
 
 ![Architecture diagram: public data sources feed the companion 311-Intel repo, which is the source for this repo's JSON snapshots, which are embedded into a single self-contained dashboard rendered in the browser](architecture.svg)
 
-Three public sources → full snapshots committed in the companion [`311-Intel`](https://github.com/steveneedham/311-Intel) repo → partial snapshots copied into this repo as `data-*.json` → embedded directly into `columbus-observer-dashboard.html` → rendered client-side in the browser. No server, no database, no build step. The dashed line marks the fastest path to a full refresh: swap the full files from `311-Intel` into this repo's `data-*.json` and reload.
+Three public sources → full snapshots committed in the companion [`311-Intel`](https://github.com/steveneedham/311-Intel) repo → complete snapshots copied into this repo as `data-*.json` → embedded directly into `columbus-observer-dashboard.html` → rendered client-side in the browser. No server, no database, no build step. The dashed line marks the fastest path to a full refresh: swap the full files from `311-Intel` into this repo's `data-*.json` and reload.
 
 ## What's here
 
@@ -30,7 +30,7 @@ Summary stat cards and a legend sit above the map. The dashboard is read-only: n
 ### `data-311.json`, `data-gbfs.json`, `data-policy.json`
 The data snapshots the dashboard is built from, pulled from the companion prototype repo [`steveneedham/311-Intel`](https://github.com/steveneedham/311-Intel). Each file documents its own source (query URL, fetch timestamp, method) inline.
 
-**These snapshots are partial**, not the full feed — each file has an `_extraction_note` field stating exactly how much was recovered versus what the source reports. To refresh with complete data, pull the full versions directly from `311-Intel`:
+**These files contain complete snapshots** from the three public feeds at their documented fetch times. Refresh by replacing them with the corresponding full outputs from `311-Intel`, then embed the same payloads in `index.html`:
 
 | This repo | Full source in `311-Intel` |
 |---|---|
@@ -38,7 +38,7 @@ The data snapshots the dashboard is built from, pulled from the companion protot
 | `data-gbfs.json` | `gbfs-vehicle-positions.json` |
 | `data-policy.json` | `mobility-policy-boundaries.json` |
 
-Swap the file contents in and reload the dashboard — no code changes needed, since it reads by the same embedded structure.
+The dashboard is self-contained and reads the embedded copies directly; no runtime fetch or build service is required.
 
 ### `architecture.svg`
 The diagram above, as a standalone file for reuse in docs or a portfolio writeup.
