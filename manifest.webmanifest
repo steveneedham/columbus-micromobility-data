@@ -1,0 +1,32 @@
+{
+  "name": "Columbus Micromobility Observer View",
+  "short_name": "Mobility Observer",
+  "description": "An independent, public-data observer view of Columbus shared-scooter operations.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f0e8",
+  "theme_color": "#f3f0e8",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "assets/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Current insights",
+      "url": "./#insights"
+    }
+  ]
+}

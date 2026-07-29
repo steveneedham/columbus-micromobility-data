@@ -6,6 +6,10 @@
 <title>Columbus Micromobility — Observer View</title>
 <meta name="description" content="A public-data observer view connecting Columbus 311 requests, published micromobility positions, and policy boundaries across the city.">
 <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f3f0e8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="assets/pwa-icon-192.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Columbus Micromobility — Observer View">
 <meta property="og:description" content="A public-data observer view connecting Columbus 311 requests, published micromobility positions, and policy boundaries across the city.">
@@ -646,6 +650,21 @@
     cursor: pointer;
   }
   .guide-button:hover { background: var(--amber-100); }
+  .install-button { margin-left: 0; }
+  .install-button[hidden] { display: none; }
+  .offline-banner {
+    position: sticky;
+    top: 0;
+    z-index: 1700;
+    padding: 9px 20px;
+    border-bottom: 1px solid #dc2626;
+    background: #fff1f1;
+    color: #b91c1c;
+    text-align: center;
+    font: 700 .68rem/1.4 var(--mono);
+    letter-spacing: .02em;
+  }
+  .offline-banner[hidden] { display: none; }
   .guide-button:focus-visible, .guide-close:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
   .site-guide {
     width: min(900px, calc(100vw - 32px));
@@ -763,6 +782,7 @@
       <h1>Columbus Micromobility — Observer View</h1>
       <span class="badge">Independent observer · public data only</span>
       <button type="button" class="guide-button" id="openSiteGuide" aria-haspopup="dialog">How to use this site</button>
+      <button type="button" class="guide-button install-button" id="installAppButton" hidden>Install app</button>
     </div>
     <p class="desc">An independent, public-data-only look at Columbus shared-scooter operations — 311 requests, published vehicle positions, and policy boundaries. Built from public sources only; not affiliated with or using data from any employer.</p>
     <div class="support-row" aria-label="Support this independent project">
@@ -787,6 +807,8 @@
     <a href="research-library.html">Research library</a>
   </div>
 </nav>
+
+<div class="offline-banner" id="offlineBanner" role="status" hidden>Offline · showing the most recently cached public-data snapshot.</div>
 
 <nav class="mobile-bottom-nav" aria-label="Mobile site sections">
   <a href="#overview">Overview</a>
@@ -172423,6 +172445,58 @@
     map.flyTo([cluster.lat, cluster.lng], Math.max(map.getZoom(), 17), { duration: 0.6 });
     marker.openPopup();
   });
+
+  // ---- Installable app and offline state ----
+  const installAppButton = document.getElementById("installAppButton");
+  const offlineBanner = document.getElementById("offlineBanner");
+  let deferredInstallPrompt = null;
+
+  function runningAsInstalledApp() {
+    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  }
+
+  function updateConnectivityState() {
+    offlineBanner.hidden = navigator.onLine;
+  }
+
+  updateConnectivityState();
+  window.addEventListener("online", updateConnectivityState);
+  window.addEventListener("offline", updateConnectivityState);
+
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    if (!runningAsInstalledApp()) installAppButton.hidden = false;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    installAppButton.hidden = true;
+  });
+
+  installAppButton.addEventListener("click", async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      if (!runningAsInstalledApp()) {
+        installAppButton.textContent = "Install from browser menu";
+      }
+      return;
+    }
+    installAppButton.textContent = "Use browser menu · Add to Home Screen";
+    setTimeout(() => { installAppButton.textContent = "Install app"; }, 6000);
+  });
+
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+      .then(() => {
+        if (!runningAsInstalledApp()) installAppButton.hidden = false;
+      })
+      .catch(() => {
+        installAppButton.hidden = true;
+      });
+  }
 
 })();
 </script>
