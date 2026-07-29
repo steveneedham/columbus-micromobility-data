@@ -800,6 +800,32 @@
     .skill-install-grid, .reference-grid, .forecast-visuals { grid-template-columns: 1fr; }
     .skill-install + .skill-install { padding-left: 0; border-left: 0; }
     .reference-item:nth-child(even) { padding-left: 0; border-left: 0; }
+    .cbd-insight-card { width: 100%; }
+    .cbd-insight-header { padding: 15px 14px; }
+    .cbd-insight-header h3 { font-size: 1.25rem; }
+    .compliance-table-wrap { overflow: visible; }
+    .compliance-table { display: block; }
+    .compliance-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .compliance-table tbody { display: grid; gap: 12px; padding: 12px; }
+    .compliance-table tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--slate-300); background: var(--paper); }
+    .compliance-table td { display: flex; min-width: 0; flex-direction: column; gap: 3px; padding: 9px 10px; border-bottom: 1px solid var(--slate-200); text-align: left; overflow-wrap: anywhere; }
+    .compliance-table td::before { content: attr(data-label); color: var(--slate-500); font: 600 .58rem var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+    .compliance-table td:first-child, .compliance-table td:last-child { grid-column: 1 / -1; }
+    .compliance-table td:first-child { background: var(--slate-100); }
+    .compliance-table td:last-child { border-bottom: 0; }
+    .compliance-table .cbd-map-button { min-height: 32px; padding: 0; }
+    .compliance-table .compliance-indicator { white-space: normal; }
+    .cbd-insight-note { padding: 12px 14px; line-height: 1.5; }
   }
 </style>
 </head>
@@ -171967,8 +171993,8 @@
     const snapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
     const timeLabel = snapshotAt ? fmtDateTime(snapshotAt.toISOString()) : "current embedded snapshot";
     document.getElementById("cbdDistributionInsight").innerHTML = `
-      <div class="hub-dashboard-table-wrap"><table class="cbd-insight-table"><thead><tr><th>Vendor</th><th>CBD active</th><th>Citywide active</th><th>CBD share</th><th>30% line</th><th>Status</th></tr></thead><tbody>
-      ${rows.map(row => `<tr><td><button type="button" class="cbd-map-button" data-cbd-map>${row.vendor}</button></td><td>${row.inside.toLocaleString()}</td><td>${row.total.toLocaleString()}</td><td>${row.percent.toFixed(1)}%</td><td>${row.percent > 30 ? `+${(row.percent - 30).toFixed(1)} pts` : `${(row.percent - 30).toFixed(1)} pts`}</td><td><span class="compliance-indicator ${row.compliance.level}">${row.compliance.label}</span></td></tr>`).join("")}
+      <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Vendor</th><th>CBD active</th><th>Citywide active</th><th>CBD share</th><th>30% line</th><th>Status</th></tr></thead><tbody>
+      ${rows.map(row => `<tr><td data-label="Vendor"><button type="button" class="cbd-map-button" data-cbd-map>${row.vendor}</button></td><td data-label="CBD active">${row.inside.toLocaleString()}</td><td data-label="Citywide active">${row.total.toLocaleString()}</td><td data-label="CBD share">${row.percent.toFixed(1)}%</td><td data-label="30% line">${row.percent > 30 ? `+${(row.percent - 30).toFixed(1)} pts` : `${(row.percent - 30).toFixed(1)} pts`}</td><td data-label="Status"><span class="compliance-indicator ${row.compliance.level}">${row.compliance.label}</span></td></tr>`).join("")}
       </tbody></table></div>
       <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. Status uses the 30% maximum: above 30% is out of compliance, 27–30% is borderline, and below 27% is within compliance. This snapshot is outside the policy’s 6:00–8:00 AM averaging window, so the indicator is provisional. “Active” excludes disabled and reserved devices.</p>`;
     document.querySelectorAll("[data-cbd-map]").forEach(button => button.addEventListener("click", () => {
@@ -171994,8 +172020,8 @@
     const snapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
     const timeLabel = snapshotAt ? fmtDateTime(snapshotAt.toISOString()) : "current embedded snapshot";
     document.getElementById("opportunityDistributionInsight").innerHTML = `
-      <div class="hub-dashboard-table-wrap"><table class="cbd-insight-table"><thead><tr><th>Opportunity zone</th><th>Vendor</th><th>Zone active</th><th>Citywide active</th><th>Fleet share</th><th>vs. 5%</th><th>Status</th></tr></thead><tbody>
-      ${rows.map(row => `<tr><td><button type="button" class="cbd-map-button" data-opportunity-map="${row.zone.geography.geography_id}">${esc(row.zone.label)}</button></td><td>${row.vendor}</td><td>${row.inside.toLocaleString()}</td><td>${row.total.toLocaleString()}</td><td>${row.percent.toFixed(1)}%</td><td>${row.percent >= 5 ? "+" : ""}${(row.percent - 5).toFixed(1)} pts</td><td><span class="compliance-indicator ${row.compliance.level}">${row.compliance.label}</span></td></tr>`).join("")}
+      <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Opportunity zone</th><th>Vendor</th><th>Zone active</th><th>Citywide active</th><th>Fleet share</th><th>vs. 5%</th><th>Status</th></tr></thead><tbody>
+      ${rows.map(row => `<tr><td data-label="Opportunity zone"><button type="button" class="cbd-map-button" data-opportunity-map="${row.zone.geography.geography_id}">${esc(row.zone.label)}</button></td><td data-label="Vendor">${row.vendor}</td><td data-label="Zone active">${row.inside.toLocaleString()}</td><td data-label="Citywide active">${row.total.toLocaleString()}</td><td data-label="Fleet share">${row.percent.toFixed(1)}%</td><td data-label="vs. 5%">${row.percent >= 5 ? "+" : ""}${(row.percent - 5).toFixed(1)} pts</td><td data-label="Status"><span class="compliance-indicator ${row.compliance.level}">${row.compliance.label}</span></td></tr>`).join("")}
       </tbody></table></div>
       <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. The published policy interface identifies a 5% deployed-device rule for “Ghost - Opportunity Zones”; this table shows each component geography separately. Status uses the 5% minimum described for this analysis: below 4.5% is out of compliance, 4.5% to under 5% is borderline, and 5% or more is within compliance. The published interface screenshot labels 5% as a maximum, so that source discrepancy should be resolved before using these indicators for enforcement. “Active” excludes disabled and reserved devices.</p>`;
     document.querySelectorAll("[data-opportunity-map]").forEach(button => button.addEventListener("click", () => {
