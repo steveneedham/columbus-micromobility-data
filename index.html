@@ -170349,6 +170349,13 @@
 (function () {
   "use strict";
 
+  const siteGuide = document.getElementById("siteGuide");
+  document.getElementById("openSiteGuide").addEventListener("click", () => siteGuide.showModal());
+  document.getElementById("closeSiteGuide").addEventListener("click", () => siteGuide.close());
+  siteGuide.addEventListener("click", event => {
+    if (event.target === siteGuide) siteGuide.close();
+  });
+
   // ---- Load embedded data ----
   const data311 = JSON.parse(document.getElementById("data-311").textContent);
   const dataGbfs = JSON.parse(document.getElementById("data-gbfs").textContent);
