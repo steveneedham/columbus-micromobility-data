@@ -177,6 +177,8 @@
   }
   #map { height: 70vh; width: 100%; }
   .sidebar { display: flex; flex-direction: column; gap: 18px; }
+  .map-panel { position: relative; }
+  .mobile-layer-button, .mobile-controls-close, .mobile-bottom-nav, .mobile-controls-backdrop { display: none; }
   .controls {
     padding: 14px 16px;
     display: flex;
@@ -194,7 +196,12 @@
     font-family: var(--body);
     background: var(--source-sheet);
   }
-  .legend { padding: 12px 16px; font-size: 0.82rem; }
+  .legend { padding: 0; font-size: 0.82rem; }
+  .legend summary { list-style: none; cursor: pointer; }
+  .legend summary::-webkit-details-marker { display: none; }
+  .legend summary::after { content: "+"; font: 600 1rem var(--mono); }
+  .legend[open] summary::after { content: "−"; }
+  .legend-body { padding: 12px 16px 8px; }
   .legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .swatch { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
   .swatch.request {
@@ -304,7 +311,7 @@
     margin-bottom: 18px;
   }
   .observation-log .eyebrow { margin: 0 0 7px; color: var(--red-600); }
-  .observation-log h2 { margin: 0; font: 500 clamp(1.7rem, 3vw, 2.5rem) var(--display); }
+  .observation-log h2, .observation-log h3 { margin: 0; font: 500 clamp(1.7rem, 3vw, 2.5rem) var(--display); }
   .observation-intro { margin: 0; color: var(--slate-600); font-size: .86rem; line-height: 1.6; }
   .observation-snapshot { border: 1px solid var(--slate-300); background: var(--source-sheet); margin-top: 14px; }
   .observation-snapshot-header {
@@ -343,10 +350,31 @@
   .observation-vendor.veo { color: var(--teal-600); }
   .observation-category { color: var(--slate-500); font: 500 .64rem var(--mono); text-transform: uppercase; letter-spacing: .04em; }
   .observation-method { margin: 12px 0 0; color: var(--slate-500); font-size: .72rem; font-style: italic; }
+  .insights { margin-top: 42px; padding-top: 30px; border-top: 1px solid var(--slate-300); }
+  .insights-header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .7fr); gap: 24px; align-items: end; }
+  .insights-header .eyebrow { margin: 0 0 7px; color: var(--red-600); }
+  .insights-header h2 { margin: 0; font: 500 clamp(1.8rem, 3vw, 2.6rem) var(--display); }
+  .insights-header p { margin: 0; color: var(--slate-600); font-size: .86rem; }
+  .insight-tabs { display: flex; gap: 0; margin-top: 20px; border-bottom: 1px solid var(--slate-300); overflow-x: auto; }
+  .insight-tab { min-height: 44px; padding: 10px 14px; border: 1px solid var(--slate-300); border-bottom: 0; background: var(--source-sheet); color: var(--slate-600); font: 600 .68rem var(--mono); white-space: nowrap; cursor: pointer; }
+  .insight-tab + .insight-tab { border-left: 0; }
+  .insight-tab[aria-selected="true"] { background: var(--blue-700); color: white; border-color: var(--blue-700); }
+  .insight-panel { padding-top: 18px; }
+  .insight-panel[hidden] { display: none; }
+  .insight-hub-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 22px; border: 1px solid var(--slate-300); background: var(--source-sheet); }
+  .insight-hub-card h3 { margin: 0 0 6px; font: 500 1.45rem var(--display); }
+  .insight-hub-card p { margin: 0; color: var(--slate-600); }
+  .insight-hub-card .hub-dashboard-button { width: auto; margin: 0; }
+  .insight-pileups { max-width: 760px; }
+  .observation-snapshot summary { cursor: pointer; }
+  .observation-snapshot summary::-webkit-details-marker { display: none; }
+  .observation-snapshot summary::after { content: "+"; margin-left: auto; font: 600 1rem var(--mono); }
+  .observation-snapshot[open] summary::after { content: "−"; }
   @media (max-width: 700px) {
-    .observation-log-header { grid-template-columns: 1fr; gap: 10px; }
-    .observation-item { grid-template-columns: 48px 1fr; }
+    .observation-log-header, .insights-header { grid-template-columns: 1fr; gap: 10px; }
+    .observation-item { grid-template-columns: 44px 1fr; padding: 12px; gap: 9px; }
     .observation-category { grid-column: 2; }
+    .insight-hub-card { grid-template-columns: 1fr; }
   }
   .skill-library {
     margin-top: 52px;
@@ -557,8 +585,42 @@
     font-style: italic;
   }
   @media (max-width: 640px) {
-    header.top { padding: 30px 20px 24px; }
-    main { padding: 24px 20px 40px; }
+    body { padding-bottom: 64px; }
+    header.top { padding: 22px 16px 18px; }
+    main { padding: 18px 14px 36px; }
+    .desc { display: none; }
+    .caveat { margin-top: 14px; padding: 10px 12px; font-size: .76rem; line-height: 1.45; }
+    .badge { font-size: .58rem; }
+    .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+    .card { padding: 11px 10px; min-height: 126px; }
+    .card .label { font-size: .58rem; line-height: 1.35; }
+    .card .value { font-size: 1.6rem; }
+    .card .sub { font-size: .68rem; }
+    .card .freshness { font-size: .56rem; margin-top: 7px; padding-top: 6px; }
+    .section-nav { display: none; }
+    .mobile-bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1300; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--slate-400); background: rgba(251,250,246,.98); }
+    .mobile-bottom-nav a { display: grid; place-items: center; min-height: 58px; padding: 7px 4px; color: var(--slate-700); font: 600 .62rem var(--mono); text-decoration: none; }
+    .mobile-bottom-nav a:hover, .mobile-bottom-nav a:focus { background: var(--amber-100); color: var(--slate-900); }
+    .layout { gap: 12px; }
+    #map { height: 68vh; min-height: 430px; }
+    .mobile-layer-button { position: absolute; right: 12px; top: 50px; z-index: 700; display: block; min-height: 44px; padding: 9px 12px; border: 1px solid var(--slate-900); background: var(--source-sheet); color: var(--slate-900); font: 700 .7rem var(--mono); box-shadow: 0 2px 8px rgba(32,42,47,.18); cursor: pointer; }
+    .sidebar { gap: 12px; }
+    .controls { position: fixed; z-index: 1600; left: 0; right: 0; bottom: 0; max-height: min(82vh, 720px); overflow-y: auto; transform: translateY(105%); transition: transform .22s ease; border-left: 0; border-right: 0; border-bottom: 0; padding: 14px 16px 80px; box-shadow: 0 -12px 38px rgba(15,23,42,.25); }
+    body.mobile-controls-open .controls { transform: translateY(0); }
+    .mobile-controls-close { display: inline-grid; place-items: center; min-width: 44px; min-height: 44px; margin-left: auto; border: 1px solid var(--slate-400); background: var(--source-sheet); color: var(--slate-900); font-size: 1.1rem; cursor: pointer; }
+    .mobile-controls-backdrop { position: fixed; inset: 0; z-index: 1500; background: rgba(15,23,42,.55); }
+    body.mobile-controls-open .mobile-controls-backdrop { display: block; }
+    .controls label, .controls select, .preset-button, .view-link-button, .hub-dashboard-button { min-height: 44px; }
+    .legend:not([open]) .legend-body { display: none; }
+    .pileup-list { max-height: none; }
+    .insights { margin-top: 28px; padding-top: 24px; scroll-margin-top: 10px; }
+    .insight-tabs { position: sticky; top: 0; z-index: 500; background: var(--paper); }
+    .insight-tab { flex: 1 0 auto; }
+    .skill-install { padding-top: 14px; padding-bottom: 14px; }
+    .skill-install ol { font-size: .78rem; }
+    .skill-downloads a { width: 100%; min-height: 44px; display: flex; align-items: center; }
+    .research-promo { margin-top: 34px; }
+
     .section-nav-inner { padding: 0 20px; overflow-x: auto; flex-wrap: nowrap; }
     .section-nav a { white-space: nowrap; }
     .research-promo { grid-template-columns: 1fr; align-items: start; }
@@ -600,11 +662,19 @@
   <div class="section-nav-inner">
     <a href="#overview">Overview</a>
     <a href="#map-workspace">Map</a>
-    <a href="#observations">Observations</a>
-    <a href="#lookup-tool">Lookup tool</a>
+    <a href="#insights">Insights</a>
+    <a href="#lookup-tool">Tools</a>
     <a href="research-library.html">Research library</a>
   </div>
 </nav>
+
+<nav class="mobile-bottom-nav" aria-label="Mobile site sections">
+  <a href="#overview">Overview</a>
+  <a href="#map-workspace">Map</a>
+  <a href="#insights">Insights</a>
+  <a href="#lookup-tool">Tools</a>
+</nav>
+<div class="mobile-controls-backdrop" id="mobileControlsBackdrop"></div>
 
 <dialog class="site-guide" id="siteGuide" aria-labelledby="site-guide-title">
   <div class="guide-shell">
@@ -615,10 +685,10 @@
     <p class="guide-lede">Start with snapshot age, then use the map layers to ask a specific question. Every view is read-only and evidence-limited: proximity and reported conditions are review signals, not proof of a violation or vendor intent.</p>
     <div class="guide-grid">
       <section class="guide-item"><h3>1 · Check data age</h3><p>The four summary cards show record counts, the last refresh timestamp, and relative age for the 311, GBFS, pile-up, and policy snapshots.</p></section>
-      <section class="guide-item"><h3>2 · Toggle map layers</h3><p>Turn 311 requests, GBFS positions, cross-vendor flags, policy boundaries, Columbus Ride Hubs, and vendor observation areas on or off independently.</p></section>
+      <section class="guide-item"><h3>2 · Toggle map layers</h3><p>On phones, select Layers &amp; filters over the map to open the control sheet. On larger screens, the controls remain beside the map.</p></section>
       <section class="guide-item"><h3>3 · Read marker shapes</h3><p>311 reports use diamonds with priority colors. GBFS vehicles use vendor-colored circles. Ride Hubs use the purple hub sign, while pile-ups use outlined flags.</p></section>
       <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow GBFS vehicle positions. Ride Hub proximity counts continue to use the complete current snapshot, independent of those display filters.</p></section>
-      <section class="guide-item"><h3>5 · Navigate to findings</h3><p>Select a cross-vendor pile-up entry to fly to its coordinates. Select a geographic vendor observation to enable its layer, focus the review area, and open its summary.</p></section>
+      <section class="guide-item"><h3>5 · Review insights</h3><p>Use the Ride Hubs, Vendor changes, and Pile-ups tabs. Select any geographic finding to enable its layer and return to the relevant map area.</p></section>
       <section class="guide-item"><h3>6 · Inspect Ride Hubs</h3><p>Open the Ride Hub Status dashboard to compare empty and capacity-exceeding proximity signals. Select any row to enable the hub layer and jump to its map marker.</p></section>
       <section class="guide-item"><h3>7 · Research a 311 case</h3><p>Select a 311 diamond for its CAS ID, address, status, source link, and a button that copies a complete case-lookup prompt for your AI tool.</p></section>
       <section class="guide-item"><h3>8 · Install the lookup workflow</h3><p>Below the observation log, download the native Claude skill ZIP or portable Markdown instructions for a ChatGPT Project or Gemini Gem.</p></section>
@@ -645,14 +715,15 @@
   <div class="stat-grid" id="statGrid"></div>
 
   <div class="layout" id="map-workspace">
-    <div class="panel">
+    <div class="panel map-panel">
       <div class="panel-header">Map — source-labeled, public-data only</div>
+      <button type="button" class="mobile-layer-button" id="openMobileControls" aria-controls="mapControls" aria-expanded="false">Layers &amp; filters</button>
       <div id="map"></div>
     </div>
 
     <div class="sidebar">
-      <div class="panel controls">
-        <div class="panel-header" style="margin: -14px -16px 4px;">Layers &amp; filters</div>
+      <div class="panel controls" id="mapControls">
+        <div class="panel-header" style="margin: -14px -16px 4px;"><span>Layers &amp; filters</span><button type="button" class="mobile-controls-close" id="closeMobileControls" aria-label="Close layers and filters">×</button></div>
         <div class="focus-presets" aria-label="Map focus presets">
           <span class="preset-label">Focus preset</span>
           <div class="preset-buttons">
@@ -688,37 +759,44 @@
         </div>
       </div>
 
-      <div class="panel legend">
-        <div class="panel-header" style="margin: -12px -16px 8px;">Legend</div>
-        <div class="legend-row"><span class="swatch request" style="background:#dc2626;"></span> 311 — critical (ADA ramp/entrance)</div>
-        <div class="legend-row"><span class="swatch request" style="background:#f97316;"></span> 311 — high (ADA concern / sidewalk pile)</div>
-        <div class="legend-row"><span class="swatch request" style="background:#64748b;"></span> 311 — standard</div>
-        <div class="legend-row"><span class="swatch" style="background:#0d9488;"></span> GBFS — Veo</div>
-        <div class="legend-row"><span class="swatch" style="background:#f97316;"></span> GBFS — Spin</div>
-        <div class="legend-row"><span class="swatch hub"></span> Columbus Ride Hub · badge = vehicles within 100 m</div>
-        <div class="legend-row"><span class="swatch observation"></span> Vendor observation review area</div>
-        <div class="legend-row"><span class="swatch ring"></span> Cross-vendor pile-up flag</div>
-        <div class="legend-row"><span class="swatch line"></span> Policy boundary</div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-header">Cross-vendor pile-ups</div>
-        <div class="pileup-list" id="pileupList"></div>
-        <button type="button" class="pileup-list-toggle" id="togglePileupList" aria-expanded="false">Show all pile-ups</button>
-      </div>
+      <details class="panel legend" id="mapLegend" open>
+        <summary class="panel-header">Legend</summary>
+        <div class="legend-body">
+          <div class="legend-row"><span class="swatch request" style="background:#dc2626;"></span> 311 — critical (ADA ramp/entrance)</div>
+          <div class="legend-row"><span class="swatch request" style="background:#f97316;"></span> 311 — high (ADA concern / sidewalk pile)</div>
+          <div class="legend-row"><span class="swatch request" style="background:#64748b;"></span> 311 — standard</div>
+          <div class="legend-row"><span class="swatch" style="background:#0d9488;"></span> GBFS — Veo</div>
+          <div class="legend-row"><span class="swatch" style="background:#f97316;"></span> GBFS — Spin</div>
+          <div class="legend-row"><span class="swatch hub"></span> Columbus Ride Hub · badge = vehicles within 100 m</div>
+          <div class="legend-row"><span class="swatch observation"></span> Vendor observation review area</div>
+          <div class="legend-row"><span class="swatch ring"></span> Cross-vendor pile-up flag</div>
+          <div class="legend-row"><span class="swatch line"></span> Policy boundary</div>
+        </div>
+      </details>
     </div>
   </div>
 
-  <section class="observation-log" id="observations" aria-labelledby="observation-log-title">
-    <div class="observation-log-header">
-      <div>
-        <p class="eyebrow">GBFS snapshot-to-snapshot</p>
-        <h2 id="observation-log-title">Vendor observation log</h2>
-      </div>
-      <p class="observation-intro">A perpetual record of what each vendor’s published fleet appears to be doing between snapshots—fleet size, range, availability, and geographic concentration. Every committed comparison is retained; no 311 signals are used.</p>
+  <section class="insights" id="insights" aria-labelledby="insights-title">
+    <div class="insights-header">
+      <div><p class="eyebrow">Current snapshot signals</p><h2 id="insights-title">Insights</h2></div>
+      <p>Review Ride Hub capacity signals, vendor changes between snapshots, or cross-vendor pile-ups. Every relevant result can take you back to the map.</p>
     </div>
-    <div id="gbfsObservationLog"></div>
-    <p class="observation-method">Point-in-time public GBFS observations; changes do not establish deployment intent, demand, service quality, or causation.</p>
+    <div class="insight-tabs" role="tablist" aria-label="Insight views">
+      <button type="button" class="insight-tab" role="tab" id="tab-ride-hubs" aria-controls="panel-ride-hubs" aria-selected="true" data-insight="ride-hubs">Ride Hubs</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-vendor-changes" aria-controls="panel-vendor-changes" aria-selected="false" data-insight="vendor-changes">Vendor changes</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-pileups" aria-controls="panel-pileups" aria-selected="false" data-insight="pileups">Pile-ups</button>
+    </div>
+    <div class="insight-panel" id="panel-ride-hubs" role="tabpanel" aria-labelledby="tab-ride-hubs" data-insight-panel="ride-hubs">
+      <div class="insight-hub-card"><div><h3>Ride Hub status dashboard</h3><p id="rideHubInsightSummary">Compare empty and over-capacity proximity signals from the current GBFS snapshot.</p></div><button type="button" class="hub-dashboard-button" id="openRideHubDashboardInsights" aria-haspopup="dialog">Open Ride Hub status</button></div>
+    </div>
+    <div class="insight-panel observation-log" id="panel-vendor-changes" role="tabpanel" aria-labelledby="tab-vendor-changes" data-insight-panel="vendor-changes" hidden>
+      <div class="observation-log-header"><div><p class="eyebrow">GBFS snapshot-to-snapshot</p><h3 id="observation-log-title">Vendor observation history</h3></div><p class="observation-intro">A perpetual record of fleet size, range, availability, and geographic concentration. Every committed comparison is retained; no 311 signals are used.</p></div>
+      <div id="gbfsObservationLog"></div>
+      <p class="observation-method">Point-in-time public GBFS observations; changes do not establish deployment intent, demand, service quality, or causation.</p>
+    </div>
+    <div class="insight-panel" id="panel-pileups" role="tabpanel" aria-labelledby="tab-pileups" data-insight-panel="pileups" hidden>
+      <div class="panel insight-pileups"><div class="panel-header">Cross-vendor pile-ups</div><div class="pileup-list" id="pileupList"></div><button type="button" class="pileup-list-toggle" id="togglePileupList" aria-expanded="false">Show all pile-ups</button></div>
+    </div>
   </section>
 
   <section class="skill-library" id="lookup-tool" aria-labelledby="skill-library-title">
@@ -170395,6 +170473,22 @@
     if (event.target === siteGuide) siteGuide.close();
   });
 
+  const mobileControlsButton = document.getElementById("openMobileControls");
+  function setMobileControls(open) {
+    document.body.classList.toggle("mobile-controls-open", open);
+    mobileControlsButton.setAttribute("aria-expanded", String(open));
+  }
+  mobileControlsButton.addEventListener("click", () => setMobileControls(true));
+  document.getElementById("closeMobileControls").addEventListener("click", () => setMobileControls(false));
+  document.getElementById("mobileControlsBackdrop").addEventListener("click", () => setMobileControls(false));
+  if (matchMedia("(max-width: 640px)").matches) document.getElementById("mapLegend").removeAttribute("open");
+
+  function selectInsight(name) {
+    document.querySelectorAll("[data-insight]").forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.insight === name)));
+    document.querySelectorAll("[data-insight-panel]").forEach(panel => { panel.hidden = panel.dataset.insightPanel !== name; });
+  }
+  document.querySelectorAll("[data-insight]").forEach(tab => tab.addEventListener("click", () => selectInsight(tab.dataset.insight)));
+
   // ---- Load embedded data ----
   const data311 = JSON.parse(document.getElementById("data-311").textContent);
   const dataGbfs = JSON.parse(document.getElementById("data-gbfs").textContent);
@@ -170543,7 +170637,7 @@
     const status = button.parentElement.querySelector(".case-lookup-status");
     try {
       await navigator.clipboard.writeText(prompt);
-      status.textContent = "Lookup prompt copied. Paste it into Codex.";
+      status.textContent = "Lookup prompt copied. Paste it into your AI tool.";
     } catch (error) {
       const textarea = document.createElement("textarea");
       textarea.value = prompt;
@@ -170554,7 +170648,7 @@
       textarea.select();
       const copied = document.execCommand("copy");
       textarea.remove();
-      status.textContent = copied ? "Lookup prompt copied. Paste it into Codex." : "Copy failed. Select the case ID and address, then ask Codex to use $columbus-311-case-lookup.";
+      status.textContent = copied ? "Lookup prompt copied. Paste it into your AI tool." : "Copy failed. Select the case ID and address, then ask your AI tool to use the installed Columbus 311 case lookup workflow.";
     }
   });
 
@@ -170696,6 +170790,7 @@
       : "Based on the current embedded GBFS snapshot and City-published Ride Hub capacity.";
     const emptyRows = empty.map(hub => `<li><button type="button" class="hub-map-link" data-hub-index="${hub.index}">${esc(hub.name)}</button></li>`).join("");
     const overRows = overCapacity.map(hub => `<tr><td><button type="button" class="hub-map-link" data-hub-index="${hub.index}">${esc(hub.name)}</button></td><td>${hub.capacity}</td><td><strong>${hub.total}</strong></td><td>${hub.veo}</td><td>${hub.spin}</td></tr>`).join("");
+    document.getElementById("rideHubInsightSummary").textContent = `${empty.length} empty and ${overCapacity.length} over-capacity proximity signals in the current snapshot.`;
     document.getElementById("rideHubDashboardContent").innerHTML = `
       <div class="hub-dashboard-summary">
         <div class="hub-dashboard-stat"><strong>${empty.length}</strong><span>Empty proximity signals</span></div>
@@ -170707,6 +170802,7 @@
   }
   buildRideHubDashboard();
   document.getElementById("openRideHubDashboard").addEventListener("click", () => rideHubDashboard.showModal());
+  document.getElementById("openRideHubDashboardInsights").addEventListener("click", () => rideHubDashboard.showModal());
   document.getElementById("closeRideHubDashboard").addEventListener("click", () => rideHubDashboard.close());
   rideHubDashboard.addEventListener("click", event => {
     if (event.target === rideHubDashboard) rideHubDashboard.close();
@@ -170989,7 +171085,7 @@
       container.innerHTML = `<div class="empty-note">A second GBFS snapshot is required before vendor changes can be observed.</div>`;
       return;
     }
-    container.innerHTML = snapshots.map(snapshot => {
+    container.innerHTML = snapshots.map((snapshot, snapshotIndex) => {
       const observedAt = parseSnapshotTime(snapshot.snapshot_id);
       const baselineAt = parseSnapshotTime(snapshot.compared_with);
       const observedLabel = observedAt ? fmtDateTime(observedAt.toISOString()) : snapshot.snapshot_id;
@@ -171006,13 +171102,13 @@
           : `<li class="observation-row"><div class="observation-item">${content}</div></li>`;
       }).join("");
       return `
-        <article class="observation-snapshot">
-          <div class="observation-snapshot-header">
+        <details class="observation-snapshot" ${snapshotIndex === 0 ? "open" : ""}>
+          <summary class="observation-snapshot-header">
             <strong>Snapshot ${esc(observedLabel)}</strong>
             <span>Compared with ${esc(baselineLabel)}</span>
-          </div>
+          </summary>
           <ul class="observation-items">${items}</ul>
-        </article>
+        </details>
       `;
     }).join("");
   }
