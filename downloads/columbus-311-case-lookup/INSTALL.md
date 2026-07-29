@@ -15,7 +15,7 @@ Claude supports this package as a native custom skill.
 
 ## ChatGPT
 
-1. Download `columbus-311-case-lookup.md` from the dashboard.
+1. Download `columbus-311-case-lookup.txt` from the dashboard.
 2. Create a new ChatGPT Project.
 3. Upload the Markdown file to the Project as a source.
 4. In **Project settings**, add: `Follow the uploaded Columbus 311 case lookup workflow whenever I provide a Columbus CAS ID and address.`
@@ -25,7 +25,7 @@ This is Project context, not a native Claude-style skill installation.
 
 ## Gemini
 
-1. Download `columbus-311-case-lookup.md` from the dashboard.
+1. Download `columbus-311-case-lookup.txt` from the dashboard.
 2. In the Gemini web app, open **Gems > New Gem**.
 3. Name it `Columbus 311 Case Lookup`.
 4. Paste the workflow purpose into the Gem instructions.
