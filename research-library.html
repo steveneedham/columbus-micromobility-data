@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Library · Columbus Micromobility Data</title>
+<meta name="description" content="Forecast guides, source inventories, project cards, and comparable demand-analysis charts for Columbus micromobility research.">
+<link rel="icon" type="image/svg+xml" href="assets/field-ledger-mark.svg">
+<style>
+:root { --paper:#f5f1e8; --sheet:#fbfaf6; --ink:#202a2f; --muted:#5e6b70; --line:#c9c3b7; --red:#a94728; --blue:#175b85; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; --display:Georgia,'Times New Roman',serif; --body:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+*{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--body)} a{color:var(--blue);text-underline-offset:.2em} a:focus-visible{outline:2px solid var(--red);outline-offset:3px}.top{padding:44px 32px 30px;border-bottom:1px solid var(--line)}.top-inner,main{max-width:1120px;margin:0 auto}.back{font:600 .7rem var(--mono);text-decoration:none}.eyebrow,.reference-label{color:var(--red);font:600 .68rem var(--mono);letter-spacing:.08em;text-transform:uppercase}.top h1{margin:18px 0 10px;font:500 clamp(2.2rem,5vw,4.2rem)/1 var(--display);letter-spacing:-.02em}.lede{max-width:760px;margin:0;color:var(--muted)}main{padding:38px 32px 64px}.reference-library{margin:0}.reference-library>h2{display:none}.reference-intro{max-width:760px;color:var(--muted);margin:0 0 28px}.reference-grid,.forecast-visuals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}.reference-item{padding:22px 24px 24px 0;border-bottom:1px solid var(--line)}.reference-item:nth-child(even){padding-left:24px;border-left:1px solid var(--line)}.reference-label{color:var(--muted)}.reference-item h3{margin:8px 0 6px;font:500 1.35rem var(--display)}.reference-item p{margin:0 0 12px;color:var(--muted);font-size:.9rem}.reference-links{display:flex;gap:16px;flex-wrap:wrap;font:600 .72rem var(--mono)}.forecast-visuals{gap:20px;margin-top:30px;border-top:0}.forecast-visual{margin:0;padding-top:12px;border-top:1px solid var(--line)}.forecast-visual img{display:block;width:100%;height:auto;border:1px solid var(--line);background:var(--sheet)}.forecast-visual figcaption{margin-top:8px;color:var(--muted);font:.68rem/1.5 var(--mono)}footer{text-align:center;padding:24px;border-top:1px solid var(--line);color:var(--muted);font:.7rem var(--mono)}
+@media(max-width:700px){.top{padding:30px 20px 24px}main{padding:28px 20px 44px}.reference-grid,.forecast-visuals{grid-template-columns:1fr}.reference-item:nth-child(even){padding-left:0;border-left:0}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><a class="back" href="index.html#overview">← Observer View</a><p class="eyebrow">Columbus Micromobility Data</p><h1>Research library</h1><p class="lede">Forecast guides, source inventories, project cards, and comparable analysis charts. Each artifact remains labeled by source so its provenance is visible.</p></div></header>
+<main>
+  <section class="reference-library" aria-labelledby="reference-library-title">
+    <p class="eyebrow">Reference artifacts · July 2026</p>
+    <h2 id="reference-library-title">Forecast source guides and inventories</h2>
+    <p class="reference-intro">Downloadable working artifacts document the event, home-game, ISO-week, and weather context used for demand planning. The ChatGPT and Claude files are retained as separate reference sets so their provenance remains visible.</p>
+
+    <div class="reference-grid">
+      <article class="reference-item">
+        <div class="reference-label">ChatGPT · Field Ledger edition</div>
+        <h3>ChatGPT Forecast</h3>
+        <p>Branded operating guide with event and game separation, ISO-week correlation, historical weather, projected weather-risk caveats, and source methodology.</p>
+        <div class="reference-links">
+          <a href="ChatGPT%20Forecast.docx" download>Word guide</a>
+          <a href="ChatGPT%20Forecast.xlsx" download>Excel inventory</a>
+        </div>
+      </article>
+
+      <article class="reference-item">
+        <div class="reference-label">Claude · Reference edition</div>
+        <h3>Claude Forecast</h3>
+        <p>Companion source guide and historical event workbook retained as supplied for comparison and reference.</p>
+        <div class="reference-links">
+          <a href="Claude%20Forecast%20-%20Columbus_Micromobility_Event_Demand_Sources_branded.docx" download>Word guide</a>
+          <a href="Claude%20Forecast%200%20Columbus_Micromobility_Events_Historical_2024-2026.xlsx" download>Excel inventory</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="forecast-visuals" aria-label="Forecast project cards">
+      <figure class="forecast-visual">
+        <img src="demand-forecast-card.svg" alt="ChatGPT Forecast project card summarizing canonical events, home games, weather-risk days, and the ISO-week join">
+        <figcaption>ChatGPT Forecast card · <a href="demand-forecast-card.svg">SVG</a> · <a href="demand-forecast-card.png">PNG</a></figcaption>
+      </figure>
+      <figure class="forecast-visual">
+        <img src="claude-demand-forecast-card.svg" alt="Claude Forecast project card summarizing event records, ISO-week series, projected weeks, and the weekly join">
+        <figcaption>Claude Forecast card · <a href="claude-demand-forecast-card.svg">SVG</a> · <a href="claude-demand-forecast-card.png">PNG</a></figcaption>
+      </figure>
+    </div>
+
+    <div class="forecast-visuals" aria-label="Comparable ChatGPT and Claude analysis charts">
+      <figure class="forecast-visual">
+        <img src="demand-forecast-chart.svg" alt="ChatGPT Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026">
+        <figcaption>ChatGPT Analysis · workbook-derived projection · <a href="demand-forecast-chart.svg">SVG</a> · <a href="demand-forecast-chart.png">PNG</a></figcaption>
+      </figure>
+      <figure class="forecast-visual">
+        <img src="claude-demand-forecast-chart.svg" alt="Claude Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026">
+        <figcaption>Claude Analysis · workbook-derived projection · <a href="claude-demand-forecast-chart.svg">SVG</a> · <a href="claude-demand-forecast-chart.png">PNG</a></figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+<footer>© 2026 Steven Needham · Independent project, public data only.</footer>
+</body>
+</html>

@@ -27,7 +27,7 @@ A single self-contained HTML dashboard — no build step, no server required. Op
 - **Columbus Ride Hubs** — official City-published CoGo station locations and dock capacity, with a badge and popup breakdown counting each vendor’s published vehicles within 100 metres in the current GBFS snapshot.
 - **Vendor observation log** — the latest snapshot’s geographically relevant vendor changes rendered as toggleable review-area circles; selecting a matching log entry enables and focuses this layer.
 
-Summary stat cards and a legend sit above the map. A running GBFS vendor observation log below the map compares each new snapshot with its prior archived snapshot without using 311 signals. A “How to use this site” dialog catalogs the dashboard controls, and the downloadable Columbus 311 case-lookup workflow includes a native Claude skill ZIP plus portable Markdown setup instructions for ChatGPT Projects and Gemini Gems. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
+Summary stat cards and a legend sit above the map. A running GBFS vendor observation log below the map compares each new snapshot with its prior archived snapshot without using 311 signals. Focus presets, a shareable URL state, and a compact top-ten pile-up list make map review easier. A “How to use this site” dialog catalogs the dashboard controls, and the downloadable Columbus 311 case-lookup workflow includes a native Claude skill ZIP plus portable Markdown setup instructions for ChatGPT Projects and Gemini Gems. The dashboard is read-only: no accounts, no write-back, no tracking scripts.
 
 ### `data-311.json`, `data-gbfs.json`, `data-policy.json`, `data-ride-hubs.json`, `data-gbfs-observations.json`
 The data snapshots the dashboard is built from. The operational snapshots are pulled from the companion prototype repo [`steveneedham/311-Intel`](https://github.com/steveneedham/311-Intel); the Ride Hubs snapshot comes from the official City ArcGIS layer. Each file documents its own source (query URL, fetch timestamp, method) inline.
@@ -53,7 +53,7 @@ After loading a new `data-gbfs.json` snapshot, append its vendor-only comparison
 python3 scripts/build_gbfs_observations.py
 ```
 
-The builder compares fleet size, median published range, availability share, and counts within explicitly defined geographic review areas. It retains up to 24 snapshot comparisons and never reads 311 records.
+The builder compares fleet size, median published range, availability share, and counts within explicitly defined geographic review areas. It retains every committed snapshot comparison as a perpetual history and never reads 311 records.
 
 ### `architecture.svg`
 The diagram above, as a standalone file for reuse in docs or a portfolio writeup.

@@ -43,7 +43,7 @@
     line-height: 1.5;
   }
   a { color: var(--blue-700); }
-  a:focus-visible, input:focus-visible, select:focus-visible {
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
     outline: 2px solid var(--red-600);
     outline-offset: 3px;
   }
@@ -94,7 +94,23 @@
   .caveat strong { color: var(--slate-900); }
   .caveat a { color: var(--blue-700); }
   .caveat code { font: .78rem var(--mono); }
+  .section-nav { border-bottom: 1px solid var(--slate-300); background: var(--source-sheet); }
+  .section-nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; flex-wrap: wrap; gap: 0; }
+  .section-nav a { padding: 11px 15px; border-left: 1px solid var(--slate-300); color: var(--slate-700); font: 600 .68rem var(--mono); letter-spacing: .03em; text-decoration: none; }
+  .section-nav a:last-child { border-right: 1px solid var(--slate-300); }
+  .section-nav a:hover { color: var(--slate-900); background: var(--amber-100); }
   main { max-width: 1280px; margin: 0 auto; padding: 32px 32px 56px; }
+  .focus-presets { margin: 10px 0 14px; padding-bottom: 14px; border-bottom: 1px solid var(--slate-300); }
+  .preset-label { display: block; margin-bottom: 7px; color: var(--slate-500); font: 600 .64rem var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+  .preset-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+  .preset-button, .view-link-button, .pileup-list-toggle {
+    border: 1px solid var(--slate-400); border-radius: 0; background: var(--source-sheet); color: var(--slate-700); padding: 7px 9px; font: 600 .66rem var(--mono); cursor: pointer;
+  }
+  .preset-button:hover, .view-link-button:hover, .pileup-list-toggle:hover { border-color: var(--slate-900); color: var(--slate-900); background: var(--amber-100); }
+  .preset-button[aria-pressed="true"] { border-color: var(--blue-700); background: var(--blue-700); color: white; }
+  .view-link-row { display: flex; gap: 8px; align-items: center; margin-top: 9px; }
+  .view-link-status { min-height: 1em; color: var(--teal-600); font-size: .66rem; }
+
   .stat-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -267,6 +283,13 @@
   }
   .pileup-item .id { font-weight: 700; color: var(--red-600); font-size: 0.8rem; }
   .pileup-item .meta { color: var(--slate-600); margin-top: 2px; }
+  .pileup-list-toggle { width: calc(100% - 32px); margin: 0 16px 14px; }
+  .research-promo { margin-top: 52px; padding: 30px 0 8px; border-top: 1px solid var(--slate-300); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
+  .research-promo .eyebrow { margin: 0 0 7px; color: var(--red-600); }
+  .research-promo h2 { margin: 0; font: 500 clamp(1.7rem, 3vw, 2.4rem)/1.1 var(--display); }
+  .research-promo p { max-width: 760px; margin: 10px 0 0; color: var(--slate-600); }
+  .research-promo a { display: inline-block; padding: 10px 13px; border: 1px solid var(--blue-700); color: var(--blue-700); background: var(--source-sheet); font: 600 .72rem var(--mono); text-decoration: none; white-space: nowrap; }
+  .research-promo a:hover { color: var(--slate-900); border-color: var(--slate-900); background: var(--amber-100); }
   .empty-note { color: var(--slate-500); font-style: italic; }
   .observation-log {
     margin-top: 34px;
@@ -515,6 +538,10 @@
   @media (max-width: 640px) {
     header.top { padding: 30px 20px 24px; }
     main { padding: 24px 20px 40px; }
+    .section-nav-inner { padding: 0 20px; overflow-x: auto; flex-wrap: nowrap; }
+    .section-nav a { white-space: nowrap; }
+    .research-promo { grid-template-columns: 1fr; align-items: start; }
+    .research-promo a { white-space: normal; }
     .title-row { align-items: flex-start; }
     .project-mark { width: 32px; height: 32px; }
     h1 { flex-basis: calc(100% - 50px); }
@@ -541,14 +568,20 @@
     </div>
     <p class="desc">An independent, public-data-only look at Columbus shared-scooter operations — 311 requests, published vehicle positions, and policy boundaries. Built from public sources only; not affiliated with or using data from any employer.</p>
     <div class="caveat">
-      <strong>Current public snapshots.</strong> The complete read-only 311, GBFS, and published Populus policy datasets are embedded below.
-      Counts and source timestamps appear in the stat cards and JSON metadata. These snapshots support operational review, not confirmed
-      violations or a complete account of citywide conditions. This dashboard itself is destined for
-      <a href="https://github.com/steveneedham/columbus-micromobility-data" target="_blank" rel="noopener">github.com/steveneedham/columbus-micromobility-data</a>.
-      Not an official Spin, Veo, or City of Columbus tool — not a confirmed-violation record system.
+      <strong>Snapshot, not live operations.</strong> Counts and timestamps describe public point-in-time data. Proximity, reports, and observations are review signals—not confirmed violations or vendor intent. Open “How to use this site” for methods and evidence boundaries.
     </div>
   </div>
 </header>
+
+<nav class="section-nav" aria-label="Site sections">
+  <div class="section-nav-inner">
+    <a href="#overview">Overview</a>
+    <a href="#map-workspace">Map</a>
+    <a href="#observations">Observations</a>
+    <a href="#lookup-tool">Lookup tool</a>
+    <a href="research-library.html">Research library</a>
+  </div>
+</nav>
 
 <dialog class="site-guide" id="siteGuide" aria-labelledby="site-guide-title">
   <div class="guide-shell">
@@ -566,17 +599,17 @@
       <section class="guide-item"><h3>6 · Inspect Ride Hubs</h3><p>Enable Columbus Ride Hubs and select a hub icon to see station capacity plus the number of Veo and Spin vehicles published within 100 metres.</p></section>
       <section class="guide-item"><h3>7 · Research a 311 case</h3><p>Select a 311 diamond for its CAS ID, address, status, source link, and a button that copies a complete case-lookup prompt for your AI tool.</p></section>
       <section class="guide-item"><h3>8 · Install the lookup workflow</h3><p>Below the observation log, download the native Claude skill ZIP or portable Markdown instructions for a ChatGPT Project or Gemini Gem.</p></section>
-      <section class="guide-item"><h3>9 · Follow vendor changes</h3><p>The running observation log compares GBFS snapshots for fleet size, published range, availability, and geographic concentration without using 311 reports.</p></section>
-      <section class="guide-item"><h3>10 · Use reference artifacts</h3><p>The final library contains downloadable forecast guides, inventories, project cards, and analysis charts with visible source provenance.</p></section>
+      <section class="guide-item"><h3>9 · Follow vendor changes</h3><p>The perpetual observation history preserves every committed GBFS comparison for fleet size, published range, availability, and geographic concentration without using 311 reports.</p></section>
+      <section class="guide-item"><h3>10 · Use research artifacts</h3><p>Open the separate Research Library for downloadable forecast guides, inventories, project cards, and analysis charts with visible source provenance.</p></section>
     </div>
     <p class="guide-footnote">This is an independent public-data observer view—not a live dispatch system, official City record system, or confirmed-violation ledger.</p>
   </div>
 </dialog>
 
-<main>
+<main id="overview">
   <div class="stat-grid" id="statGrid"></div>
 
-  <div class="layout">
+  <div class="layout" id="map-workspace">
     <div class="panel">
       <div class="panel-header">Map — source-labeled, public-data only</div>
       <div id="map"></div>
@@ -585,6 +618,16 @@
     <div class="sidebar">
       <div class="panel controls">
         <div class="panel-header" style="margin: -14px -16px 4px;">Layers &amp; filters</div>
+        <div class="focus-presets" aria-label="Map focus presets">
+          <span class="preset-label">Focus preset</span>
+          <div class="preset-buttons">
+            <button type="button" class="preset-button" data-focus="overview">Overview</button>
+            <button type="button" class="preset-button" data-focus="311">311 review</button>
+            <button type="button" class="preset-button" data-focus="fleet">Fleet activity</button>
+            <button type="button" class="preset-button" data-focus="hubs">Ride Hubs</button>
+          </div>
+          <div class="view-link-row"><button type="button" class="view-link-button" id="copyViewLink">Copy view link</button><span class="view-link-status" id="viewLinkStatus" aria-live="polite"></span></div>
+        </div>
         <label><input type="checkbox" id="toggle311" checked> 311 requests (review signal, not confirmed violations)</label>
         <label><input type="checkbox" id="toggleGbfs" checked> GBFS vehicle positions</label>
         <label><input type="checkbox" id="togglePileups" checked> Cross-vendor flags</label>
@@ -625,23 +668,24 @@
       <div class="panel">
         <div class="panel-header">Cross-vendor pile-ups</div>
         <div class="pileup-list" id="pileupList"></div>
+        <button type="button" class="pileup-list-toggle" id="togglePileupList" aria-expanded="false">Show all pile-ups</button>
       </div>
     </div>
   </div>
 
-  <section class="observation-log" aria-labelledby="observation-log-title">
+  <section class="observation-log" id="observations" aria-labelledby="observation-log-title">
     <div class="observation-log-header">
       <div>
         <p class="eyebrow">GBFS snapshot-to-snapshot</p>
         <h2 id="observation-log-title">Vendor observation log</h2>
       </div>
-      <p class="observation-intro">A running record of what each vendor’s published fleet appears to be doing between snapshots—fleet size, range, availability, and geographic concentration. No 311 signals are used.</p>
+      <p class="observation-intro">A perpetual record of what each vendor’s published fleet appears to be doing between snapshots—fleet size, range, availability, and geographic concentration. Every committed comparison is retained; no 311 signals are used.</p>
     </div>
     <div id="gbfsObservationLog"></div>
     <p class="observation-method">Point-in-time public GBFS observations; changes do not establish deployment intent, demand, service quality, or causation.</p>
   </section>
 
-  <section class="skill-library" aria-labelledby="skill-library-title">
+  <section class="skill-library" id="lookup-tool" aria-labelledby="skill-library-title">
     <p class="eyebrow">Open workflow · public portal</p>
     <h2 id="skill-library-title">Install the Columbus 311 case lookup</h2>
     <p class="skill-intro">A portable, read-only workflow for finding a Columbus 311 case by address and CAS ID, then separating portal facts from vendor and accessibility evidence. Claude accepts the ZIP as a native custom skill; ChatGPT and Gemini use the same Markdown as reusable project or Gem context.</p>
@@ -693,54 +737,13 @@
     <p class="skill-note">Review AI instruction packages before installing them. This workflow uses a public, read-only portal, requires no login, and should never submit, edit, or comment on a 311 request.</p>
   </section>
 
-  <section class="reference-library" aria-labelledby="reference-library-title">
-    <p class="eyebrow">Reference artifacts · July 2026</p>
-    <h2 id="reference-library-title">Forecast source guides and inventories</h2>
-    <p class="reference-intro">Downloadable working artifacts document the event, home-game, ISO-week, and weather context used for demand planning. The ChatGPT and Claude files are retained as separate reference sets so their provenance remains visible.</p>
-
-    <div class="reference-grid">
-      <article class="reference-item">
-        <div class="reference-label">ChatGPT · Field Ledger edition</div>
-        <h3>ChatGPT Forecast</h3>
-        <p>Branded operating guide with event and game separation, ISO-week correlation, historical weather, projected weather-risk caveats, and source methodology.</p>
-        <div class="reference-links">
-          <a href="ChatGPT%20Forecast.docx" download>Word guide</a>
-          <a href="ChatGPT%20Forecast.xlsx" download>Excel inventory</a>
-        </div>
-      </article>
-
-      <article class="reference-item">
-        <div class="reference-label">Claude · Reference edition</div>
-        <h3>Claude Forecast</h3>
-        <p>Companion source guide and historical event workbook retained as supplied for comparison and reference.</p>
-        <div class="reference-links">
-          <a href="Claude%20Forecast%20-%20Columbus_Micromobility_Event_Demand_Sources_branded.docx" download>Word guide</a>
-          <a href="Claude%20Forecast%200%20Columbus_Micromobility_Events_Historical_2024-2026.xlsx" download>Excel inventory</a>
-        </div>
-      </article>
+  <section class="research-promo" aria-labelledby="research-promo-title">
+    <div>
+      <p class="eyebrow">Separate reference collection</p>
+      <h2 id="research-promo-title">Research library</h2>
+      <p>Forecast guides, source inventories, project cards, and comparable analysis charts now live in their own quieter reading space.</p>
     </div>
-
-    <div class="forecast-visuals" aria-label="Forecast project cards">
-      <figure class="forecast-visual">
-        <img src="demand-forecast-card.svg" alt="ChatGPT Forecast project card summarizing canonical events, home games, weather-risk days, and the ISO-week join">
-        <figcaption>ChatGPT Forecast card · <a href="demand-forecast-card.svg">SVG</a> · <a href="demand-forecast-card.png">PNG</a></figcaption>
-      </figure>
-      <figure class="forecast-visual">
-        <img src="claude-demand-forecast-card.svg" alt="Claude Forecast project card summarizing event records, ISO-week series, projected weeks, and the weekly join">
-        <figcaption>Claude Forecast card · <a href="claude-demand-forecast-card.svg">SVG</a> · <a href="claude-demand-forecast-card.png">PNG</a></figcaption>
-      </figure>
-    </div>
-
-    <div class="forecast-visuals" aria-label="Comparable ChatGPT and Claude analysis charts">
-      <figure class="forecast-visual">
-        <img src="demand-forecast-chart.svg" alt="ChatGPT Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026">
-        <figcaption>ChatGPT Analysis · workbook-derived projection · <a href="demand-forecast-chart.svg">SVG</a> · <a href="demand-forecast-chart.png">PNG</a></figcaption>
-      </figure>
-      <figure class="forecast-visual">
-        <img src="claude-demand-forecast-chart.svg" alt="Claude Analysis chart showing confirmed or logged events, projected additional events, and the 2024 to 2025 same-week baseline for ISO weeks 32 through 53 of 2026">
-        <figcaption>Claude Analysis · workbook-derived projection · <a href="claude-demand-forecast-chart.svg">SVG</a> · <a href="claude-demand-forecast-chart.png">PNG</a></figcaption>
-      </figure>
-    </div>
+    <a href="research-library.html">Open research library →</a>
   </section>
 </main>
 
@@ -170692,33 +170695,115 @@
     observationAreaLayers.set(areaName, circle);
   });
 
-  // ---- Toggles ----
-  document.getElementById("toggle311").addEventListener("change", e => {
-    if (e.target.checked) map.addLayer(layer311); else map.removeLayer(layer311);
-  });
-  document.getElementById("toggleGbfs").addEventListener("change", e => {
-    if (e.target.checked) map.addLayer(layerGbfs); else map.removeLayer(layerGbfs);
-  });
-  document.getElementById("togglePileups").addEventListener("change", e => {
-    if (e.target.checked) map.addLayer(layerPileups); else map.removeLayer(layerPileups);
-  });
-  document.getElementById("togglePolicy").addEventListener("change", e => {
-    if (e.target.checked) map.addLayer(layerPolicy); else map.removeLayer(layerPolicy);
-  });
-  document.getElementById("toggleRideHubs").addEventListener("change", e => {
-    if (e.target.checked) map.addLayer(layerRideHubs); else map.removeLayer(layerRideHubs);
-  });
-  document.getElementById("toggleVendorObservations").addEventListener("change", e => {
-    if (e.target.checked) map.addLayer(layerVendorObservations); else map.removeLayer(layerVendorObservations);
-  });
-  document.getElementById("operatorFilter").addEventListener("change", () => {
+  // ---- Layer presets and shareable view state ----
+  const layerControls = {
+    "311": { checkbox: document.getElementById("toggle311"), layer: layer311 },
+    gbfs: { checkbox: document.getElementById("toggleGbfs"), layer: layerGbfs },
+    pileups: { checkbox: document.getElementById("togglePileups"), layer: layerPileups },
+    policy: { checkbox: document.getElementById("togglePolicy"), layer: layerPolicy },
+    hubs: { checkbox: document.getElementById("toggleRideHubs"), layer: layerRideHubs },
+    observations: { checkbox: document.getElementById("toggleVendorObservations"), layer: layerVendorObservations }
+  };
+  const focusPresets = {
+    overview: ["311", "gbfs", "pileups", "policy"],
+    "311": ["311", "policy"],
+    fleet: ["gbfs", "pileups"],
+    hubs: ["gbfs", "hubs"]
+  };
+  let restoringViewState = true;
+
+  function setLayerVisibility(key, visible) {
+    const config = layerControls[key];
+    if (!config) return;
+    config.checkbox.checked = visible;
+    if (visible && !map.hasLayer(config.layer)) map.addLayer(config.layer);
+    if (!visible && map.hasLayer(config.layer)) map.removeLayer(config.layer);
+  }
+
+  function activeLayerKeys() {
+    return Object.entries(layerControls).filter(([, config]) => config.checkbox.checked).map(([key]) => key);
+  }
+
+  function updatePresetState() {
+    const active = activeLayerKeys().sort().join(",");
+    document.querySelectorAll("[data-focus]").forEach(button => {
+      const preset = (focusPresets[button.dataset.focus] || []).slice().sort().join(",");
+      button.setAttribute("aria-pressed", String(active === preset));
+    });
+  }
+
+  function syncViewUrl() {
+    if (restoringViewState) return;
+    const params = new URLSearchParams(location.search);
+    const center = map.getCenter();
+    params.set("layers", activeLayerKeys().join(","));
+    params.set("operator", document.getElementById("operatorFilter").value);
+    params.set("availability", document.getElementById("availFilter").value);
+    params.set("lat", center.lat.toFixed(5));
+    params.set("lng", center.lng.toFixed(5));
+    params.set("zoom", String(map.getZoom()));
+    history.replaceState(null, "", `${location.pathname}?${params.toString()}${location.hash}`);
+  }
+
+  function restoreViewState() {
+    const params = new URLSearchParams(location.search);
+    if (params.has("layers")) {
+      const requested = new Set(params.get("layers").split(",").filter(key => key in layerControls));
+      Object.keys(layerControls).forEach(key => setLayerVisibility(key, requested.has(key)));
+    }
+    const operator = params.get("operator");
+    if (["all", "Veo", "Spin"].includes(operator)) document.getElementById("operatorFilter").value = operator;
+    const availability = params.get("availability");
+    if (["all", "available", "unavailable"].includes(availability)) document.getElementById("availFilter").value = availability;
     buildGbfsLayer();
-    if (document.getElementById("toggleGbfs").checked) { layerGbfs.addTo(map); }
+    if (layerControls.gbfs.checkbox.checked) layerGbfs.addTo(map);
+    const hasMapPosition = params.has("lat") && params.has("lng") && params.has("zoom");
+    const lat = Number(params.get("lat"));
+    const lng = Number(params.get("lng"));
+    const zoom = Number(params.get("zoom"));
+    if (hasMapPosition && Number.isFinite(lat) && Number.isFinite(lng) && Number.isFinite(zoom)) map.setView([lat, lng], Math.max(9, Math.min(19, zoom)));
+    updatePresetState();
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      restoringViewState = false;
+      syncViewUrl();
+    }));
+  }
+
+  Object.entries(layerControls).forEach(([key, config]) => {
+    config.checkbox.addEventListener("change", event => {
+      setLayerVisibility(key, event.target.checked);
+      updatePresetState();
+      syncViewUrl();
+    });
   });
-  document.getElementById("availFilter").addEventListener("change", () => {
-    buildGbfsLayer();
-    if (document.getElementById("toggleGbfs").checked) { layerGbfs.addTo(map); }
+  document.querySelectorAll("[data-focus]").forEach(button => {
+    button.addEventListener("click", () => {
+      const requested = new Set(focusPresets[button.dataset.focus] || []);
+      Object.keys(layerControls).forEach(key => setLayerVisibility(key, requested.has(key)));
+      updatePresetState();
+      syncViewUrl();
+    });
   });
+  ["operatorFilter", "availFilter"].forEach(id => {
+    document.getElementById(id).addEventListener("change", () => {
+      buildGbfsLayer();
+      if (layerControls.gbfs.checkbox.checked) layerGbfs.addTo(map);
+      syncViewUrl();
+    });
+  });
+  document.getElementById("copyViewLink").addEventListener("click", async () => {
+    syncViewUrl();
+    const status = document.getElementById("viewLinkStatus");
+    try {
+      await navigator.clipboard.writeText(location.href);
+      status.textContent = "View link copied.";
+    } catch {
+      status.textContent = "Copy this page URL from your browser.";
+    }
+    setTimeout(() => { status.textContent = ""; }, 3000);
+  });
+  map.on("moveend", syncViewUrl);
+  restoreViewState();
 
   // ---- Stat cards ----
   function parseSnapshotTime(value) {
@@ -170852,41 +170937,51 @@
     if (!link) return;
     const areaLayer = observationAreaLayers.get(link.dataset.observationArea);
     if (!areaLayer) return;
-    if (!map.hasLayer(layerVendorObservations)) {
-      layerVendorObservations.addTo(map);
-      document.getElementById("toggleVendorObservations").checked = true;
-    }
+    if (!map.hasLayer(layerVendorObservations)) setLayerVisibility("observations", true);
+    updatePresetState();
+    syncViewUrl();
     document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
     map.flyToBounds(areaLayer.getBounds(), { padding: [36, 36], duration: 0.6 });
     areaLayer.openPopup();
   });
 
   // ---- Sidebar pile-up list ----
+  const pileupPreviewCount = 10;
+  let pileupListExpanded = false;
   function buildPileupList() {
     const list = document.getElementById("pileupList");
+    const toggle = document.getElementById("togglePileupList");
     if (!pileups.length) {
       list.innerHTML = `<div class="empty-note">No cross-vendor pile-ups detected in this snapshot.</div>`;
+      toggle.hidden = true;
       return;
     }
-    list.innerHTML = pileups.map(c => `
+    const visiblePileups = pileupListExpanded ? pileups : pileups.slice(0, pileupPreviewCount);
+    list.innerHTML = visiblePileups.map(c => `
       <button type="button" class="pileup-item" data-pileup-id="${esc(c.id)}" aria-label="Show ${esc(c.id)} on the map">
         <div class="id">${esc(c.id)}</div>
         <div class="meta">${c.vehicles.length} vehicles · ${esc(c.companies.join(", "))}</div>
         <div class="meta">${c.lat.toFixed(5)}, ${c.lng.toFixed(5)}</div>
       </button>
     `).join("");
+    toggle.hidden = pileups.length <= pileupPreviewCount;
+    toggle.textContent = pileupListExpanded ? "Show top 10" : `Show all ${pileups.length} pile-ups`;
+    toggle.setAttribute("aria-expanded", String(pileupListExpanded));
   }
   buildPileupList();
+  document.getElementById("togglePileupList").addEventListener("click", () => {
+    pileupListExpanded = !pileupListExpanded;
+    buildPileupList();
+  });
   document.getElementById("pileupList").addEventListener("click", event => {
     const item = event.target.closest("[data-pileup-id]");
     if (!item) return;
     const cluster = pileups.find(candidate => candidate.id === item.dataset.pileupId);
     const marker = pileupMarkers.get(item.dataset.pileupId);
     if (!cluster || !marker) return;
-    if (!map.hasLayer(layerPileups)) {
-      layerPileups.addTo(map);
-      document.getElementById("togglePileups").checked = true;
-    }
+    if (!map.hasLayer(layerPileups)) setLayerVisibility("pileups", true);
+    updatePresetState();
+    syncViewUrl();
     document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
     map.flyTo([cluster.lat, cluster.lng], Math.max(map.getZoom(), 17), { duration: 0.6 });
     marker.openPopup();

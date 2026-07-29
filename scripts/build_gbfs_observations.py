@@ -93,7 +93,7 @@ def main():
         vendor_metrics[company] = {"current": current_metrics, "previous": previous_metrics}
         notes.extend(observations(company, current_metrics, previous_metrics))
     snapshots.insert(0, {"snapshot_id": current_id, "compared_with": previous_id, "observations": notes, "vendor_metrics": vendor_metrics})
-    payload = {"generated_at": datetime.now(timezone.utc).isoformat(), "method": {"scope": "GBFS vendor behavior only; no 311 records or complaint signals are used.", "comparison": "Newest website GBFS snapshot versus the newest older archived snapshot.", "review_areas": AREAS, "interpretation": "Published point-in-time fleet observations, not proof of deployment intent, demand, service quality, or causation."}, "snapshots": snapshots[:24]}
+    payload = {"generated_at": datetime.now(timezone.utc).isoformat(), "method": {"scope": "GBFS vendor behavior only; no 311 records or complaint signals are used.", "comparison": "Newest website GBFS snapshot versus the newest older archived snapshot.", "review_areas": AREAS, "interpretation": "Published point-in-time fleet observations, not proof of deployment intent, demand, service quality, or causation."}, "snapshots": snapshots}
     args.output.write_text(json.dumps(payload, indent=2) + "\n")
     print(json.dumps({"snapshot_id": current_id, "compared_with": previous_id, "observations": len(notes)}, indent=2))
 
