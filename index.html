@@ -181,6 +181,26 @@
   .legend { padding: 12px 16px; font-size: 0.82rem; }
   .legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .swatch { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+  .swatch.request {
+    width: 10px;
+    height: 10px;
+    margin: 1px;
+    border-radius: 1px;
+    transform: rotate(45deg);
+  }
+  .request-marker-shell {
+    background: transparent;
+    border: 0;
+  }
+  .request-marker {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--paper);
+    border-radius: 1px;
+    box-shadow: 0 0 0 1px rgba(32, 42, 47, 0.55);
+    transform: rotate(45deg);
+  }
   .swatch.ring { background: transparent; border: 2px solid var(--red-600); }
   .swatch.line { width: 18px; height: 0; border-top: 2px dashed var(--violet-600); border-radius: 0; }
   .pileup-list { padding: 12px 16px; max-height: 260px; overflow-y: auto; font-size: 0.82rem; }
@@ -200,7 +220,7 @@
   }
   .pileup-item:hover {
     border-color: var(--red-600);
-    background: var(--red-100);
+    background: var(--amber-100);
   }
   .pileup-item:focus-visible {
     outline: 2px solid var(--red-600);
@@ -376,9 +396,9 @@
 
       <div class="panel legend">
         <div class="panel-header" style="margin: -12px -16px 8px;">Legend</div>
-        <div class="legend-row"><span class="swatch" style="background:#dc2626;"></span> 311 — critical (ADA ramp/entrance)</div>
-        <div class="legend-row"><span class="swatch" style="background:#f97316;"></span> 311 — high (ADA concern / sidewalk pile)</div>
-        <div class="legend-row"><span class="swatch" style="background:#64748b;"></span> 311 — standard</div>
+        <div class="legend-row"><span class="swatch request" style="background:#dc2626;"></span> 311 — critical (ADA ramp/entrance)</div>
+        <div class="legend-row"><span class="swatch request" style="background:#f97316;"></span> 311 — high (ADA concern / sidewalk pile)</div>
+        <div class="legend-row"><span class="swatch request" style="background:#64748b;"></span> 311 — standard</div>
         <div class="legend-row"><span class="swatch" style="background:#0d9488;"></span> GBFS — Veo</div>
         <div class="legend-row"><span class="swatch" style="background:#f97316;"></span> GBFS — Spin</div>
         <div class="legend-row"><span class="swatch ring"></span> Cross-vendor pile-up flag</div>
@@ -168458,12 +168478,16 @@
   records311.forEach(rec => {
     if (typeof rec.latitude !== "number" || typeof rec.longitude !== "number") return;
     const priority = normalizedPriority(rec.complaint_type);
-    const marker = L.circleMarker([rec.latitude, rec.longitude], {
-      radius: 6,
-      color: PRIORITY_COLOR[priority],
-      fillColor: PRIORITY_COLOR[priority],
-      fillOpacity: 0.75,
-      weight: 1.5
+    const marker = L.marker([rec.latitude, rec.longitude], {
+      title: `${rec.source_id || "311 request"} — ${priority} priority`,
+      alt: `${priority} priority 311 request`,
+      icon: L.divIcon({
+        className: "request-marker-shell",
+        html: `<span class="request-marker" style="background:${PRIORITY_COLOR[priority]}"></span>`,
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
+        popupAnchor: [0, -8]
+      })
     });
     const popup = `
       <div class="popup-title">${esc(rec.source_id || "unknown id")}</div>
