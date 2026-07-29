@@ -273,6 +273,36 @@
   #map { height: 70vh; width: 100%; }
   .sidebar { display: flex; flex-direction: column; gap: 18px; }
   .map-panel { position: relative; }
+  .map-fullscreen-button {
+    border: 1px solid var(--slate-400);
+    border-radius: 0;
+    padding: 6px 8px;
+    background: var(--source-sheet);
+    color: var(--slate-900);
+    font: 600 .64rem var(--mono);
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+  }
+  .map-fullscreen-button:hover { border-color: var(--slate-900); background: var(--amber-100); }
+  .map-fullscreen-button:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
+  .map-panel:fullscreen,
+  .map-panel.map-expanded {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--source-sheet);
+  }
+  .map-panel.map-expanded {
+    position: fixed;
+    inset: 0;
+    z-index: 1800;
+    border: 0;
+  }
+  .map-panel:fullscreen #map,
+  .map-panel.map-expanded #map { flex: 1; height: auto; min-height: 0; }
+  body.map-expanded { overflow: hidden; }
   .mobile-layer-button, .mobile-controls-close, .mobile-bottom-nav, .mobile-controls-backdrop { display: none; }
   .controls {
     padding: 14px 16px;
@@ -870,7 +900,7 @@
 
   <div class="layout" id="map-workspace">
     <div class="panel map-panel">
-      <div class="panel-header">Map — source-labeled, public-data only</div>
+      <div class="panel-header"><span>Map — source-labeled, public-data only</span><button type="button" class="map-fullscreen-button" id="toggleMapFullscreen" aria-pressed="false">Expand map</button></div>
       <button type="button" class="mobile-layer-button" id="openMobileControls" aria-controls="mapControls" aria-expanded="false">Layers &amp; filters</button>
       <div id="map"></div>
     </div>
@@ -171561,6 +171591,63 @@
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
+
+  // ---- Full-window map ----
+  const mapPanel = document.querySelector(".map-panel");
+  const mapFullscreenButton = document.getElementById("toggleMapFullscreen");
+
+  function refreshMapSize() {
+    requestAnimationFrame(() => requestAnimationFrame(() => map.invalidateSize()));
+  }
+
+  function updateMapFullscreenUi(expanded) {
+    mapFullscreenButton.textContent = expanded ? "Exit full screen" : "Expand map";
+    mapFullscreenButton.setAttribute("aria-pressed", String(expanded));
+    refreshMapSize();
+  }
+
+  function enterMapFallback() {
+    mapPanel.classList.add("map-expanded");
+    document.body.classList.add("map-expanded");
+    updateMapFullscreenUi(true);
+  }
+
+  function exitMapFallback() {
+    mapPanel.classList.remove("map-expanded");
+    document.body.classList.remove("map-expanded");
+    updateMapFullscreenUi(false);
+  }
+
+  mapFullscreenButton.addEventListener("click", async () => {
+    if (document.fullscreenElement === mapPanel) {
+      await document.exitFullscreen();
+      return;
+    }
+    if (mapPanel.classList.contains("map-expanded")) {
+      exitMapFallback();
+      return;
+    }
+    if (mapPanel.requestFullscreen) {
+      try {
+        await mapPanel.requestFullscreen();
+        return;
+      } catch {
+        enterMapFallback();
+        return;
+      }
+    }
+    enterMapFallback();
+  });
+
+  document.addEventListener("fullscreenchange", () => {
+    if (!mapPanel.classList.contains("map-expanded")) {
+      updateMapFullscreenUi(document.fullscreenElement === mapPanel);
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && mapPanel.classList.contains("map-expanded")) exitMapFallback();
+  });
 
   // ---- 311 layer ----
   const layer311 = L.layerGroup();
