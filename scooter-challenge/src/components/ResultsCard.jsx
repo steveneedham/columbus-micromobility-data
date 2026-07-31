@@ -1,6 +1,8 @@
 import { SkillExporter } from './SkillExporter.jsx';
 import { LocationMap } from './LocationMap.jsx';
+import { ShareCard } from './ShareCard.jsx';
 import { COPY } from '../constants/messages.js';
+import { buildReportIssueUrl } from '../utils/reportIssue.js';
 
 function ConfidenceBar({ score }) {
   const color = score >= 80 ? 'bg-river' : score >= 50 ? 'bg-brick-dim' : 'bg-note';
@@ -41,6 +43,8 @@ export function ResultsCard({ results, formData, onReset }) {
         <p className="mt-4 border-t border-rule pt-3 font-mono text-xs text-note">{COPY.disclaimer}</p>
       </div>
 
+      <ShareCard results={results} formData={formData} />
+
       <div className="overflow-x-auto rounded-sheet border border-rule">
         <table className="w-full border-collapse text-sm">
           <thead>
@@ -74,6 +78,15 @@ export function ResultsCard({ results, formData, onReset }) {
           </tbody>
         </table>
       </div>
+
+      <a
+        href={buildReportIssueUrl(results)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="-mx-1 -my-2 inline-flex items-center gap-1 px-1 py-2 font-mono text-xs text-note hover:text-brick hover:underline"
+      >
+        ⚠️ Report incorrect data or rate
+      </a>
 
       {locationData.length > 0 && (
         <div className="rounded-sheet border border-rule bg-sheet p-5">
