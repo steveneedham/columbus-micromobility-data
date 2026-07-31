@@ -44,12 +44,22 @@ export function ResultsCard({ results, formData, onReset }) {
           </thead>
           <tbody>
             <tr className="border-t border-rule">
-              <td className="px-4 py-2 text-ink">Spin 99¢ Club</td>
+              <td className="px-4 py-2 text-ink">
+                <div>Spin 99¢ Club</div>
+                <div className="mt-0.5 font-mono text-xs text-note">
+                  ${spin.breakdown.subscription.toFixed(2)}/mo pass + ${spin.breakdown.perRide.toFixed(2)}/ride
+                </div>
+              </td>
               <td className="px-4 py-2 text-ink">${spin.perRideAvg.toFixed(2)}</td>
               <td className="px-4 py-2 text-ink">${spin.monthlyTotal.toFixed(2)}</td>
             </tr>
             <tr className="border-t border-rule">
-              <td className="px-4 py-2 text-ink">Veo Premium</td>
+              <td className="px-4 py-2 text-ink">
+                <div>Veo Premium</div>
+                <div className="mt-0.5 font-mono text-xs text-note">
+                  ${veo.breakdown.subscription.toFixed(2)}/mo pass + ${veo.breakdown.perMinute.toFixed(2)}/min
+                </div>
+              </td>
               <td className="px-4 py-2 text-ink">${veo.perRideAvg.toFixed(2)}</td>
               <td className="px-4 py-2 text-ink">${veo.monthlyTotal.toFixed(2)}</td>
             </tr>
