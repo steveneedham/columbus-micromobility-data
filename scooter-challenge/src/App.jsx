@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { InputForm } from './components/InputForm.jsx';
 import { ResultsCard } from './components/ResultsCard.jsx';
+import { Ticker } from './components/Ticker.jsx';
 import { useGBFS } from './hooks/useGBFS.js';
 import { useCostCalculator } from './hooks/useCostCalculator.js';
 import { COPY } from './constants/messages.js';
@@ -48,10 +49,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-paper px-4 py-10 text-ink sm:px-8">
-      <div className="mx-auto max-w-2xl">
+    <div className="min-h-screen bg-paper text-ink">
+      <Ticker />
+      <div className="mx-auto max-w-2xl px-4 py-10 sm:px-8">
         <header className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-wide text-river">🛴 Research tool</p>
+          <p className="font-mono text-xs uppercase tracking-wide text-river">🧪 Urban Transit Mobility Lab</p>
           <h1 className="mt-1 font-display text-3xl text-ink">Scooter Challenge</h1>
           <p className="mt-2 text-note">{COPY.tagline}</p>
           {!results && <p className="mt-2 text-sm text-note">{COPY.intro}</p>}

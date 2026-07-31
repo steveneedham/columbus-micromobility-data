@@ -89,7 +89,7 @@ export function InputForm({ onSubmit }) {
           <button
             type="button"
             onClick={addLocation}
-            className="mt-3 font-mono text-xs text-river hover:underline"
+            className="-mx-1 mt-1 px-1 py-2 font-mono text-xs text-river hover:underline"
           >
             + Add another location
           </button>
@@ -114,7 +114,7 @@ export function InputForm({ onSubmit }) {
           <button
             type="button"
             onClick={addReceipt}
-            className="mt-3 font-mono text-xs text-river hover:underline"
+            className="-mx-1 mt-1 px-1 py-2 font-mono text-xs text-river hover:underline"
           >
             + Add another ride
           </button>

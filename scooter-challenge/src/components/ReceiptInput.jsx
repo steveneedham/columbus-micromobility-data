@@ -4,7 +4,9 @@ export function ReceiptInput({ receipt, onChange, onRemove, removable }) {
       <select
         value={receipt.operator}
         onChange={(e) => onChange({ ...receipt, operator: e.target.value })}
-        className="rounded border border-rule bg-paper px-2 py-2 text-ink"
+        className={`rounded border-2 bg-paper px-2 py-2 font-semibold ${
+          receipt.operator === 'spin' ? 'border-spin text-spin' : 'border-veo text-veo'
+        }`}
       >
         <option value="spin">Spin</option>
         <option value="veo">Veo</option>
@@ -40,7 +42,7 @@ export function ReceiptInput({ receipt, onChange, onRemove, removable }) {
           <button
             type="button"
             onClick={onRemove}
-            className="font-mono text-xs text-brick hover:underline"
+            className="-my-2 px-2 py-2 font-mono text-xs text-brick hover:underline"
           >
             ✕
           </button>

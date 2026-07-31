@@ -49,7 +49,7 @@ export function LocationInput({ location, onChange, onRemove, index, removable }
           <button
             type="button"
             onClick={onRemove}
-            className="font-mono text-xs text-brick hover:underline"
+            className="-my-2 py-2 font-mono text-xs text-brick hover:underline"
           >
             Remove
           </button>
@@ -85,12 +85,12 @@ export function LocationInput({ location, onChange, onRemove, index, removable }
         </div>
       )}
 
-      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+      <div className="mt-1 flex flex-col items-start gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-1">
         <button
           type="button"
           onClick={useMyLocation}
           disabled={locating}
-          className="font-mono text-xs text-river hover:underline disabled:opacity-50"
+          className="-mx-1 px-1 py-2 font-mono text-xs text-river hover:underline disabled:opacity-50"
         >
           {locating ? 'Locating…' : '📍 Use my location'}
         </button>
@@ -98,7 +98,7 @@ export function LocationInput({ location, onChange, onRemove, index, removable }
         <select
           defaultValue=""
           onChange={useLandmark}
-          className="rounded border-none bg-transparent font-mono text-xs text-river underline"
+          className="-mx-1 max-w-full rounded border-none bg-transparent px-1 py-2 font-mono text-xs text-river underline"
         >
           <option value="" disabled>
             📌 Jump to a landmark…
@@ -113,7 +113,7 @@ export function LocationInput({ location, onChange, onRemove, index, removable }
         <button
           type="button"
           onClick={() => setShowCoordinates((prev) => !prev)}
-          className="font-mono text-xs text-note hover:underline"
+          className="-mx-1 px-1 py-2 font-mono text-xs text-note hover:underline"
         >
           {showCoordinates ? 'Use address instead' : 'Enter coordinates instead'}
         </button>

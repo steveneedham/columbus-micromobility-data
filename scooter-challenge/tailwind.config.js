@@ -15,6 +15,10 @@ export default {
         river: '#236A73',
         'river-wash': '#9CC6C9',
         'night-map': '#172126',
+        // Operator brand tokens, sourced from ../operator-brand-colors.json
+        // (sampled from each operator's live site — see that file for provenance).
+        spin: '#E03F23',
+        veo: '#00B8AA',
       },
       fontFamily: {
         display: ['Newsreader', 'serif'],
