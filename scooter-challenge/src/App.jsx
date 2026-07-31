@@ -28,6 +28,8 @@ export default function App() {
         const nearby = loc.lat != null && loc.lon != null ? getNearbyCount(loc.lat, loc.lon) : null;
         return {
           name: loc.name,
+          lat: loc.lat,
+          lon: loc.lon,
           spinCount: nearby?.spinCount ?? 0,
           veoCount: nearby?.veoCount ?? 0,
         };

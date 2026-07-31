@@ -1,4 +1,5 @@
 import { SkillExporter } from './SkillExporter.jsx';
+import { LocationMap } from './LocationMap.jsx';
 
 function ConfidenceBar({ score }) {
   const color = score >= 80 ? 'bg-river' : score >= 50 ? 'bg-brick-dim' : 'bg-note';
@@ -70,6 +71,9 @@ export function ResultsCard({ results, formData, onReset }) {
       {locationData.length > 0 && (
         <div className="rounded-sheet border border-rule bg-sheet p-5">
           <h3 className="font-display text-lg text-ink">Vehicle density by location</h3>
+          <div className="mt-3">
+            <LocationMap locations={locationData} />
+          </div>
           <div className="mt-3 space-y-2">
             {locationData.map((loc) => (
               <div key={loc.name} className="flex items-center justify-between text-sm">
