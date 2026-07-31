@@ -1,3 +1,5 @@
+import { COPY } from '../constants/messages.js';
+
 export function generateSkillMarkdown(results, formData) {
   const locationLines = formData.locations
     .map((loc) => `- **${loc.name}**: ${loc.address || `${loc.lat}, ${loc.lon}`}`)
@@ -31,6 +33,8 @@ ${densityLines || '_GBFS data unavailable at time of run._'}
 
 **Confidence**: ${results.recommendation.confidenceScore}%
 **Reasoning**: ${results.recommendation.reasoning}
+
+> ⚠️ ${COPY.disclaimer}
 
 ---
 

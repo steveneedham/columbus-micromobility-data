@@ -1,5 +1,6 @@
 import { SkillExporter } from './SkillExporter.jsx';
 import { LocationMap } from './LocationMap.jsx';
+import { COPY } from '../constants/messages.js';
 
 function ConfidenceBar({ score }) {
   const color = score >= 80 ? 'bg-river' : score >= 50 ? 'bg-brick-dim' : 'bg-note';
@@ -12,14 +13,18 @@ function ConfidenceBar({ score }) {
 
 export function ResultsCard({ results, formData, onReset }) {
   const { spin, veo, recommendation, locationData = [] } = results;
-  const winnerLabel = recommendation.winner === 'spin' ? 'Spin' : 'Veo';
+  const winnerIsSpin = recommendation.winner === 'spin';
+  const winnerLabel = winnerIsSpin ? 'Spin' : 'Veo';
+  const winnerBorder = winnerIsSpin ? 'border-spin' : 'border-veo';
+  const winnerText = winnerIsSpin ? 'text-spin' : 'text-veo';
 
   return (
     <div className="space-y-6">
-      <div className="rounded-sheet border-l-4 border-river bg-sheet p-5">
+      <div className={`rounded-sheet border-l-4 ${winnerBorder} bg-sheet p-5`}>
         <p className="font-mono text-xs uppercase tracking-wide text-note">Recommendation</p>
         <p className="mt-1 font-display text-2xl text-ink">
-          🏆 {winnerLabel} saves you ${recommendation.savings.toFixed(2)}/month
+          🏆 <span className={`font-semibold ${winnerText}`}>{winnerLabel}</span> saves you $
+          {recommendation.savings.toFixed(2)}/month
         </p>
         <p className="mt-2 text-sm text-note">{recommendation.reasoning}</p>
 
@@ -32,6 +37,8 @@ export function ResultsCard({ results, formData, onReset }) {
             <ConfidenceBar score={recommendation.confidenceScore} />
           </div>
         </div>
+
+        <p className="mt-4 border-t border-rule pt-3 font-mono text-xs text-note">{COPY.disclaimer}</p>
       </div>
 
       <div className="overflow-x-auto rounded-sheet border border-rule">
@@ -44,9 +51,9 @@ export function ResultsCard({ results, formData, onReset }) {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-t border-rule">
+            <tr className="border-l-4 border-t border-spin border-t-rule">
               <td className="px-4 py-2 text-ink">
-                <div>Spin 99¢ Club</div>
+                <div className="font-semibold text-spin">Spin 99¢ Club</div>
                 <div className="mt-0.5 font-mono text-xs text-note">
                   ${spin.breakdown.subscription.toFixed(2)}/mo pass + ${spin.breakdown.perRide.toFixed(2)}/ride
                 </div>
@@ -54,9 +61,9 @@ export function ResultsCard({ results, formData, onReset }) {
               <td className="px-4 py-2 text-ink">${spin.perRideAvg.toFixed(2)}</td>
               <td className="px-4 py-2 text-ink">${spin.monthlyTotal.toFixed(2)}</td>
             </tr>
-            <tr className="border-t border-rule">
+            <tr className="border-l-4 border-t border-veo border-t-rule">
               <td className="px-4 py-2 text-ink">
-                <div>Veo Premium</div>
+                <div className="font-semibold text-veo">Veo Premium</div>
                 <div className="mt-0.5 font-mono text-xs text-note">
                   ${veo.breakdown.subscription.toFixed(2)}/mo pass + ${veo.breakdown.perMinute.toFixed(2)}/min
                 </div>
@@ -79,7 +86,8 @@ export function ResultsCard({ results, formData, onReset }) {
               <div key={loc.name} className="flex items-center justify-between text-sm">
                 <span className="text-ink">{loc.name}</span>
                 <span className="font-mono text-note">
-                  Spin: {loc.spinCount} · Veo: {loc.veoCount}
+                  <span className="text-spin">Spin: {loc.spinCount}</span> ·{' '}
+                  <span className="text-veo">Veo: {loc.veoCount}</span>
                 </span>
               </div>
             ))}
@@ -92,7 +100,7 @@ export function ResultsCard({ results, formData, onReset }) {
       <button
         type="button"
         onClick={onReset}
-        className="font-mono text-xs uppercase tracking-wide text-note hover:underline"
+        className="-mx-1 -my-2 px-1 py-2 font-mono text-xs uppercase tracking-wide text-note hover:underline"
       >
         ← Start over
       </button>

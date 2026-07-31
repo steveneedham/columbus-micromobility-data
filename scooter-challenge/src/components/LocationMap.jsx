@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Circle, Tooltip, useMap } from 'react-leaflet';
+import { Fragment, useEffect } from 'react';
+import { MapContainer, TileLayer, Circle, Marker, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DEFAULT_RADIUS } from '../constants/operators.js';
+import { createLocationIcon } from '../utils/locationIcon.js';
 
 const RADIUS_METERS = DEFAULT_RADIUS * 1609.34;
 
@@ -39,20 +40,23 @@ export function LocationMap({ locations }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <FitToLocations points={points} />
-        {withCoords.map((loc) => {
+        {withCoords.map((loc, i) => {
           const total = loc.spinCount + loc.veoCount;
           const color = densityColor(total);
+          const pinColor = i % 2 === 0 ? 'teal' : 'orange';
           return (
-            <Circle
-              key={loc.name}
-              center={[loc.lat, loc.lon]}
-              radius={RADIUS_METERS}
-              pathOptions={{ color, fillColor: color, fillOpacity: 0.25, weight: 2 }}
-            >
-              <Tooltip direction="top" offset={[0, -8]}>
-                {loc.name}: Spin {loc.spinCount} · Veo {loc.veoCount}
-              </Tooltip>
-            </Circle>
+            <Fragment key={loc.name}>
+              <Circle
+                center={[loc.lat, loc.lon]}
+                radius={RADIUS_METERS}
+                pathOptions={{ color, fillColor: color, fillOpacity: 0.2, weight: 2 }}
+              />
+              <Marker position={[loc.lat, loc.lon]} icon={createLocationIcon(pinColor)}>
+                <Tooltip direction="top" offset={[0, -40]}>
+                  {loc.name}: Spin {loc.spinCount} · Veo {loc.veoCount}
+                </Tooltip>
+              </Marker>
+            </Fragment>
           );
         })}
       </MapContainer>
