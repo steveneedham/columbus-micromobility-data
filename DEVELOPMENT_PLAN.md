@@ -732,6 +732,14 @@ describe('Geo Utilities', () => {
 ❌ Geocoding API integration (manual lat/lon entry)  
 ❌ Multi-city support  
 
+### Vision: Multi-modal, not just Spin vs. Veo
+
+The longer-term direction is comparing *every* realistic way to get around, not just two scooter/bike operators. Not scoped yet — needs to be fleshed out further — but the candidates discussed so far, in rough order of build effort:
+
+- **Personal car ownership** (easiest — no external data source): AAA's published average cost-per-mile (~$0.60–0.70, blending depreciation/insurance/maintenance/fuel) × haversine distance, plus optional downtown parking cost. Reuses existing distance math.
+- **Uber/Lyft** (medium): no public live-pricing API (proprietary, key-gated), so this would be a static estimate — typical Columbus base fare + per-mile + per-minute constants, same pattern as `OPERATORS`, not real-time.
+- **COTA bus service** (hardest): fixed-route/fixed-stop model doesn't map onto GBFS-style live density at all; would need GTFS static schedule/fare data as a new source, and arguably needs a travel-time dimension alongside cost to be a fair comparison (a cheaper bus ride that takes 35 extra minutes isn't a clean apples-to-apples swap).
+
 ---
 
 **Ready to start building.** Let me know when you're ready for Phase 1!
