@@ -29,7 +29,7 @@ export function Ticker() {
     <div
       className="ticker-track overflow-hidden border-y border-rule bg-panel py-2"
       role="marquee"
-      aria-label="Illustrative example savings from Scooter Challenge — not live or tracked user data"
+      aria-label="Illustrative example savings from Curb Your Spending — not live or tracked user data"
     >
       <div className="ticker-content flex w-max gap-8 whitespace-nowrap px-4 font-mono text-xs text-note">
         {items.map((text, i) => (

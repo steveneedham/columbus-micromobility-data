@@ -14,7 +14,7 @@ export function generateSkillMarkdown(results, formData) {
     )
     .join('\n');
 
-  return `# Scooter Challenge Result
+  return `# Curb Your Spending Result
 
 ## Your Data
 ${locationLines}
@@ -48,6 +48,6 @@ Each run pulls live vehicle data, so recommendations stay current as fleets chan
 
 ---
 
-*Generated: ${new Date().toLocaleDateString()} | Scooter Challenge — Columbus Micromobility Data*
+*Generated: ${new Date().toLocaleDateString()} | Curb Your Spending — Columbus Micromobility Data*
 `;
 }
