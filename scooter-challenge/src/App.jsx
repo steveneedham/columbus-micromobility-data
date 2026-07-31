@@ -33,6 +33,8 @@ export default function App() {
           lon: loc.lon,
           spinCount: nearby?.spinCount ?? 0,
           veoCount: nearby?.veoCount ?? 0,
+          scooterCount: nearby?.scooterCount ?? 0,
+          bikeCount: nearby?.bikeCount ?? 0,
         };
       });
 

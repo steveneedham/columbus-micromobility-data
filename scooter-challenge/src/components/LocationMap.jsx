@@ -51,7 +51,7 @@ export function LocationMap({ locations }) {
                 radius={RADIUS_METERS}
                 pathOptions={{ color, fillColor: color, fillOpacity: 0.2, weight: 2 }}
               />
-              <Marker position={[loc.lat, loc.lon]} icon={createLocationIcon(pinColor)}>
+              <Marker position={[loc.lat, loc.lon]} icon={createLocationIcon(pinColor, total)}>
                 <Tooltip direction="top" offset={[0, -40]}>
                   {loc.name}: Spin {loc.spinCount} · Veo {loc.veoCount}
                 </Tooltip>
