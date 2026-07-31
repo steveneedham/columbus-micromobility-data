@@ -1,7 +1,45 @@
 import { useState } from 'react';
+import { LANDMARKS } from '../constants/landmarks.js';
 
 export function LocationInput({ location, onChange, onRemove, index, removable }) {
   const [showCoordinates, setShowCoordinates] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const [locateError, setLocateError] = useState(null);
+
+  const hasCoords = location.lat != null && location.lon != null;
+
+  const useMyLocation = () => {
+    if (!navigator.geolocation) {
+      setLocateError('Geolocation is not available in this browser.');
+      return;
+    }
+    setLocating(true);
+    setLocateError(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        onChange({
+          ...location,
+          address: location.address || 'Current location',
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+        });
+        setLocating(false);
+      },
+      (err) => {
+        setLocateError(err.message || 'Unable to get your location.');
+        setLocating(false);
+      },
+      { timeout: 10000 }
+    );
+  };
+
+  const useLandmark = (e) => {
+    const landmark = LANDMARKS.find((l) => l.name === e.target.value);
+    if (!landmark) return;
+    setLocateError(null);
+    onChange({ ...location, address: landmark.name, lat: landmark.lat, lon: landmark.lon });
+    e.target.value = '';
+  };
 
   return (
     <div className="rounded-sheet border border-rule bg-sheet p-4">
@@ -47,13 +85,46 @@ export function LocationInput({ location, onChange, onRemove, index, removable }
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => setShowCoordinates((prev) => !prev)}
-        className="mt-2 font-mono text-xs text-river hover:underline"
-      >
-        {showCoordinates ? 'Use address instead' : 'Enter coordinates instead'}
-      </button>
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+        <button
+          type="button"
+          onClick={useMyLocation}
+          disabled={locating}
+          className="font-mono text-xs text-river hover:underline disabled:opacity-50"
+        >
+          {locating ? 'Locating…' : '📍 Use my location'}
+        </button>
+
+        <select
+          defaultValue=""
+          onChange={useLandmark}
+          className="rounded border-none bg-transparent font-mono text-xs text-river underline"
+        >
+          <option value="" disabled>
+            📌 Jump to a landmark…
+          </option>
+          {LANDMARKS.map((landmark) => (
+            <option key={landmark.name} value={landmark.name}>
+              {landmark.name}
+            </option>
+          ))}
+        </select>
+
+        <button
+          type="button"
+          onClick={() => setShowCoordinates((prev) => !prev)}
+          className="font-mono text-xs text-note hover:underline"
+        >
+          {showCoordinates ? 'Use address instead' : 'Enter coordinates instead'}
+        </button>
+      </div>
+
+      {locateError && <p className="mt-1 font-mono text-xs text-brick">{locateError}</p>}
+      {hasCoords && (
+        <p className="mt-1 font-mono text-xs text-note">
+          → {location.lat.toFixed(4)}, {location.lon.toFixed(4)}
+        </p>
+      )}
     </div>
   );
 }
