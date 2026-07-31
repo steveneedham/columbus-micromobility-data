@@ -40,15 +40,18 @@ export function useGBFS() {
   const getNearbyCount = useCallback(
     (lat, lon, radius = DEFAULT_RADIUS) => {
       if (typeof lat !== 'number' || typeof lon !== 'number') {
-        return { spinCount: 0, veoCount: 0, spinNearest: null, veoNearest: null };
+        return { spinCount: 0, veoCount: 0, spinNearest: null, veoNearest: null, scooterCount: 0, bikeCount: 0 };
       }
       const allVehicles = [...data.spin.vehicles, ...data.veo.vehicles];
       const nearby = nearbyVehicles(lat, lon, allVehicles, radius);
+      const combined = [...nearby.spin, ...nearby.veo];
       return {
         spinCount: nearby.spin.length,
         veoCount: nearby.veo.length,
         spinNearest: nearby.spin[0]?.distanceMiles ?? null,
         veoNearest: nearby.veo[0]?.distanceMiles ?? null,
+        scooterCount: combined.filter((v) => v.type === 'scooter').length,
+        bikeCount: combined.filter((v) => v.type === 'bike').length,
       };
     },
     [data]

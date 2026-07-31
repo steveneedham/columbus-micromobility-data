@@ -1,7 +1,8 @@
 import L from 'leaflet';
 
-// Adapted from ../../../assets/columbus-ride-hub-marker.svg (the main
-// dashboard's Ride Hub pin) — same pin + bike-medallion shape, recolored per
+// Adapted from ../../../assets/columbus-ride-hub-marker.svg and the main
+// dashboard's .ride-hub-marker-wrap/.ride-hub-count pattern (index.html) —
+// same pin + bike-medallion shape and count-badge treatment, recolored per
 // location and with the "RIDE HUB" lettering dropped since these mark a
 // rider's own stops, not a CoGo dock.
 const PIN_COLORS = {
@@ -22,11 +23,20 @@ function pinSvg(hex) {
   </svg>`;
 }
 
-export function createLocationIcon(colorKey = 'teal') {
+export function createLocationIcon(colorKey = 'teal', count = 0) {
   const hex = PIN_COLORS[colorKey] ?? PIN_COLORS.teal;
+  const badge =
+    count > 0
+      ? `<span style="position:absolute;top:0;right:-2px;display:grid;place-items:center;min-width:19px;height:19px;padding:0 4px;border:2px solid #FBFAF6;border-radius:10px;background:#A94728;color:#FBFAF6;font:700 9px 'IBM Plex Mono',monospace;line-height:1;box-shadow:0 1px 2px rgba(32,42,47,.35);">${count}</span>`
+      : '';
+
+  const html = `<span style="position:relative;display:block;width:30px;height:45px;filter:drop-shadow(0 1px 2px rgba(32,42,47,.45));">${pinSvg(
+    hex
+  )}${badge}</span>`;
+
   return L.divIcon({
     className: 'location-pin-icon',
-    html: pinSvg(hex),
+    html,
     iconSize: [30, 45],
     iconAnchor: [15, 45],
     popupAnchor: [0, -40],

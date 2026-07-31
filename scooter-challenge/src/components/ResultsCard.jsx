@@ -1,6 +1,7 @@
 import { SkillExporter } from './SkillExporter.jsx';
 import { LocationMap } from './LocationMap.jsx';
 import { ShareCard } from './ShareCard.jsx';
+import { ScooterIcon, BikeIcon } from './VehicleIcons.jsx';
 import { COPY } from '../constants/messages.js';
 import { buildReportIssueUrl } from '../utils/reportIssue.js';
 
@@ -96,11 +97,19 @@ export function ResultsCard({ results, formData, onReset }) {
           </div>
           <div className="mt-3 space-y-2">
             {locationData.map((loc) => (
-              <div key={loc.name} className="flex items-center justify-between text-sm">
+              <div key={loc.name} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
                 <span className="text-ink">{loc.name}</span>
-                <span className="font-mono text-note">
-                  <span className="text-spin">Spin: {loc.spinCount}</span> ·{' '}
+                <span className="flex items-center gap-3 font-mono text-note">
+                  <span className="text-spin">Spin: {loc.spinCount}</span>
                   <span className="text-veo">Veo: {loc.veoCount}</span>
+                  <span className="flex items-center gap-1 text-note" title="Scooters nearby">
+                    <ScooterIcon size={14} />
+                    {loc.scooterCount}
+                  </span>
+                  <span className="flex items-center gap-1 text-note" title="Bikes nearby">
+                    <BikeIcon size={14} />
+                    {loc.bikeCount}
+                  </span>
                 </span>
               </div>
             ))}
