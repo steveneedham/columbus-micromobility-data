@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
-# Fetch current Veo/Spin GBFS vehicle positions and archive a daily snapshot,
-# rollup summary, and fleet-count plot. Run by .github/workflows/fleet-export.yml.
+# Fetch current Veo/Spin GBFS vehicle positions, archive a daily snapshot,
+# rollup summary, and fleet-count plot, then refresh the dashboard's own
+# data-gbfs.json / data-gbfs-observations.json and their embedded copies in
+# index.html so the live site stays current. Run by
+# .github/workflows/fleet-export.yml (daily 4:00 UTC, or on demand).
 import json
+import re
+import subprocess
+import sys
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -16,6 +23,10 @@ ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOTS_DIR = ROOT / "snapshots"
 DAILY_SUMMARY_DIR = ROOT / "daily_summary"
 PLOTS_DIR = ROOT / "plots"
+DATA_GBFS_PATH = ROOT / "data-gbfs.json"
+DATA_OBSERVATIONS_PATH = ROOT / "data-gbfs-observations.json"
+INDEX_HTML_PATH = ROOT / "index.html"
+BUILD_OBSERVATIONS_SCRIPT = ROOT / "scripts" / "build_gbfs_observations.py"
 
 VEO_STATUS = "https://cluster-prod.veoride.com/api/shares/name/cbs/gbfs/free_bike_status"
 VEO_TYPES = "https://cluster-prod.veoride.com/api/shares/name/cbs/gbfs/vehicle_types"
@@ -56,11 +67,8 @@ def battery_percent(vehicle):
     return None
 
 
-def available(vehicle):
-    return vehicle.get("is_disabled") == 0 and vehicle.get("is_reserved") == 0
-
-
 def fetch_fleet():
+    """Fetch live Veo/Spin vehicles with full field fidelity, deduplicated by (company, id)."""
     veo_types_payload = fetch_json(VEO_TYPES)
     veo_payload = fetch_json(VEO_STATUS)
     spin_payload = fetch_json(SPIN_STATUS)
@@ -75,28 +83,54 @@ def fetch_fleet():
         raise RuntimeError(f"Refusing partial snapshot: Veo={len(veo_bikes)}, Spin={len(spin_bikes)}")
 
     records = []
+    seen = set()
+
+    def upsert(company, vehicle_id, vtype, lat, lng, battery, rng, disabled, reserved):
+        if not vehicle_id or lat is None or lng is None:
+            return
+        key = (company, vehicle_id)
+        if key in seen:
+            return
+        seen.add(key)
+        records.append({
+            "Company": company,
+            "Vehicle_ID": str(vehicle_id),
+            "Type": vtype or "",
+            "Latitude": lat,
+            "Longitude": lng,
+            "Battery_Pct": battery,
+            "Range_Miles": rng,
+            "Is_Available": bool(disabled == 0 and reserved == 0),
+            "Is_Disabled": bool(disabled),
+            "Is_Reserved": bool(reserved),
+        })
+
     for bike in veo_bikes:
-        records.append({
-            "Company": "Veo",
-            "Vehicle_ID": bike.get("bike_id", "Unknown"),
-            "Type": veo_types.get(bike.get("vehicle_type_id"), "") or "",
-            "Latitude": bike.get("lat"),
-            "Longitude": bike.get("lon"),
-            "Battery_Pct": bike.get("battery_level") or bike.get("battery_pct"),
-            "Range_Miles": meters_to_miles(bike.get("current_range_meters")),
-            "Is_Available": available(bike),
-        })
+        upsert(
+            "Veo",
+            bike.get("bike_id"),
+            veo_types.get(bike.get("vehicle_type_id"), "") or "",
+            bike.get("lat"),
+            bike.get("lon"),
+            bike.get("battery_level") or bike.get("battery_pct"),
+            meters_to_miles(bike.get("current_range_meters")),
+            bike.get("is_disabled"),
+            bike.get("is_reserved"),
+        )
+
     for bike in spin_bikes:
-        records.append({
-            "Company": "Spin",
-            "Vehicle_ID": bike.get("bike_id") or bike.get("vehicle_id") or "Unknown",
-            "Type": SPIN_TYPES.get(bike.get("vehicle_type_id"), "e-bike"),
-            "Latitude": bike.get("lat"),
-            "Longitude": bike.get("lon"),
-            "Battery_Pct": battery_percent(bike),
-            "Range_Miles": meters_to_miles(bike.get("current_range_meters") or bike.get("range_meters")),
-            "Is_Available": available(bike),
-        })
+        upsert(
+            "Spin",
+            bike.get("bike_id") or bike.get("vehicle_id"),
+            SPIN_TYPES.get(bike.get("vehicle_type_id"), "e-bike"),
+            bike.get("lat"),
+            bike.get("lon"),
+            battery_percent(bike),
+            meters_to_miles(bike.get("current_range_meters") or bike.get("range_meters")),
+            bike.get("is_disabled"),
+            bike.get("is_reserved"),
+        )
+
     return pd.DataFrame.from_records(records)
 
 
@@ -146,19 +180,92 @@ def write_plot(df, timestamp):
     return path
 
 
+def build_dashboard_payload(df, timestamp):
+    vehicles = []
+    for row in df.itertuples(index=False):
+        battery = row.Battery_Pct
+        rng = row.Range_Miles
+        vehicles.append({
+            "id": row.Vehicle_ID,
+            "company": row.Company,
+            "type": row.Type,
+            "lat": row.Latitude,
+            "lng": row.Longitude,
+            "battery": int(battery) if pd.notna(battery) else 0,
+            "range": float(rng) if pd.notna(rng) else 0,
+            "available": bool(row.Is_Available),
+            "disabled": bool(row.Is_Disabled),
+            "reserved": bool(row.Is_Reserved),
+        })
+    return {
+        "snapshot_id": timestamp,
+        "source_file": f"columbus_scooters_{timestamp}.csv",
+        "position_count": len(vehicles),
+        "invalid_row_count": 0,
+        "vehicles": vehicles,
+    }
+
+
+def replace_embedded_script(html, element_id, new_json_text):
+    pattern = re.compile(
+        rf'(<script type="application/json" id="{element_id}">\n).*?(\n</script>)',
+        re.DOTALL,
+    )
+    new_html, count = pattern.subn(lambda m: m.group(1) + new_json_text + m.group(2), html, count=1)
+    if count != 1:
+        raise RuntimeError(f"Expected exactly one #{element_id} script block, found {count}")
+    return new_html
+
+
+def write_dashboard_data(payload):
+    DATA_GBFS_PATH.write_text(json.dumps(payload, separators=(",", ":")))
+    html = INDEX_HTML_PATH.read_text()
+    html = replace_embedded_script(html, "data-gbfs", json.dumps(payload, indent=2))
+    INDEX_HTML_PATH.write_text(html)
+
+
+def refresh_observations():
+    """Rebuild data-gbfs-observations.json against the newest older archived
+    snapshot in this repo's own snapshots/ directory, then sync it into
+    index.html. A no-op (with a note) on the very first run, when there's no
+    prior snapshot to compare against yet."""
+    result = subprocess.run(
+        [sys.executable, str(BUILD_OBSERVATIONS_SCRIPT), "--archive-root", str(ROOT)],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print(f"Observation log not updated: {result.stderr.strip() or result.stdout.strip()}")
+        return False
+    html = INDEX_HTML_PATH.read_text()
+    html = replace_embedded_script(html, "data-gbfs-observations", DATA_OBSERVATIONS_PATH.read_text().rstrip("\n"))
+    INDEX_HTML_PATH.write_text(html)
+    return True
+
+
 def main():
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     df = fetch_fleet()
+
     snapshot_path = write_snapshot(df, timestamp)
     summary_path = write_daily_summary(df, timestamp)
     plot_path = write_plot(df, timestamp)
+
+    payload = build_dashboard_payload(df, timestamp)
+    write_dashboard_data(payload)
+    observations_updated = refresh_observations()
+
+    counts = Counter(df["Company"])
     print(json.dumps({
         "timestamp": timestamp,
         "snapshot": str(snapshot_path),
         "daily_summary": str(summary_path),
         "plot": str(plot_path),
         "total_vehicles": int(len(df)),
-    }))
+        "by_company": dict(counts),
+        "observations_updated": observations_updated,
+    }, indent=2))
 
 
 if __name__ == "__main__":

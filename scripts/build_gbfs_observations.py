@@ -77,7 +77,11 @@ def main():
     current_payload = json.loads(args.current.read_text())
     current_id = current_payload["snapshot_id"]
     current_items = current_payload.get("vehicles", [])
+    # Nested per-date archive (e.g. the local Google Drive export root); falls
+    # back to a flat snapshots/ directory (e.g. this repo's own committed archive).
     candidates = sorted(args.archive_root.glob("*/snapshots/columbus_scooters_*.csv"))
+    if not candidates:
+        candidates = sorted(args.archive_root.glob("snapshots/columbus_scooters_*.csv"))
     older = [path for path in candidates if path.stem.replace("columbus_scooters_", "") < current_id]
     if not older:
         raise SystemExit("No older archived snapshot is available.")
