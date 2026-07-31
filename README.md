@@ -1,98 +1,321 @@
-# Columbus Micromobility Data
+# 🛴 Scooter Challenge — Claude Code Project
 
-An independent, public-data-only look at shared-scooter operations in Columbus, Ohio — 311 complaint activity, published vehicle positions, and city policy boundaries. Built and maintained by Steven Needham as a personal project. **Not affiliated with, endorsed by, or built using data from any current or former employer** — everything here comes from public sources: the City of Columbus 311 feed, published GBFS vehicle-position data, and Columbus's published mobility policy boundaries.
+**Interactive operator recommendation tool for Columbus micromobility users**
 
-## Project identity
-
-This project uses **Field Ledger**, an independent observer-oriented design system derived from Steven Needham's evidence-first practice while maintaining its own typography, palette, mark, and publication voice.
-
-- [Living design-system reference](design-system.html)
-- [Implementation guide](DESIGN_SYSTEM.md)
-
-## Architecture
-
-![Architecture diagram: public data sources feed the companion 311-Intel repo, which is the source for this repo's JSON snapshots, which are embedded into a single self-contained dashboard rendered in the browser](architecture.svg)
-
-Four public sources → complete snapshots stored as `data-*.json` → embedded directly into `index.html` → rendered client-side in the browser. The 311, GBFS, and policy analysis snapshots are built through the companion [`311-Intel`](https://github.com/steveneedham/311-Intel) repo; Columbus Ride Hubs come directly from the City of Columbus public CoGo station layer. No server, no database, no build step. The dashed line marks the fastest path to a full refresh: swap the full files from `311-Intel` into this repo's `data-*.json` and reload.
-
-## What's here
-
-### `index.html`
-A single self-contained HTML dashboard — no build step, no server required. Open it directly in a browser. It renders a Leaflet map of Columbus with six layers you can toggle independently:
-
-- **311 requests** — shared bike/scooter complaints from the City's public feed, color-coded by a priority heuristic (critical / high / standard) derived from complaint type. Click a marker for source ID, address, zone, status, and a link back to the source record.
-- **GBFS vehicle positions** — published Veo and Spin vehicle locations, filterable by operator and availability.
-- **Cross-vendor pile-ups** — clusters of four or more vehicles from more than one operator within ~20 metres of each other, flagged as a review signal (not a confirmed violation).
-- **Policy boundaries** — published no-parking, mandatory-parking, and no-ride zones.
-- **Populus MDS Geographies** — the complete supplied MDS geography export: 110 named geographies and 147 polygon/multipolygon features, toggleable as a separate map layer.
-- **The Ohio State University municipal boundary** — a supplied policy API geography rendered as its own toggle, with point-in-time Veo and Spin counts derived from the current complete GBFS snapshot.
-- **Columbus Ride Hubs** — official City-published CoGo station locations and dock capacity, with a badge and popup breakdown counting each vendor’s published vehicles within 100 metres in the current GBFS snapshot. A dedicated status dashboard groups empty and capacity-exceeding proximity signals; every row jumps to its hub on the map.
-- **Vendor observation log** — the latest snapshot’s geographically relevant vendor changes rendered as toggleable review-area circles; selecting a matching log entry enables and focuses this layer.
-
-A compact overview leads into a map-first workspace. On phones, a sticky four-part navigation and map control sheet keep layers and filters within reach; Ride Hub, Downtown CBD distribution, opportunity-zone distribution, vendor-change, and pile-up findings share a tabbed Insights section. The opportunity-zone view compares each vendor’s active citywide fleet with the six component geographies in the published Populus export and reports the point-in-time difference from the 5% policy reference without making a compliance determination. The perpetual GBFS observation history compares each new snapshot with its prior archived snapshot without using 311 signals. Focus presets, a shareable URL state, and a compact top-ten pile-up list make map review easier. A “How to use this site” dialog catalogs the dashboard controls, and the downloadable Columbus 311 case-lookup workflow includes a native Claude skill ZIP plus portable Markdown setup instructions for ChatGPT Projects and Gemini Gems. The dashboard is read-only: no accounts and no write-back. Google Analytics 4 (`G-76JHMZJ82N`) and PostHog measure aggregate usage and interaction patterns. PostHog uses the US cloud endpoint with person profiles and session replay disabled, respects browser Do Not Track settings, and initializes only on the production GitHub Pages hostname.
-
-### `data-311.json`, `data-gbfs.json`, `data-policy.json`, `data-ride-hubs.json`, `data-gbfs-observations.json`, `data-osu-boundary.json`
-The data snapshots the dashboard is built from. The operational snapshots are pulled from the companion prototype repo [`steveneedham/311-Intel`](https://github.com/steveneedham/311-Intel); the Ride Hubs snapshot comes from the official City ArcGIS layer. Each file documents its own source (query URL, fetch timestamp, method) inline.
-
-**These files contain complete snapshots** from the four public feeds at their documented fetch times. Refresh by replacing them with the corresponding full outputs from `311-Intel`, then embed the same payloads in `index.html`:
-
-| This repo | Full source in `311-Intel` |
-|---|---|
-| `data-311.json` | `columbus-311-current.json` |
-| `data-gbfs.json` | `gbfs-vehicle-positions.json` |
-| `data-policy.json` | `mobility-policy-boundaries.json` |
-| `data-ride-hubs.json` | City of Columbus `PublicService/MapServer/31` |
-| `data-gbfs-observations.json` | Derived comparison of the newest GBFS snapshot with the prior archive |
-| `data-mds-geographies.json` | Complete supplied Populus MDS geography export; 110 named geographies |
-| `data-osu-boundary.json` | Supplied Ohio State municipal policy API geography export |
-
-The dashboard is self-contained and reads the embedded copies directly; no runtime fetch or build service is required.
-
-
-### GBFS vendor observation refresh
-
-After loading a new `data-gbfs.json` snapshot, append its vendor-only comparison to the running log:
-
-```sh
-python3 scripts/build_gbfs_observations.py
-```
-
-The builder compares fleet size, median published range, availability share, and counts within explicitly defined geographic review areas. It retains every committed snapshot comparison as a perpetual history and never reads 311 records.
-
-### `architecture.svg`
-The diagram above, as a standalone file for reuse in docs or a portfolio writeup.
-
-## Why this exists
-
-This project sits alongside the market-monitoring "watch mode" work described in the rest of this repo: a lightweight, sustainable way to track the Columbus shared-mobility market using only what's publicly available — no insider access required. The framing is deliberately that of an informed outside observer, not an advocate: claims are hedged to what the data actually supports, and every figure traces back to a named public source.
-
-## Data sources
-
-- **311 complaints** — City of Columbus 311 public map (`gis.columbus.gov/coc311map`), filtered to "Shared Electric Bike & Scooters" requests.
-- **Vehicle positions** — published GBFS feeds for Veo and Spin.
-- **Policy boundaries** — Columbus's published Populus mobility-policy export (no-parking, mandatory-parking, no-ride zones).
-- **Columbus Ride Hubs** — City of Columbus Recreation and Parks public CoGo bikeshare station layer (`PublicService/MapServer/31`).
-- **The Ohio State University municipal boundary** — supplied policy API geography export.
-
-None of this requires or uses any operator- or employer-internal system, login, or dataset.
-
-## Evidence boundaries
-
-- Cross-vendor proximity clusters are a spatial review signal, not a confirmed pile-up, complaint, or violation.
-- Policy-boundary proximity does not establish that a boundary caused a complaint or was active at the time of the report.
-- Columbus Ride Hubs show published station locations and dock capacity. Nearby vendor counts use a 100-metre radius from the current point-in-time GBFS snapshot; proximity does not prove that a vehicle is parked at or using a hub, and open-dock availability is not included.
-- 311 status and vehicle availability reflect a single fetch timestamp (see each JSON file's `fetched_at` / `snapshot_id`) — not a live feed.
-
-## Running locally
-
-No install needed:
-
-```
-open index.html
-```
-
-or serve the folder with any static file server if your browser blocks local file access to the embedded scripts.
+Build personalized Spin vs. Veo cost analysis based on live GBFS data and user riding patterns.
 
 ---
 
-© 2026 Steven Needham. Independent project, public data only.
+## 📋 Quick Start
+
+### What This Project Does
+1. User uploads ride receipts (or enters manually) + home address + 3 other locations
+2. System fetches live Spin/Veo vehicle density from each neighborhood
+3. Calculates cost projections (Spin flat-rate vs. Veo per-minute)
+4. Recommends the cheaper operator + confidence score
+5. Outputs downloadable Claude skill for re-running analysis
+
+### MVP Scope (Aug 1–7)
+- ✅ Input form (addresses + manual receipt entry)
+- ✅ Live GBFS fetch + vehicle count per location
+- ✅ Cost calculator (no OCR yet)
+- ✅ Recommendation card + confidence
+- ✅ Skill template export (Markdown)
+
+### Tech Stack
+- **Frontend:** React + Tailwind (existing dashboard pattern)
+- **Data:** Client-side GBFS fetch, public endpoints
+- **Calculation:** JavaScript (no backend needed for MVP)
+- **Export:** JSON → Markdown skill generation
+
+---
+
+## 📁 Project Structure
+
+```
+scooter-challenge/
+├── README.md                          (this file)
+├── DEVELOPMENT_PLAN.md                (detailed build sequence)
+│
+├── public/
+│   └── index.html
+│
+├── src/
+│   ├── App.jsx                        (main component)
+│   ├── index.css                      (Tailwind config)
+│   │
+│   ├── components/
+│   │   ├── InputForm.jsx              (address + receipt inputs)
+│   │   ├── ResultsCard.jsx            (cost breakdown + recommendation)
+│   │   ├── SkillExporter.jsx          (Markdown + JSON export)
+│   │   └── LocationInput.jsx          (multi-address field)
+│   │
+│   ├── hooks/
+│   │   ├── useGBFS.js                 (fetch vehicle density)
+│   │   ├── useReceiptParser.js        (regex-based parsing)
+│   │   └── useCostCalculator.js       (Spin vs. Veo projections)
+│   │
+│   ├── utils/
+│   │   ├── gbfs.js                    (GBFS endpoints + parsing)
+│   │   ├── geo.js                     (haversine, nearby vehicles)
+│   │   ├── calculator.js              (cost math, confidence scoring)
+│   │   ├── receiptParser.js           (regex patterns for OCR fallback)
+│   │   └── skillTemplate.js           (Markdown generator)
+│   │
+│   └── constants/
+│       ├── operators.js               (Spin/Veo rate defaults)
+│       ├── gbfsEndpoints.js           (public GBFS feed URLs)
+│       └── messages.js                (copy, FAQs, tooltips)
+│
+├── skills/
+│   └── scooter-challenge-skill.md     (exportable Claude skill)
+│
+├── docs/
+│   ├── USER_GUIDE.md                  (end-user docs)
+│   ├── GBFS_NOTES.md                  (data source reference)
+│   └── COST_MODEL.md                  (formulas & assumptions)
+│
+└── tests/
+    ├── calculator.test.js             (cost math tests)
+    ├── parser.test.js                 (receipt parsing tests)
+    └── geo.test.js                    (distance/density tests)
+```
+
+---
+
+## 🎯 MVP Features (Sprint 1)
+
+### 1. Input Form (`InputForm.jsx`)
+**User provides:**
+- Home address (required) — text input or lat/lon
+- Up to 3 additional locations (optional)
+  - Work, grocery, hangout, SO's house
+- Ride history: manual entry OR receipt screenshot upload
+  - Operator (Spin/Veo)
+  - Duration (minutes)
+  - Date
+  - Total cost
+- Monthly ride frequency (slider, 5–50 rides)
+
+**Validation:**
+- At least one ride history entry
+- Valid addresses or coordinates
+- Plausible costs ($2–15/ride)
+
+### 2. Live GBFS Lookup (`useGBFS.js`)
+**Per location:**
+- Fetch Spin + Veo vehicle positions (public endpoints)
+- Filter within 0.5 mi radius
+- Count available vehicles
+- Calculate distance to nearest (each operator)
+
+**Data sources:**
+- Spin GBFS: `https://feeds.spin.app/gbfs/v3/systems/columbus_us/vehicles`
+- Veo GBFS: `https://gbfs.veo.dev/columbus/station_information.json`
+
+### 3. Cost Calculator (`useCostCalculator.js`)
+**Inputs:** User receipts + frequency + ride duration estimate
+
+**Outputs:**
+```javascript
+{
+  spin: {
+    perRideFlat: 2.39,
+    monthlyTotal: 60.74,
+    avgRideCost: 2.39
+  },
+  veo: {
+    perMinuteRate: 0.475,
+    monthlySubscription: 5.99,
+    avgRideCost: 6.69,
+    monthlyTotal: 173.24
+  },
+  recommendation: {
+    winner: "spin",
+    savings: 112.50,
+    confidenceScore: 95,
+    reasoning: "Cost advantage is clear; Veo's density doesn't compensate"
+  }
+}
+```
+
+### 4. Results Card (`ResultsCard.jsx`)
+**Display:**
+- Cost comparison table (monthly projection)
+- Vehicle count per location (Spin vs. Veo)
+- Confidence score (0–100%) with color coding
+- Recommendation badge ("Winner: Spin saves you $X/month")
+- Hunt time estimate (if available)
+
+### 5. Skill Exporter (`SkillExporter.jsx`)
+**Outputs:**
+- `.md` file (Claude native skill)
+- `.json` file (results snapshot)
+- Zip package option (later)
+
+**Skill includes:**
+- User's addresses + receipt data
+- Current GBFS snapshot
+- Cost breakdown
+- Recommendation with reasoning
+- Instructions for re-running
+
+---
+
+## 🔑 Key Utilities
+
+### `geo.js` — Distance Calculations
+```javascript
+haversineDistance(lat1, lon1, lat2, lon2) → miles
+nearbyVehicles(userLat, userLon, vehicles, radiusMiles) → filtered array
+huntTimeEstimate(distanceMiles) → minutes  // 3 mph walk + 1 min unlock
+```
+
+### `calculator.js` — Cost Math
+```javascript
+projectCost(operator, avgDurationMin, ridesPerMonth, rateConfig) → monthlyTotal
+confidenceScore(data) → 0–100 (based on consistency across locations)
+recommendation(spinCost, veoCost, huntTimeDiff) → { winner, reasoning }
+```
+
+### `receiptParser.js` — Fallback Parsing
+```javascript
+// MVP: Manual entry only
+// Future: Regex patterns for OCR
+parseReceiptText(text) → { operator, duration, cost, date }
+```
+
+### `skillTemplate.js` — Markdown Export
+```javascript
+generateSkillMarkdown(userData, gbfsSnapshot, results) → markdown string
+```
+
+---
+
+## 📊 Operator Rate Constants
+
+**Spin 99 Cent Club:**
+- Monthly fee: $0.99
+- Per-ride flat: $2.39
+- Speed: 18–22 mph
+
+**Veo VeoPlus Premium:**
+- Monthly fee: $5.99
+- Per-minute rate: $0.45–$0.50
+- Speed: 17 mph cap
+
+*(Store in `constants/operators.js` for easy updates)*
+
+---
+
+## 🚀 Development Sequence
+
+### Day 1: Setup + Core Logic
+1. ✅ Project scaffold (React template)
+2. ✅ Geo utilities (haversine, nearby vehicles)
+3. ✅ Cost calculator (projection logic)
+4. ✅ Confidence scoring
+
+### Day 2: GBFS Integration
+1. ✅ Fetch Spin + Veo endpoints
+2. ✅ Parse vehicle JSON
+3. ✅ Filter by radius, count availability
+4. ✅ Error handling for unavailable feeds
+
+### Day 3: UI Components
+1. ✅ InputForm (addresses + manual receipt entry)
+2. ✅ LocationInput (repeatable field)
+3. ✅ ResultsCard (cost table + recommendation)
+4. ✅ Basic styling (Tailwind)
+
+### Day 4: Export & Polish
+1. ✅ SkillExporter (Markdown generation)
+2. ✅ JSON results snapshot
+3. ✅ Mobile responsive
+4. ✅ Error messages + help text
+
+### Day 5: Testing + Launch
+1. ✅ Cost calculator edge cases
+2. ✅ GBFS fetch failure handling
+3. ✅ Address validation (geocoding?)
+4. ✅ Deploy to research library
+
+---
+
+## 🔗 Integration Points
+
+### Website Integration
+- Embed in: `steveneedham.github.io/columbus-micromobility-data/research/scooter-challenge`
+- Link from: Research Library card
+- Example user: Steven's case (Spin $60/mo vs Veo $173/mo)
+
+### Skill Export Target
+- Claude native skill (primary)
+- ChatGPT Project (secondary, later)
+- Gemini Gem (secondary, later)
+
+### Future Expansions
+- OCR receipt parsing
+- Hunt time estimation (distance + wait time)
+- Other cities (Spin/Veo markets)
+- Historical trend analysis (track cost deltas over time)
+
+---
+
+## 📝 Testing Checklist
+
+### Unit Tests
+- [ ] Haversine distance (known coords → known distances)
+- [ ] Cost calculation (Spin $2.39 × 25 rides = $60.74)
+- [ ] Confidence scoring (consistent data = high score)
+- [ ] GBFS parsing (vehicle count from JSON)
+
+### Integration Tests
+- [ ] Form submission → calculator → results card
+- [ ] GBFS fetch failure → graceful error message
+- [ ] Skill export → valid Markdown syntax
+- [ ] Multiple locations → per-location cost breakdown
+
+### Manual Testing
+- [ ] Try 20 rides/month → Spin wins
+- [ ] Try 5 rides/month → review tradeoff
+- [ ] Enter addresses without GBFS data → show defaults
+- [ ] Export skill → paste into Claude → works
+
+---
+
+## 🛠 Tech Decisions
+
+| Choice | Why |
+|--------|-----|
+| React | Existing dashboard pattern; component reuse |
+| Tailwind | Consistent with steven-needham/design-system |
+| Client-side only | No backend needed; public data only |
+| GBFS public feeds | Free, no auth required |
+| Markdown export | Universal; works in Claude/ChatGPT/Gemini |
+
+---
+
+## 📚 Docs to Write
+
+- `USER_GUIDE.md` — How to use the tool
+- `GBFS_NOTES.md` — Data source details, refresh rates, limitations
+- `COST_MODEL.md` — Formulas, assumptions, confidence scoring logic
+- `DEVELOPMENT_PLAN.md` — This build sequence (detailed version)
+
+---
+
+## 🎓 Next Session
+
+**Goal:** Have a working MVP by EOD Aug 7
+
+**Bring:**
+- Fresh GBFS pulls from Columbus (for integration testing)
+- More receipt examples (if available, for parser validation)
+- Feedback on form UX from Transit Columbus Slack
+
+---
+
+**Maintained by:** Steven Needham  
+**Status:** MVP in development (Sprint 1: Aug 1–7)  
+**Last updated:** July 31, 2026
