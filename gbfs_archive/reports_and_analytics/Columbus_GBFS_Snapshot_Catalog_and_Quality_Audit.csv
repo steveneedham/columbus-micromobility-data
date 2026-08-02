@@ -1,0 +1,81 @@
+Date,Time,Timestamp Precision,Multiple Snapshots On Date,Spacing (Hours from Prior Snapshot),Filename,Row Count,Veo Count,Spin Count,Size (KB),Quality Status,Exclusion Recommendation,Quality & Completeness Comments
+2019-10-03,14:14:27,YES,NO,N/A,Spin Analytics Test Dataset v2.csv,100,0,0,8.0,PASS,Include,Complete dataset (100 rows) | 100 missing lat/lon rows
+2023-04-28,00:00:00,YES,NO,N/A,Reported_Vehicles_as_Not_Found_or_Damaged_or_Vandalized_-_Columbus_Dayton_2023-04-28T1002.csv,158,0,0,20.8,PASS,Include,Complete dataset (158 rows) | 158 missing lat/lon rows
+2023-12-08,12:01:53,YES,NO,N/A,Sheet 1-Tier Park Deployment Points (DOPs) - Columbus.csv,330,0,0,22.2,PASS,Include,Complete dataset (330 rows) | 330 missing lat/lon rows
+2024-05-27,00:00:00,NO (Midnight default),NO,N/A,Inventory_Columbus - N High St - SC - Spin - OH - US - NA_12_28_2024_05_27_37.csv,1004,0,0,202.2,PASS,Include,Complete dataset (1004 rows) | 1004 missing lat/lon rows
+2025-02-02,00:00:00,YES,NO,N/A,pheenix-ush-llc-v-city-of-columbus.ohsd.69485624.2025-02-02.csv,40,0,0,17.3,WARN,Review,Partial snapshot (40 rows) | 40 missing lat/lon rows
+2025-05-01,00:00:00,YES,NO,N/A,The Ohio State University - Spin-aggregated-routes-from-2025-05-01-to-2026-07-27.csv,4939,0,0,217.2,PASS,Include,Complete dataset (4939 rows) | 4939 missing lat/lon rows
+2026-01-01,00:00:00,YES,YES,0.00,The Ohio State University - Spin-aggregated-routes-from-2026-01-01-to-2026-07-26 (1).geojson,0,0,0,1118.4,FAIL,EXCLUDE,0 rows / Empty file
+2026-01-01,00:00:00,YES,YES,0.00,The Ohio State University - Spin-aggregated-routes-from-2026-01-01-to-2026-07-26.csv,3616,0,0,159.5,PASS,Include,Complete dataset (3616 rows) | 3616 missing lat/lon rows
+2026-01-01,00:00:00,YES,YES,0.00,The Ohio State University - Spin-aggregated-routes-from-2026-01-01-to-2026-07-26.geojson,0,0,0,1146.1,FAIL,EXCLUDE,0 rows / Empty file
+2026-02-21,16:30:18,NO (Midnight default),NO,N/A,Columbus_Veo_Fleet.csv,824,0,0,62.3,PASS,Include,Complete dataset (824 rows)
+2026-02-25,12:36:58,YES,NO,N/A,columbus_scooters_20260225_123658.csv,1752,1038,714,114.9,PASS,Include,Complete dataset (1752 rows) | Multi-vendor (Veo + Spin)
+2026-03-04,19:26:39,NO (Midnight default),NO,N/A,More results for 'Dayton + Columbus Actions - 2026WK10'.csv,316,0,0,72.1,PASS,Include,Complete dataset (316 rows) | 316 missing lat/lon rows
+2026-03-05,00:00:00,YES,NO,N/A,Dayton + Columbus Actions - 2026WK10_2026-03-05T12:02:17.142107714Z.csv,437,0,0,100.1,PASS,Include,Complete dataset (437 rows) | 437 missing lat/lon rows
+2026-03-06,00:00:00,YES,NO,N/A,Current Inventory - Bird IDs in_inventory  by warehouse - Columbus_2026-03-06T00_02_18.27902071Z.csv,1130,0,0,180.4,PASS,Include,Complete dataset (1130 rows) | 1130 missing lat/lon rows
+2026-03-11,00:00:00,YES,NO,N/A,Kepler Market Heatmaps - Columbus_2026-03-11T20:09:21.888467316Z.csv,6384,0,6384,1331.2,PASS,Include,Complete dataset (6384 rows) | Spin only
+2026-03-14,13:34:39,NO (Midnight default),YES,0.00,More results for 'Dayton + Columbus Actions - 2026WK11'.csv,1127,0,0,260.4,PASS,Include,Complete dataset (1127 rows) | 1127 missing lat/lon rows
+2026-03-14,21:36:25,NO (Midnight default),YES,8.03,More results for 'Current Inventory - Bird IDs in_inventory  by warehouse - Columbus'.csv,1092,0,0,210.0,PASS,Include,Complete dataset (1092 rows) | 1092 missing lat/lon rows
+2026-03-15,16:39:13,NO (Midnight default),NO,N/A,More results for 'Dayton + Columbus Actions - 2026WK11' 2.csv,1374,0,0,319.2,PASS,Include,Complete dataset (1374 rows) | 1374 missing lat/lon rows
+2026-04-06,01:27:29,NO (Midnight default),NO,N/A,More results for 'Dayton + Columbus Actions - 2026WK14 - last task location Bird'.csv,1894,0,0,654.5,PASS,Include,Complete dataset (1894 rows) | 1894 missing lat/lon rows
+2026-05-13,01:51:21,NO (Midnight default),YES,0.00,More results for 'Dayton + Columbus Actions - 2026WK19 - last task location Bird - nest ????'.csv,2070,0,0,511.4,PASS,Include,Complete dataset (2070 rows) | 2070 missing lat/lon rows
+2026-05-13,02:12:17,NO (Midnight default),YES,0.35,More results for 'Columbus C1 Shells Ready to Go'.csv,170,0,167,105.4,PASS,Include,Complete dataset (170 rows) | Spin only | 170 missing lat/lon rows
+2026-05-30,12:14:05,YES,YES,0.00,columbus_scooters_20260530T121405Z (1).csv,3361,2119,1242,337.7,PASS,Include,Complete dataset (3361 rows) | Multi-vendor (Veo + Spin)
+2026-05-30,12:14:05,YES,YES,0.00,columbus_scooters_20260530T121405Z.csv,3361,2119,1242,337.7,PASS,Include,Complete dataset (3361 rows) | Multi-vendor (Veo + Spin)
+2026-06-03,00:00:00,YES,NO,N/A,2026-06-03 - svc-metabase-noreply@bird.co - Mech productivity overview v1.0 - Columbus_2026-06-03T12-05-42.756209093Z.csv,18,0,0,4.5,WARN,Review,Partial snapshot (18 rows) | 18 missing lat/lon rows
+2026-06-04,00:00:00,NO (Midnight default),NO,N/A,"Columbus, OH_2026-06-04_2026-06-11_timesheets.csv",210,0,0,29.1,PASS,Include,Complete dataset (210 rows) | 210 missing lat/lon rows
+2026-06-11,00:00:00,YES,NO,N/A,Mechanic Productivity - Columbus log_2026-06-11T04:44:29.248458216Z.csv,894,0,0,97.0,PASS,Include,Complete dataset (894 rows) | 894 missing lat/lon rows
+2026-06-14,00:00:00,YES,YES,0.00,kepler_market_heatmaps___columbus_last_7d_2026-06-14T10_09_57.034658634Z (1).csv,7870,0,7870,1797.1,PASS,Include,Complete dataset (7870 rows) | Spin only
+2026-06-14,00:00:00,YES,YES,0.00,kepler_market_heatmaps___columbus_last_7d_2026-06-14T21_53_13.388897784Z.csv,8084,0,8084,1845.8,PASS,Include,Complete dataset (8084 rows) | Spin only
+2026-06-14,00:00:00,YES,YES,0.00,kepler_market_heatmaps___columbus_last_7d_2026-06-14T03_33_44.98863676Z.csv,7138,0,7138,1625.1,PASS,Include,Complete dataset (7138 rows) | Spin only
+2026-06-14,00:00:00,YES,YES,0.00,kepler_market_heatmaps___columbus_last_7d_2026-06-14T10_09_57.034658634Z.csv,7870,0,7870,1797.1,PASS,Include,Complete dataset (7870 rows) | Spin only
+2026-06-14,00:00:00,YES,YES,0.00,Spin Columbus Vehicle - Rebalance_2026-06-14T15:16:23.112898844Z.csv,1634,0,0,806.9,PASS,Include,Complete dataset (1634 rows)
+2026-06-15,00:00:00,YES,YES,0.00,2026-06-15 - svc-metabase-noreply@bird.co - Columbus Open Bounties - Live!_2026-06-15T04-09-07.116266063Z.csv,7,0,0,0.4,WARN,Review,Partial snapshot (7 rows) | 7 missing lat/lon rows
+2026-06-15,00:00:00,YES,YES,0.00,2026-06-15 - svc-metabase-noreply@bird.co - Columbus Open Bounties - Live!_2026-06-15T04-09-07.116266063Z (1).csv,7,0,0,0.4,WARN,Review,Partial snapshot (7 rows) | 7 missing lat/lon rows
+2026-06-15,00:00:00,YES,YES,0.00,Kepler Market Heatmaps - Columbus last 7d  by ISO YR and ISO WK_2026-06-15T16:08:59.802326084Z.csv,9133,0,9133,1901.4,PASS,Include,Complete dataset (9133 rows) | Spin only
+2026-06-15,00:00:00,YES,YES,0.00,2026-06-15 - svc-metabase-noreply@bird.co - Columbus Actions - past 7 Days_2026-06-15T12-05-16.927558082Z.csv,2209,0,0,1170.4,PASS,Include,Complete dataset (2209 rows) | 2209 missing lat/lon rows
+2026-06-15,00:00:00,YES,YES,0.00,Kepler Market Heatmaps - Columbus last 7d  by ISO YR and ISO WK_2026-06-15T16:08:15.468353834Z.csv,10721,0,7591,2285.6,PASS,Include,Complete dataset (10721 rows) | Spin only
+2026-06-20,00:00:00,YES,YES,0.00,Kepler Market Heatmaps - Columbus last 7d  by ISO YR and ISO WK_2026-06-20T09_00_05.496382054Z.csv,7442,0,7442,1578.7,PASS,Include,Complete dataset (7442 rows) | Spin only
+2026-06-20,00:00:00,YES,YES,0.00,Spin Columbus Vehicle - Rebalance_2026-06-20T04_16_47.190310444Z.csv,1729,0,0,879.5,PASS,Include,Complete dataset (1729 rows)
+2026-06-21,00:00:00,YES,YES,0.00,kepler_market_heatmaps___columbus_last_7d__by_iso_yr_and_iso_wk_2026-06-21T17_17_52.363630151Z.csv,8236,0,8236,1740.9,PASS,Include,Complete dataset (8236 rows) | Spin only
+2026-06-21,00:00:00,YES,YES,0.00,2026-06-21 - svc-metabase-noreply@bird.co - Columbus Actions - past 7 Days_2026-06-21T20-04-05.586496432Z.csv,2569,0,0,1378.0,PASS,Include,Complete dataset (2569 rows) | 2569 missing lat/lon rows
+2026-06-23,00:00:00,YES,NO,N/A,On-Street V3 - Columbus_2026-06-23T21:08:02.201217862Z.csv,7,0,0,0.5,WARN,Review,Partial snapshot (7 rows) | 7 missing lat/lon rows
+2026-06-24,00:00:00,YES,NO,N/A,2026-06-24 - svc-metabase-noreply@bird.co - Columbus Actions - past 7 Days_2026-06-24T12-05-05.482781898Z.csv,1813,0,0,973.1,PASS,Include,Complete dataset (1813 rows) | 1813 missing lat/lon rows
+2026-06-25,00:00:00,YES,NO,N/A,On-Street V3 - Columbus_2026-06-25T00:08:01.678146588Z.csv,7,0,0,0.5,WARN,Review,Partial snapshot (7 rows) | 7 missing lat/lon rows
+2026-06-26,00:00:00,YES,YES,0.00,2026-06-26 - svc-metabase-noreply@bird.co - Columbus Actions - past 2 Days_2026-06-26T11-02-10.253379846Z.csv,730,0,0,390.7,PASS,Include,Complete dataset (730 rows) | 730 missing lat/lon rows
+2026-06-26,00:00:00,YES,YES,0.00,2026-06-26 - svc-metabase-noreply@bird.co - On-Street V3 - Columbus_2026-06-26T11-11-39.398775232Z.csv,7,0,0,0.5,WARN,Review,Partial snapshot (7 rows) | 7 missing lat/lon rows
+2026-06-26,00:00:00,YES,YES,0.00,2026-06-26 - svc-metabase-noreply@bird.co - Kepler Market Heatmaps - Columbus last 7d_2026-06-26T08-09-56.117973837Z.csv,8303,0,8303,1910.1,PASS,Include,Complete dataset (8303 rows) | Spin only
+2026-07-07,15:24:54,NO (Midnight default),YES,0.00,columbus - MDS Policies.json,0,0,0,35.1,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-07,15:24:57,NO (Midnight default),YES,0.00,columbus - MDS Geographies.json,0,0,0,2143.6,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-16,02:38:27,YES,YES,0.00,Columbus Dog Treat Trail — Data - Stops.csv,2,0,0,0.4,WARN,Review,Partial snapshot (2 rows) | 2 missing lat/lon rows
+2026-07-16,02:43:34,YES,YES,0.09,Columbus Dog Treat Trail — Data - Form Responses 1.csv,1,0,0,0.2,WARN,Review,Partial snapshot (1 rows) | 1 missing lat/lon rows
+2026-07-16,02:48:00,YES,YES,0.07,Columbus Dog Treat Trail — Data - Stops (1).csv,2,0,0,0.4,WARN,Review,Partial snapshot (2 rows) | 2 missing lat/lon rows
+2026-07-16,02:53:37,YES,YES,0.09,Columbus Dog Treat Trail — Data - Stops-2.csv,3,0,0,0.4,WARN,Review,Partial snapshot (3 rows) | 3 missing lat/lon rows
+2026-07-16,07:14:29,YES,YES,4.35,columbus_gbfs_map_ready_20260716.csv,3550,2255,1295,671.3,PASS,Include,Complete dataset (3550 rows) | Multi-vendor (Veo + Spin)
+2026-07-23,19:12:01,NO (Midnight default),YES,0.00,gbfs-vehicle-positions.json,3578,0,0,657.2,PASS,Include,Complete dataset (3578 rows)
+2026-07-23,19:12:03,NO (Midnight default),YES,0.00,gbfs-watch-history.json,0,0,0,1.2,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-23,21:21:28,NO (Midnight default),YES,2.16,columbus - MDS Geographies (1).json,0,0,0,2143.6,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-23,21:22:38,NO (Midnight default),YES,0.02,columbus - MDS Policies (1).json,0,0,0,35.1,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-26,16:49:47,YES,NO,N/A,columbus_scooters_20260726T164947Z.csv,3538,2200,1338,360.6,PASS,Include,Complete dataset (3538 rows) | Multi-vendor (Veo + Spin)
+2026-07-27,03:12:16,YES,NO,N/A,columbus_scooters_20260727T031216Z.csv,3539,2203,1336,355.9,PASS,Include,Complete dataset (3539 rows) | Multi-vendor (Veo + Spin)
+2026-07-29,02:27:44,NO (Midnight default),YES,0.00,columbus - MDS Geographies-2.json,0,0,0,2143.4,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-29,06:16:13,NO (Midnight default),YES,3.81,osu-spin-osu_expanded_campus_boundary_export.geojson,0,0,0,2.2,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-29,15:15:46,NO (Midnight default),YES,8.99,columbus-311-current.json,0,0,0,90.6,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-29,15:16:07,NO (Midnight default),YES,0.01,gbfs-vehicle-positions.json,3620,0,0,665.1,PASS,Include,Complete dataset (3620 rows)
+2026-07-29,15:16:07,NO (Midnight default),YES,0.00,gbfs-watch-history.json,0,0,0,2.5,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-29,20:37:52,NO (Midnight default),YES,5.36,osu-spin-ohio_stadium_gameday_export.geojson,0,0,0,1.3,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-29,20:38:57,NO (Midnight default),YES,0.02,osu-spin-ohio_stadium_gameday_export (1).geojson,0,0,0,1.3,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-31,05:06:15,YES,YES,0.00,columbus_scooters_20260731T050615Z.csv,3527,2237,1290,298.2,PASS,Include,Complete dataset (3527 rows) | Multi-vendor (Veo + Spin)
+2026-07-31,05:17:42,YES,YES,0.19,columbus_scooters_20260731T051742Z.csv,3523,2234,1289,339.0,PASS,Include,Complete dataset (3523 rows) | Multi-vendor (Veo + Spin)
+2026-07-31,07:27:39,NO (Midnight default),YES,2.17,data-gbfs-observations.json,0,0,0,17.4,FAIL,EXCLUDE,0 rows / Empty file
+2026-07-31,07:27:39,NO (Midnight default),YES,0.00,data-gbfs.json,3523,0,0,662.1,PASS,Include,Complete dataset (3523 rows)
+2026-07-31,11:07:04,NO (Midnight default),YES,3.66,veo_mymaps_import_may17_evening.csv,2142,0,0,51.9,PASS,Include,Complete dataset (2142 rows)
+2026-07-31,11:07:04,NO (Midnight default),YES,0.00,columbus_combined_mymaps_import_may17_evening.csv,3291,0,0,91.1,PASS,Include,Complete dataset (3291 rows)
+2026-07-31,11:07:04,NO (Midnight default),YES,0.00,More results for 'Kepler Market Heatmaps - Columbus last 7d'(1).csv,7841,0,7841,1798.0,PASS,Include,Complete dataset (7841 rows) | Spin only
+2026-07-31,11:07:04,NO (Midnight default),YES,0.00,More results for 'Kepler Market Heatmaps - Columbus last 7d'(2).csv,7841,0,7841,1798.0,PASS,Include,Complete dataset (7841 rows) | Spin only
+2026-07-31,11:11:56,NO (Midnight default),YES,0.08,columbus_combined_mymaps_import_may15.csv,3359,0,0,93.9,PASS,Include,Complete dataset (3359 rows)
+2026-07-31,11:11:56,NO (Midnight default),YES,0.00,veo_mymaps_import.csv,2118,0,0,51.3,PASS,Include,Complete dataset (2118 rows)
+2026-07-31,11:11:56,NO (Midnight default),YES,0.00,spin_mymaps_import_may15.csv,1202,0,0,41.6,PASS,Include,Complete dataset (1202 rows)
+2026-07-31,11:11:56,NO (Midnight default),YES,0.00,veo_mymaps_import_may17_evening (1).csv,2142,0,0,51.9,PASS,Include,Complete dataset (2142 rows)
+2026-07-31,11:11:56,NO (Midnight default),YES,0.00,More results for 'Kepler Market Heatmaps - Columbus last 7d'(1) (1).csv,7841,0,7841,1798.0,PASS,Include,Complete dataset (7841 rows) | Spin only
+2026-07-31,11:29:22,NO (Midnight default),YES,0.29,scooter-challenge-results.json,0,0,0,1.8,FAIL,EXCLUDE,0 rows / Empty file
