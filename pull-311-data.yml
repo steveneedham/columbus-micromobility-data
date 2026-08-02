@@ -1,0 +1,52 @@
+name: Pull 311 Data
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Every hour at :00
+  workflow_dispatch:
+
+jobs:
+  fetch-311:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch 311 data
+        run: python scripts/pull_311.py
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add snapshots/311_requests_*.json 2>/dev/null || true
+          if git diff --cached --exit-code > /dev/null; then
+            echo "No new data to commit"
+          else
+            git commit -m "311 data: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
+
+      - name: Trigger rebuild
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'rebuild-site.yml',
+              ref: 'main'
+            })
