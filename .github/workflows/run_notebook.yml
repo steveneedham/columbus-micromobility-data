@@ -2,8 +2,9 @@ name: Scheduled Colab Run
 
 on:
   schedule:
-    - cron: '0 8 * * *' # Runs everyday at 8:00 AM UTC
-  workflow_dispatch: # Allows manual trigger
+    - cron: '0 8 * * *'  # 8am UTC
+    - cron: '0 20 * * *' # 8pm UTC (new)
+  workflow_dispatch:: # Allows manual trigger
 
 jobs:
   run-notebook:
