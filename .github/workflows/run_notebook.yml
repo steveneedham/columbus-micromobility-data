@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '0 8 * * *'  # 8am UTC
     - cron: '0 20 * * *' # 8pm UTC (new)
-  workflow_dispatch:: # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   run-notebook:
