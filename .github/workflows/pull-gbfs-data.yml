@@ -7,16 +7,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  fetch-gbfs:
+  pull-gbfs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -24,32 +25,33 @@ jobs:
         run: |
           pip install papermill ipykernel pandas requests
 
-      - name: Run GBFS extraction notebook
+      - name: Execute GBFS notebook
         run: |
-          papermill Veo_Spin_CBS_GBFS_Extract.ipynb /dev/null \
-            -p output_dir snapshots \
-            -p timestamp "$(date -u +'%Y%m%dT%H%M%SZ')"
-        continue-on-error: true
+          papermill Veo_Spin_CBS_GBFS_Extract.ipynb /dev/null
 
-      - name: Commit and push
+      - name: Commit and push GBFS data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add snapshots/columbus_scooters_*.csv 2>/dev/null || true
           git add plots/ 2>/dev/null || true
+          git add daily_summary/ 2>/dev/null || true
+          
           if git diff --cached --exit-code > /dev/null; then
-            echo "No new data to commit"
+            echo "No new GBFS data to commit"
           else
-            git commit -m "GBFS data: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M UTC')
+            git commit -m "Automated fleet export $TIMESTAMP"
+            git pull --rebase
             git push
           fi
 
-      - name: Trigger rebuild
-        if: success()
+      - name: Trigger rebuild site workflow
         uses: actions/github-script@v7
+        if: success()
         with:
           script: |
-            await github.rest.actions.createWorkflowDispatch({
+            github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'rebuild-site.yml',

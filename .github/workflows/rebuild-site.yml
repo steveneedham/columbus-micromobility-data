@@ -2,6 +2,7 @@ name: Rebuild Site
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   rebuild:
@@ -10,35 +11,38 @@ jobs:
       contents: write
       pages: write
       id-token: write
+    
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install pandas requests
+        run: |
+          pip install pandas requests
 
-      - name: Rebuild site
-        run: python scripts/rebuild_site.py
-        continue-on-error: true
+      - name: Generate dashboard
+        run: |
+          python scripts/rebuild_site.py
 
-      - name: Commit changes
+      - name: Commit and push dashboard
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add docs/ 2>/dev/null || true
-          git add *.html 2>/dev/null || true
+          
           if git diff --cached --exit-code > /dev/null; then
-            echo "No changes to commit"
+            echo "No dashboard changes to commit"
           else
-            git commit -m "Site rebuild: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git commit -m "Rebuild dashboard: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
             git push
           fi
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
-        if: always()
+        if: success()
