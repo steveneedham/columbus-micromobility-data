@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # Fixed indentation here
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,12 +24,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Added the data science libraries your notebook requires
-          pip install papermill nbconvert pandas matplotlib seaborn requests
+          # Added ipykernel and registered the python3 kernel
+          pip install ipykernel papermill nbconvert pandas matplotlib seaborn requests
+          python -m ipykernel install --user --name python3
 
       - name: Execute notebook
         run: |
-          # Updated to match your exact notebook file name
           papermill Veo_Spin_CBS_GBFS_Extract.ipynb output-notebook.ipynb
           
       - name: Commit and push changes
