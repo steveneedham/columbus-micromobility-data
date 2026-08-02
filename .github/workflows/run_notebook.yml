@@ -6,7 +6,47 @@ on:
   workflow_dispatch: # Allows manual trigger
 
 jobs:
+  run-notebook:name: Scheduled Colab Run
+
+on:
+  schedule:
+    - cron: '0 8 * * *' # Runs everyday at 8:00 AM UTC
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
   run-notebook:
+    runs-on: ubuntu-latest
+    
+    # ⚠️ REQUIRED: Gives the action permission to push back to your repo
+    permissions: 
+      contents: write 
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Fixed indentation here
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          # Added the data science libraries your notebook requires
+          pip install papermill nbconvert pandas matplotlib seaborn requests
+
+      - name: Execute notebook
+        run: |
+          # Updated to match your exact notebook file name
+          papermill Veo_Spin_CBS_GBFS_Extract.ipynb output-notebook.ipynb
+          
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Automated fleet data & plots update" || echo "No changes to commit"
+          git push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
