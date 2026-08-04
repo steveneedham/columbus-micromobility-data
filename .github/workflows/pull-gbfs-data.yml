@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
+      actions: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install papermill ipykernel pandas requests
+          pip install papermill ipykernel pandas requests matplotlib seaborn
 
       - name: Execute GBFS notebook
         run: |
