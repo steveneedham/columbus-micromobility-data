@@ -155,7 +155,13 @@ def generate_dashboard_html(gbfs_data, data_311):
     open_count = sum(1 for r in records_311 if r.get("STATUS") == "Open")
     resolved_count = sum(1 for r in records_311 if r.get("STATUS") == "Resolved")
     
-    generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    # Use actual 311 fetch time, not script runtime
+    if data_311 and "fetched_at" in data_311:
+        fetched_iso = data_311["fetched_at"]
+        fetched_dt = datetime.fromisoformat(fetched_iso.replace("+00:00", "+00:00"))
+        generated_at = fetched_dt.strftime("%Y-%m-%d %H:%M UTC")
+    else:
+        generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     
     html = f"""<!DOCTYPE html>
 <html lang="en">
