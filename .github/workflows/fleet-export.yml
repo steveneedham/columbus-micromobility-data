@@ -30,6 +30,6 @@ jobs:
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-        git add snapshots/ daily_summary/ plots/ data-gbfs.json data-gbfs-observations.json index.html
+        git add snapshots/ daily_summary/ plots/ data-gbfs.json data-gbfs-observations.json data-pileup-history.json index.html
         git commit -m "Automated fleet export $(date -u +"%Y-%m-%dT%H:%M:%SZ")" || echo "No changes to commit"
         git push

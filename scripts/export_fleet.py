@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Fetch current Veo/Spin GBFS vehicle positions, archive a daily snapshot,
 # rollup summary, and fleet-count plot, then refresh the dashboard's own
-# data-gbfs.json / data-gbfs-observations.json and their embedded copies in
-# index.html so the live site stays current. Run by
-# .github/workflows/fleet-export.yml (daily 4:00 UTC, or on demand).
+# data-gbfs.json / data-gbfs-observations.json / data-pileup-history.json
+# and their embedded copies in index.html so the live site stays current.
+# Run by .github/workflows/fleet-export.yml (daily 4:00 UTC, or on demand).
 import json
 import re
 import subprocess
@@ -25,8 +25,10 @@ DAILY_SUMMARY_DIR = ROOT / "daily_summary"
 PLOTS_DIR = ROOT / "plots"
 DATA_GBFS_PATH = ROOT / "data-gbfs.json"
 DATA_OBSERVATIONS_PATH = ROOT / "data-gbfs-observations.json"
+DATA_PILEUP_HISTORY_PATH = ROOT / "data-pileup-history.json"
 INDEX_HTML_PATH = ROOT / "index.html"
 BUILD_OBSERVATIONS_SCRIPT = ROOT / "scripts" / "build_gbfs_observations.py"
+BUILD_PILEUP_HISTORY_SCRIPT = ROOT / "scripts" / "build_pileup_history.py"
 
 VEO_STATUS = "https://cluster-prod.veoride.com/api/shares/name/cbs/gbfs/free_bike_status"
 VEO_TYPES = "https://cluster-prod.veoride.com/api/shares/name/cbs/gbfs/vehicle_types"
@@ -244,6 +246,25 @@ def refresh_observations():
     return True
 
 
+def refresh_pileup_history():
+    """Rebuild data-pileup-history.json (tracks how long each cross-vendor
+    pile-up has persisted across snapshots) and sync it into index.html.
+    Backfills from every archived snapshot on its very first run."""
+    result = subprocess.run(
+        [sys.executable, str(BUILD_PILEUP_HISTORY_SCRIPT)],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print(f"Pile-up history not updated: {result.stderr.strip() or result.stdout.strip()}")
+        return False
+    html = INDEX_HTML_PATH.read_text()
+    html = replace_embedded_script(html, "data-pileup-history", DATA_PILEUP_HISTORY_PATH.read_text().rstrip("\n"))
+    INDEX_HTML_PATH.write_text(html)
+    return True
+
+
 def main():
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     df = fetch_fleet()
@@ -255,6 +276,7 @@ def main():
     payload = build_dashboard_payload(df, timestamp)
     write_dashboard_data(payload)
     observations_updated = refresh_observations()
+    pileup_history_updated = refresh_pileup_history()
 
     counts = Counter(df["Company"])
     print(json.dumps({
@@ -265,6 +287,7 @@ def main():
         "total_vehicles": int(len(df)),
         "by_company": dict(counts),
         "observations_updated": observations_updated,
+        "pileup_history_updated": pileup_history_updated,
     }, indent=2))
 
 
