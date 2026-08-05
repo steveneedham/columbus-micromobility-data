@@ -46,15 +46,3 @@ jobs:
             git pull --rebase
             git push
           fi
-
-      - name: Trigger rebuild site workflow
-        uses: actions/github-script@v7
-        if: success()
-        with:
-          script: |
-            github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'rebuild-site.yml',
-              ref: 'main'
-            })
