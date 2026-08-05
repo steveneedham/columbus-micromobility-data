@@ -4,7 +4,9 @@
 # data-gbfs.json / data-gbfs-observations.json / data-pileup-history.json
 # and their embedded copies in index.html so the live site stays current.
 # Run by .github/workflows/fleet-export.yml (daily 4:00 UTC, or on demand).
+import csv
 import json
+import math
 import re
 import subprocess
 import sys
@@ -143,6 +145,40 @@ def write_snapshot(df, timestamp):
     return path
 
 
+def distance_meters(a, b):
+    lat_scale = 111320
+    lng_scale = 111320 * math.cos(math.radians((a[0] + b[0]) / 2))
+    return math.hypot((a[0] - b[0]) * lat_scale, (a[1] - b[1]) * lng_scale)
+
+
+def load_previous_veo_positions(current_timestamp):
+    """Most recent archived snapshot strictly older than the one just
+    written, keyed by Veo's own vehicle_id. Veo's IDs are stable across
+    pulls (99.9% overlap between consecutive snapshots observed in this
+    repo's archive); Spin's rotate every pull (0% overlap), so this is
+    deliberately Veo-only (#22)."""
+    candidates = sorted(SNAPSHOTS_DIR.glob("columbus_scooters_*.csv"))
+    older = [p for p in candidates if p.stem.replace("columbus_scooters_", "") < current_timestamp]
+    if not older:
+        return None, {}
+    previous_path = older[-1]
+    previous_id = previous_path.stem.replace("columbus_scooters_", "")
+    positions = {}
+    with previous_path.open(newline="", encoding="utf-8-sig") as source:
+        for row in csv.DictReader(source):
+            if row.get("Company") != "Veo":
+                continue
+            try:
+                positions[row["Vehicle_ID"]] = {
+                    "lat": float(row["Latitude"]),
+                    "lng": float(row["Longitude"]),
+                    "range": float(row["Range_Miles"]) if row.get("Range_Miles") not in (None, "") else None,
+                }
+            except (KeyError, TypeError, ValueError):
+                pass
+    return previous_id, positions
+
+
 def write_daily_summary(df, timestamp):
     DAILY_SUMMARY_DIR.mkdir(exist_ok=True)
     date_str = timestamp[:8]
@@ -182,12 +218,13 @@ def write_plot(df, timestamp):
     return path
 
 
-def build_dashboard_payload(df, timestamp):
+def build_dashboard_payload(df, timestamp, previous_snapshot_id=None, previous_veo_positions=None):
+    previous_veo_positions = previous_veo_positions or {}
     vehicles = []
     for row in df.itertuples(index=False):
         battery = row.Battery_Pct
         rng = row.Range_Miles
-        vehicles.append({
+        vehicle = {
             "id": row.Vehicle_ID,
             "company": row.Company,
             "type": row.Type,
@@ -198,7 +235,16 @@ def build_dashboard_payload(df, timestamp):
             "available": bool(row.Is_Available),
             "disabled": bool(row.Is_Disabled),
             "reserved": bool(row.Is_Reserved),
-        })
+        }
+        previous = previous_veo_positions.get(row.Vehicle_ID) if row.Company == "Veo" else None
+        if previous:
+            vehicle["prev_snapshot_id"] = previous_snapshot_id
+            vehicle["prev_lat"] = previous["lat"]
+            vehicle["prev_lng"] = previous["lng"]
+            vehicle["moved_m"] = round(distance_meters((row.Latitude, row.Longitude), (previous["lat"], previous["lng"])), 1)
+            if previous["range"] is not None and pd.notna(rng):
+                vehicle["range_delta"] = round(float(rng) - previous["range"], 2)
+        vehicles.append(vehicle)
     return {
         "snapshot_id": timestamp,
         "source_file": f"columbus_scooters_{timestamp}.csv",
@@ -273,12 +319,14 @@ def main():
     summary_path = write_daily_summary(df, timestamp)
     plot_path = write_plot(df, timestamp)
 
-    payload = build_dashboard_payload(df, timestamp)
+    previous_snapshot_id, previous_veo_positions = load_previous_veo_positions(timestamp)
+    payload = build_dashboard_payload(df, timestamp, previous_snapshot_id, previous_veo_positions)
     write_dashboard_data(payload)
     observations_updated = refresh_observations()
     pileup_history_updated = refresh_pileup_history()
 
     counts = Counter(df["Company"])
+    veo_with_movement = sum(1 for v in payload["vehicles"] if v.get("moved_m") is not None)
     print(json.dumps({
         "timestamp": timestamp,
         "snapshot": str(snapshot_path),
@@ -288,6 +336,7 @@ def main():
         "by_company": dict(counts),
         "observations_updated": observations_updated,
         "pileup_history_updated": pileup_history_updated,
+        "veo_vehicles_matched_to_previous_snapshot": veo_with_movement,
     }, indent=2))
 
 
