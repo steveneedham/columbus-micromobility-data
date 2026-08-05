@@ -1,0 +1,51 @@
+name: Build Scooter Challenge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scooter-challenge/src/**"
+      - "scooter-challenge/index.html"
+      - "scooter-challenge/package.json"
+      - "scooter-challenge/package-lock.json"
+      - "scooter-challenge/vite.config.js"
+      - "scooter-challenge/tailwind.config.js"
+      - "scooter-challenge/postcss.config.js"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: scooter-challenge/package-lock.json
+
+      - name: Install dependencies
+        working-directory: scooter-challenge
+        run: npm ci
+
+      - name: Run tests
+        working-directory: scooter-challenge
+        run: npm test
+
+      - name: Build
+        working-directory: scooter-challenge
+        run: npm run build
+
+      - name: Commit & push built site
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add scooter-challenge/dist/
+          git commit -m "Build Scooter Challenge $(date -u +"%Y-%m-%dT%H:%M:%SZ")" || echo "No changes to commit"
+          git push

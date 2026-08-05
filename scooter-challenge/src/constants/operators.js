@@ -17,13 +17,18 @@ export const OPERATORS = {
   },
 };
 
+// Same endpoints scripts/export_fleet.py fetches server-side for the main
+// dashboard (confirmed working there). Both are free_bike_status feeds --
+// Columbus is a free-floating deployment for both operators, not
+// station-based, so a station_information.json endpoint (what this used to
+// point Veo at) would never return anything here.
 export const GBFS_ENDPOINTS = {
   spin: {
-    url: 'https://feeds.spin.app/gbfs/v3/systems/columbus_us/vehicles',
+    url: 'https://mds.bird.co/gbfs/v2/public/provider/spin/columbus/free_bike_status.json',
     format: 'json',
   },
   veo: {
-    url: 'https://gbfs.veo.dev/columbus/station_information.json',
+    url: 'https://cluster-prod.veoride.com/api/shares/name/cbs/gbfs/free_bike_status',
     format: 'json',
   },
 };
