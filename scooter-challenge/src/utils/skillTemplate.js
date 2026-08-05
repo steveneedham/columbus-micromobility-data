@@ -21,7 +21,7 @@ ${locationLines}
 - Recent rides: ${formData.receipts.length} receipts
 - Monthly estimate: ${formData.frequency} rides/month
 
-## Live Vehicle Density
+## Vehicle Density (public GBFS feed)
 ${densityLines || '_GBFS data unavailable at time of run._'}
 
 ## Cost Projection (${formData.frequency} rides/month)
@@ -44,7 +44,7 @@ ${densityLines || '_GBFS data unavailable at time of run._'}
 3. Adjust your monthly ride frequency estimate.
 4. Run this skill in Claude (or paste it into ChatGPT/Gemini) to get an updated recommendation.
 
-Each run pulls live vehicle data, so recommendations stay current as fleets change.
+Each run pulls the public GBFS feed, so recommendations stay current as fleets change.
 
 ---
 

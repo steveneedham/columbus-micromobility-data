@@ -70,7 +70,7 @@ export function generateShareCardSVG(results, formData) {
       <circle cx="34" cy="132" r="5" fill="${PALETTE.river}"/><text x="52" y="138">${receiptCount} logged ride${receiptCount === 1 ? '' : 's'}</text>
       <circle cx="34" cy="173" r="5" fill="${PALETTE.brick}"/><text x="52" y="179">${locationCount} location${locationCount === 1 ? '' : 's'} checked</text>
     </g>
-    <text x="26" y="226" class="body" font-size="12" fill="${PALETTE.note}">Live Spin/Veo fleet snapshot + your own</text>
+    <text x="26" y="226" class="body" font-size="12" fill="${PALETTE.note}">Public Spin/Veo GBFS snapshot + your own</text>
     <text x="26" y="244" class="body" font-size="12" fill="${PALETTE.note}">ride history — not a citywide average.</text>
   </g>
 
