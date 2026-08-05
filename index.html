@@ -270,6 +270,14 @@
     align-items: center;
     justify-content: space-between;
   }
+  .pileup-snapshot-freshness {
+    margin: 0;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--slate-200);
+    font: 500 0.66rem var(--mono);
+    letter-spacing: 0.02em;
+    color: var(--slate-500);
+  }
   #map { height: 70vh; width: 100%; }
   .sidebar { display: flex; flex-direction: column; gap: 18px; }
   .map-panel { position: relative; }
@@ -993,7 +1001,7 @@
   <section class="insights" id="insights" aria-labelledby="insights-title">
     <div class="insights-header">
       <div><p class="eyebrow">Current snapshot signals</p><h2 id="insights-title">Insights</h2></div>
-      <p>Review Ride Hub capacity signals, fleet distribution, municipal geography counts, vendor changes between snapshots, or cross-vendor pile-ups. Every relevant result can take you back to the map.</p>
+      <p>Review Ride Hub capacity signals, fleet distribution, municipal geography counts, vendor changes between snapshots, cross-vendor pile-ups, fleet cap compliance, or vehicle mix. Every relevant result can take you back to the map.</p>
     </div>
     <div class="insight-tabs" role="tablist" aria-label="Insight views">
       <button type="button" class="insight-tab" role="tab" id="tab-ride-hubs" aria-controls="panel-ride-hubs" aria-selected="true" data-insight="ride-hubs">Ride Hubs</button>
@@ -1002,6 +1010,9 @@
       <button type="button" class="insight-tab" role="tab" id="tab-osu-boundary" aria-controls="panel-osu-boundary" aria-selected="false" data-insight="osu-boundary">Ohio State</button>
       <button type="button" class="insight-tab" role="tab" id="tab-vendor-changes" aria-controls="panel-vendor-changes" aria-selected="false" data-insight="vendor-changes">Vendor changes</button>
       <button type="button" class="insight-tab" role="tab" id="tab-pileups" aria-controls="panel-pileups" aria-selected="false" data-insight="pileups">Pile-ups</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-311-list" aria-controls="panel-311-list" aria-selected="false" data-insight="311-list">311 records</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-fleet-cap" aria-controls="panel-fleet-cap" aria-selected="false" data-insight="fleet-cap">Fleet cap</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-vehicle-mix" aria-controls="panel-vehicle-mix" aria-selected="false" data-insight="vehicle-mix">Vehicle mix</button>
     </div>
     <div class="insight-panel" id="panel-ride-hubs" role="tabpanel" aria-labelledby="tab-ride-hubs" data-insight-panel="ride-hubs">
       <div class="insight-hub-card"><div><h3>Ride Hub status dashboard</h3><p id="rideHubInsightSummary">Compare empty and over-capacity proximity signals from the current GBFS snapshot.</p></div><button type="button" class="hub-dashboard-button" id="openRideHubDashboardInsights" aria-haspopup="dialog">Open Ride Hub status</button></div>
@@ -1030,7 +1041,22 @@
       <p class="observation-method">Point-in-time public GBFS observations; changes do not establish deployment intent, demand, service quality, or causation.</p>
     </div>
     <div class="insight-panel" id="panel-pileups" role="tabpanel" aria-labelledby="tab-pileups" data-insight-panel="pileups" hidden>
-      <div class="panel insight-pileups"><div class="panel-header">Cross-vendor pile-ups</div><div class="pileup-list" id="pileupList"></div><button type="button" class="pileup-list-toggle" id="togglePileupList" aria-expanded="false">Show all pile-ups</button></div>
+      <div class="panel insight-pileups"><div class="panel-header">Cross-vendor pile-ups</div><p class="pileup-snapshot-freshness" id="pileupSnapshotFreshness"></p><div class="pileup-list" id="pileupList"></div><button type="button" class="pileup-list-toggle" id="togglePileupList" aria-expanded="false">Show all pile-ups</button></div>
+    </div>
+    <div class="insight-panel" id="panel-311-list" role="tabpanel" aria-labelledby="tab-311-list" data-insight-panel="311-list" hidden>
+      <div class="panel insight-pileups"><div class="panel-header">Most recent 311 requests</div><p class="pileup-snapshot-freshness" id="request311Freshness"></p><div class="pileup-list" id="request311List"></div><button type="button" class="pileup-list-toggle" id="toggleRequest311List" aria-expanded="false">Show all 311 requests</button></div>
+    </div>
+    <div class="insight-panel" id="panel-fleet-cap" role="tabpanel" aria-labelledby="tab-fleet-cap" data-insight-panel="fleet-cap" hidden>
+      <div class="cbd-insight-card">
+        <div class="cbd-insight-header"><h3>Fleet cap compliance</h3><p>Total active devices per operator against the City of Columbus / Populus.ai authorized cap.</p></div>
+        <div id="fleetCapInsight"></div>
+      </div>
+    </div>
+    <div class="insight-panel" id="panel-vehicle-mix" role="tabpanel" aria-labelledby="tab-vehicle-mix" data-insight-panel="vehicle-mix" hidden>
+      <div class="cbd-insight-card">
+        <div class="cbd-insight-header"><h3>Vehicle mix</h3><p>Scooter vs. bike split of the active fleet, by operator.</p></div>
+        <div id="vehicleMixInsight"></div>
+      </div>
     </div>
   </section>
 
@@ -171702,6 +171728,7 @@
 
   // ---- 311 layer ----
   const layer311 = L.layerGroup();
+  const request311Markers = new Map();
   records311.forEach(rec => {
     if (typeof rec.latitude !== "number" || typeof rec.longitude !== "number") return;
     const priority = normalizedPriority(rec.complaint_type);
@@ -171736,6 +171763,7 @@
     `;
     marker.bindPopup(popup);
     marker.addTo(layer311);
+    if (rec.source_id) request311Markers.set(rec.source_id, marker);
   });
   layer311.addTo(map);
   document.getElementById("map").addEventListener("click", async event => {
@@ -172058,6 +172086,47 @@
       map.flyToBounds(zone.layer.getBounds(), { padding: [28, 28], duration: .6 });
     }));
   }
+
+  // ---- Fleet cap compliance (#6/#11) ----
+  const FLEET_CAPS = { Veo: 2000, Spin: 2000 };
+  function buildFleetCapInsight() {
+    const activeVehicles = vehicles.filter(vehicle => !vehicle.disabled && !vehicle.reserved);
+    const rows = ["Veo", "Spin"].map(vendor => {
+      const count = activeVehicles.filter(vehicle => vehicle.company === vendor).length;
+      const cap = FLEET_CAPS[vendor];
+      const percent = cap ? count / cap * 100 : 0;
+      const overUnder = count - cap;
+      const level = count > cap ? "red" : percent >= 90 ? "yellow" : "green";
+      const label = count > cap ? "Over cap" : percent >= 90 ? "Near cap" : "Within cap";
+      return { vendor, count, cap, percent, overUnder, level, label };
+    });
+    const snapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
+    const timeLabel = snapshotAt ? fmtDateTime(snapshotAt.toISOString()) : "current embedded snapshot";
+    document.getElementById("fleetCapInsight").innerHTML = `
+      <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Operator</th><th>Active devices</th><th>Cap</th><th>Over/Under</th><th>% of cap</th><th>Status</th></tr></thead><tbody>
+      ${rows.map(row => `<tr><td data-label="Operator">${esc(row.vendor)}</td><td data-label="Active devices">${row.count.toLocaleString()}</td><td data-label="Cap">${row.cap.toLocaleString()}</td><td data-label="Over/Under">${row.overUnder > 0 ? "+" : ""}${row.overUnder.toLocaleString()}</td><td data-label="% of cap">${row.percent.toFixed(1)}%</td><td data-label="Status"><span class="compliance-indicator ${row.level}">${row.level === "red" ? "🔴 " : ""}${esc(row.label)}</span></td></tr>`).join("")}
+      </tbody></table></div>
+      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. Cap is the City of Columbus / Populus.ai authorized device limit (2,000 per operator). “Active” excludes disabled and reserved devices.</p>`;
+  }
+  buildFleetCapInsight();
+
+  // ---- Vehicle mix (#9) ----
+  function buildVehicleMixInsight() {
+    const activeVehicles = vehicles.filter(vehicle => !vehicle.disabled && !vehicle.reserved);
+    const rows = ["Veo", "Spin"].map(vendor => {
+      const vendorVehicles = activeVehicles.filter(vehicle => vehicle.company === vendor);
+      const scooters = vendorVehicles.filter(vehicle => /scooter/i.test(vehicle.type)).length;
+      const bikes = vendorVehicles.length - scooters;
+      const total = vendorVehicles.length;
+      return { vendor, scooters, bikes, total, scooterPct: total ? scooters / total * 100 : 0 };
+    });
+    document.getElementById("vehicleMixInsight").innerHTML = `
+      <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Operator</th><th>Scooters</th><th>Bikes</th><th>Total active</th><th>Scooter share</th></tr></thead><tbody>
+      ${rows.map(row => `<tr><td data-label="Operator">${esc(row.vendor)}</td><td data-label="Scooters">${row.scooters.toLocaleString()}</td><td data-label="Bikes">${row.bikes.toLocaleString()}</td><td data-label="Total active">${row.total.toLocaleString()}</td><td data-label="Scooter share">${row.scooterPct.toFixed(1)}%</td></tr>`).join("")}
+      </tbody></table></div>
+      <p class="cbd-insight-note">“Bikes” includes e-bike and bicycle form factors as reported by each operator’s GBFS feed. “Active” excludes disabled and reserved devices.</p>`;
+  }
+  buildVehicleMixInsight();
 
   fetch("data-mds-geographies.json")
     .then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
@@ -172545,6 +172614,8 @@
   // ---- Sidebar pile-up list ----
   const pileupPreviewCount = 10;
   let pileupListExpanded = false;
+  document.getElementById("pileupSnapshotFreshness").textContent =
+    `Detected in GBFS snapshot ${freshnessLabel(dataGbfs.snapshot_id || dataGbfs.fetched_at)}`;
   function buildPileupList() {
     const list = document.getElementById("pileupList");
     const toggle = document.getElementById("togglePileupList");
@@ -172581,6 +172652,53 @@
     syncViewUrl();
     document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
     map.flyTo([cluster.lat, cluster.lng], Math.max(map.getZoom(), 17), { duration: 0.6 });
+    marker.openPopup();
+  });
+
+  // ---- Sidebar raw 311 list (#10) ----
+  const request311PreviewCount = 10;
+  let request311ListExpanded = false;
+  const request311Sorted = records311
+    .filter(rec => typeof rec.latitude === "number" && typeof rec.longitude === "number")
+    .toSorted((a, b) => new Date(b.reported_at || 0) - new Date(a.reported_at || 0));
+  document.getElementById("request311Freshness").textContent =
+    `311 data ${freshnessLabel(data311.fetched_at)} · ${request311Sorted.length.toLocaleString()} requests loaded`;
+  function buildRequest311List() {
+    const list = document.getElementById("request311List");
+    const toggle = document.getElementById("toggleRequest311List");
+    if (!request311Sorted.length) {
+      list.innerHTML = `<div class="empty-note">No 311 requests in the current snapshot.</div>`;
+      toggle.hidden = true;
+      return;
+    }
+    const visible = request311ListExpanded ? request311Sorted : request311Sorted.slice(0, request311PreviewCount);
+    list.innerHTML = visible.map(rec => `
+      <button type="button" class="pileup-item" data-request-id="${esc(rec.source_id || "")}" aria-label="Show ${esc(rec.source_id || "311 request")} on the map">
+        <div class="id">${esc(rec.source_id || "unknown id")}</div>
+        <div class="meta">${esc(titleCase(rec.status))} · ${esc(rec.address || "unknown address")}</div>
+        <div class="meta">${esc(fmtDateTime(rec.reported_at))}</div>
+      </button>
+    `).join("");
+    toggle.hidden = request311Sorted.length <= request311PreviewCount;
+    toggle.textContent = request311ListExpanded ? "Show most recent 10" : `Show all ${request311Sorted.length} requests`;
+    toggle.setAttribute("aria-expanded", String(request311ListExpanded));
+  }
+  buildRequest311List();
+  document.getElementById("toggleRequest311List").addEventListener("click", () => {
+    request311ListExpanded = !request311ListExpanded;
+    buildRequest311List();
+  });
+  document.getElementById("request311List").addEventListener("click", event => {
+    const item = event.target.closest("[data-request-id]");
+    if (!item) return;
+    const rec = request311Sorted.find(candidate => candidate.source_id === item.dataset.requestId);
+    const marker = request311Markers.get(item.dataset.requestId);
+    if (!rec || !marker) return;
+    if (!map.hasLayer(layer311)) setLayerVisibility("311", true);
+    updatePresetState();
+    syncViewUrl();
+    document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+    map.flyTo([rec.latitude, rec.longitude], Math.max(map.getZoom(), 17), { duration: 0.6 });
     marker.openPopup();
   });
 
