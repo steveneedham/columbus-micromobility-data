@@ -5,6 +5,7 @@ import { Ticker } from './components/Ticker.jsx';
 import { useGBFS } from './hooks/useGBFS.js';
 import { useCostCalculator } from './hooks/useCostCalculator.js';
 import { COPY } from './constants/messages.js';
+import { trackAnalyzeCosts } from './utils/analytics.js';
 
 export default function App() {
   const [formData, setFormData] = useState(null);
@@ -41,6 +42,7 @@ export default function App() {
     const dataAgeMin = spin.age ? (Date.now() - spin.age) / 60000 : 999;
     const recommendation = getRecommendation(spinCost, veoCost, data, dataAgeMin);
 
+    trackAnalyzeCosts({ formData: data, recommendation });
     setResults({ spin: spinCost, veo: veoCost, recommendation, locationData });
   };
 

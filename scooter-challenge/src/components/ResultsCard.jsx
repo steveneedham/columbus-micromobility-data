@@ -4,6 +4,7 @@ import { ShareCard } from './ShareCard.jsx';
 import { ScooterIcon, BikeIcon } from './VehicleIcons.jsx';
 import { COPY } from '../constants/messages.js';
 import { buildReportIssueUrl } from '../utils/reportIssue.js';
+import { RATES_UPDATED_AT } from '../constants/operators.js';
 
 function ConfidenceBar({ score }) {
   const color = score >= 80 ? 'bg-river' : score >= 50 ? 'bg-brick-dim' : 'bg-note';
@@ -45,6 +46,8 @@ export function ResultsCard({ results, formData, onReset }) {
       </div>
 
       <ShareCard results={results} formData={formData} />
+
+      <p className="font-mono text-xs text-note">Rates as of {RATES_UPDATED_AT}</p>
 
       <div className="overflow-x-auto rounded-sheet border border-rule">
         <table className="w-full border-collapse text-sm">
