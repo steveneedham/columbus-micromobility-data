@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { SkillExporter } from './SkillExporter.jsx';
 import { LocationMap } from './LocationMap.jsx';
 import { ShareCard } from './ShareCard.jsx';
@@ -11,6 +12,34 @@ function ConfidenceBar({ score }) {
   return (
     <div className="h-2 w-full rounded-full bg-panel">
       <div className={`h-2 rounded-full ${color}`} style={{ width: `${score}%` }} />
+    </div>
+  );
+}
+
+function ConfidenceHelp() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="font-mono text-xs text-note underline decoration-dotted underline-offset-2 hover:text-ink"
+        aria-expanded={open}
+      >
+        {open ? 'Hide' : 'What does this mean?'}
+      </button>
+      {open && (
+        <div className="mt-2 space-y-1 rounded border border-rule bg-panel p-3 font-mono text-xs text-note">
+          <p>The confidence score reflects how much this estimate can be trusted, based on:</p>
+          <ul className="ml-4 list-disc space-y-0.5">
+            <li>Number of past rides you logged (more receipts, higher confidence)</li>
+            <li>How consistent your logged costs are per operator</li>
+            <li>Number of locations you compared (more coverage, higher confidence)</li>
+            <li>How fresh the public GBFS vehicle data was when you ran the comparison</li>
+          </ul>
+          <p>A lower score usually means: log more rides, or re-run the comparison when GBFS data is fresher.</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -40,6 +69,7 @@ export function ResultsCard({ results, formData, onReset }) {
           <div className="mt-1">
             <ConfidenceBar score={recommendation.confidenceScore} />
           </div>
+          <ConfidenceHelp />
         </div>
 
         <p className="mt-4 border-t border-rule pt-3 font-mono text-xs text-note">{COPY.disclaimer}</p>
