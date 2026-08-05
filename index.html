@@ -531,6 +531,38 @@
     .observation-meta { grid-column: 2; justify-items: start; }
     .insight-hub-card { grid-template-columns: 1fr; }
   }
+  .suggest-insight {
+    margin-top: 52px;
+    padding-top: 34px;
+    border-top: 1px solid var(--slate-300);
+  }
+  .suggest-insight .eyebrow { margin: 0 0 8px; color: var(--violet-600); }
+  .suggest-insight h2 { margin: 0; color: var(--slate-900); font: 500 clamp(1.7rem, 3vw, 2.4rem)/1.1 var(--display); }
+  .suggest-insight-intro { max-width: 780px; margin: 12px 0 18px; color: var(--slate-600); }
+  .suggest-insight-form { display: flex; flex-direction: column; gap: 10px; max-width: 640px; }
+  .suggest-insight-label { font: 600 0.68rem var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--slate-600); }
+  .suggest-insight-form textarea {
+    border: 1px solid var(--slate-400);
+    border-radius: 0;
+    padding: 10px 12px;
+    font: 400 0.85rem var(--body);
+    color: var(--slate-900);
+    background: var(--source-sheet);
+    resize: vertical;
+  }
+  .suggest-insight-form textarea:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
+  .suggest-insight-form button {
+    align-self: flex-start;
+    padding: 9px 14px;
+    border: 1px solid var(--violet-600);
+    background: transparent;
+    color: var(--violet-600);
+    font: 600 0.72rem var(--mono);
+    cursor: pointer;
+  }
+  .suggest-insight-form button:hover { background: var(--amber-100); color: var(--slate-900); border-color: var(--slate-900); }
+  .suggest-insight-note { max-width: 780px; margin: 10px 0 0; color: var(--slate-500); font-size: 0.78rem; }
+
   .skill-library {
     margin-top: 52px;
     padding-top: 34px;
@@ -1058,6 +1090,18 @@
         <div id="vehicleMixInsight"></div>
       </div>
     </div>
+  </section>
+
+  <section class="suggest-insight" id="suggest-insight" aria-labelledby="suggest-insight-title">
+    <p class="eyebrow">Have an idea?</p>
+    <h2 id="suggest-insight-title">Suggest your own insight</h2>
+    <p class="suggest-insight-intro">What would you like to know about Columbus micromobility data? Describe it below — submitting opens a pre-filled GitHub issue on this repo for you to post.</p>
+    <form class="suggest-insight-form" id="suggestInsightForm">
+      <label for="suggestInsightText" class="suggest-insight-label">Your suggestion</label>
+      <textarea id="suggestInsightText" name="suggestion" rows="3" placeholder="e.g. Show average pile-up duration by neighborhood" required></textarea>
+      <button type="submit">Open a GitHub issue with this suggestion</button>
+    </form>
+    <p class="suggest-insight-note">This opens github.com in a new tab with your suggestion pre-filled as an issue title and body. Nothing is sent anywhere until you sign in and click “Submit new issue” there yourself.</p>
   </section>
 
   <section class="skill-library" id="lookup-tool" aria-labelledby="skill-library-title">
@@ -172705,6 +172749,19 @@
     document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
     map.flyTo([rec.latitude, rec.longitude], Math.max(map.getZoom(), 17), { duration: 0.6 });
     marker.openPopup();
+  });
+
+  // ---- Suggest your own insight (#12) ----
+  document.getElementById("suggestInsightForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const field = document.getElementById("suggestInsightText");
+    const text = field.value.trim();
+    if (!text) return;
+    const title = text.length > 80 ? `${text.slice(0, 77)}…` : text;
+    const body = `${text}\n\n---\nSubmitted via the “Suggest your own insight” form on the live dashboard.`;
+    const url = `https://github.com/steveneedham/columbus-micromobility-data/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=suggestion`;
+    window.open(url, "_blank", "noopener");
+    field.value = "";
   });
 
   // ---- Installable app and offline state ----
