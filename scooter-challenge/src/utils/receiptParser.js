@@ -25,8 +25,8 @@ export function validateReceipt(receipt) {
 }
 
 export const RECEIPT_PATTERNS = {
-  operator: /^(Spin|Veo)/i,
+  operator: /\b(Spin|Veo)\b/i,
   duration: /(\d+)\s*min(?:ute)?s?/i,
-  cost: /\$(\d+\.?\d{0,2})/,
+  cost: /\$\s?(\d+\.\d{2})/,
   date: /(\d{1,2})\/(\d{1,2})\/(\d{2,4})/,
 };
