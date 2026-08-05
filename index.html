@@ -514,6 +514,12 @@
   .insight-tab { min-height: 44px; padding: 10px 14px; border: 1px solid var(--slate-300); border-bottom: 0; background: var(--source-sheet); color: var(--slate-600); font: 600 .68rem var(--mono); white-space: nowrap; cursor: pointer; }
   .insight-tab + .insight-tab { border-left: 0; }
   .insight-tab[aria-selected="true"] { background: var(--blue-700); color: white; border-color: var(--blue-700); }
+  .insight-tab-dot { display: none; width: 7px; height: 7px; border-radius: 50%; margin-left: 7px; vertical-align: middle; }
+  .insight-tab-dot.green, .insight-tab-dot.red { display: inline-block; }
+  .insight-tab-dot.green { background: #39704a; }
+  .insight-tab-dot.red { background: var(--red-600); }
+  .insight-tab[aria-selected="true"] .insight-tab-dot.green { background: #7fd39a; }
+  .insight-tab[aria-selected="true"] .insight-tab-dot.red { background: #f3a58a; }
   .insight-panel { padding-top: 18px; }
   .insight-panel[hidden] { display: none; }
   .insight-hub-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 22px; border: 1px solid var(--slate-300); background: var(--source-sheet); }
@@ -1037,15 +1043,15 @@
       <p>Review Ride Hub capacity signals, fleet distribution, municipal geography counts, vendor changes between snapshots, cross-vendor pile-ups, fleet cap compliance, or vehicle mix. Every relevant result can take you back to the map.</p>
     </div>
     <div class="insight-tabs" role="tablist" aria-label="Insight views">
-      <button type="button" class="insight-tab" role="tab" id="tab-ride-hubs" aria-controls="panel-ride-hubs" aria-selected="true" data-insight="ride-hubs">Ride Hubs</button>
-      <button type="button" class="insight-tab" role="tab" id="tab-cbd-distribution" aria-controls="panel-cbd-distribution" aria-selected="false" data-insight="cbd-distribution">CBD distribution</button>
-      <button type="button" class="insight-tab" role="tab" id="tab-opportunity-distribution" aria-controls="panel-opportunity-distribution" aria-selected="false" data-insight="opportunity-distribution">Opportunity zones</button>
-      <button type="button" class="insight-tab" role="tab" id="tab-osu-boundary" aria-controls="panel-osu-boundary" aria-selected="false" data-insight="osu-boundary">Ohio State</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-ride-hubs" aria-controls="panel-ride-hubs" aria-selected="true" data-insight="ride-hubs">Ride Hubs<span class="insight-tab-dot" id="tabDot-ride-hubs" aria-hidden="true"></span></button>
+      <button type="button" class="insight-tab" role="tab" id="tab-cbd-distribution" aria-controls="panel-cbd-distribution" aria-selected="false" data-insight="cbd-distribution">CBD distribution<span class="insight-tab-dot" id="tabDot-cbd-distribution" aria-hidden="true"></span></button>
+      <button type="button" class="insight-tab" role="tab" id="tab-opportunity-distribution" aria-controls="panel-opportunity-distribution" aria-selected="false" data-insight="opportunity-distribution">Opportunity zones<span class="insight-tab-dot" id="tabDot-opportunity-distribution" aria-hidden="true"></span></button>
+      <button type="button" class="insight-tab" role="tab" id="tab-osu-boundary" aria-controls="panel-osu-boundary" aria-selected="false" data-insight="osu-boundary">Ohio State<span class="insight-tab-dot" id="tabDot-osu-boundary" aria-hidden="true"></span></button>
       <button type="button" class="insight-tab" role="tab" id="tab-vendor-changes" aria-controls="panel-vendor-changes" aria-selected="false" data-insight="vendor-changes">Vendor changes</button>
       <button type="button" class="insight-tab" role="tab" id="tab-pileups" aria-controls="panel-pileups" aria-selected="false" data-insight="pileups">Pile-ups</button>
       <button type="button" class="insight-tab" role="tab" id="tab-311-list" aria-controls="panel-311-list" aria-selected="false" data-insight="311-list">311 records</button>
-      <button type="button" class="insight-tab" role="tab" id="tab-fleet-cap" aria-controls="panel-fleet-cap" aria-selected="false" data-insight="fleet-cap">Fleet cap</button>
-      <button type="button" class="insight-tab" role="tab" id="tab-vehicle-mix" aria-controls="panel-vehicle-mix" aria-selected="false" data-insight="vehicle-mix">Vehicle mix</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-fleet-cap" aria-controls="panel-fleet-cap" aria-selected="false" data-insight="fleet-cap">Fleet cap<span class="insight-tab-dot" id="tabDot-fleet-cap" aria-hidden="true"></span></button>
+      <button type="button" class="insight-tab" role="tab" id="tab-vehicle-mix" aria-controls="panel-vehicle-mix" aria-selected="false" data-insight="vehicle-mix">Vehicle mix<span class="insight-tab-dot" id="tabDot-vehicle-mix" aria-hidden="true"></span></button>
     </div>
     <div class="insight-panel" id="panel-ride-hubs" role="tabpanel" aria-labelledby="tab-ride-hubs" data-insight-panel="ride-hubs">
       <div class="insight-hub-card"><div><h3>Ride Hub status dashboard</h3><p id="rideHubInsightSummary">Compare empty and over-capacity proximity signals from the current GBFS snapshot.</p></div><button type="button" class="hub-dashboard-button" id="openRideHubDashboardInsights" aria-haspopup="dialog">Open Ride Hub status</button></div>
@@ -171712,6 +171718,17 @@
     }[c]));
   }
 
+  // ---- Insight tab compliance dots ----
+  // Green/red status dot on the Insights nav itself, per tab. Only tabs with
+  // an actual defined threshold get one; tabs that are purely descriptive
+  // (Vendor changes, Pile-ups, 311 records) intentionally have no dot.
+  function setTabDot(insightId, isCompliant) {
+    const dot = document.getElementById(`tabDot-${insightId}`);
+    if (!dot) return;
+    dot.classList.remove("red", "green");
+    dot.classList.add(isCompliant ? "green" : "red");
+  }
+
   // ---- Map init ----
   const map = L.map("map").setView([39.9612, -82.9988], 12);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -171987,6 +172004,7 @@
       <section class="hub-dashboard-section"><h3>Empty hubs</h3><ul class="hub-dashboard-list">${emptyRows || '<li><span class="hub-map-link">None in this snapshot.</span></li>'}</ul></section>
       <section class="hub-dashboard-section"><h3>Over-capacity hubs</h3><div class="hub-dashboard-table-wrap"><table class="hub-dashboard-table"><thead><tr><th>Hub</th><th>Capacity</th><th>Nearby</th><th>Veo</th><th>Spin</th></tr></thead><tbody>${overRows || '<tr><td colspan="5">None in this snapshot.</td></tr>'}</tbody></table></div></section>
     `;
+    setTabDot("ride-hubs", empty.length === 0 && overCapacity.length === 0);
   }
   buildRideHubDashboard();
   document.getElementById("openRideHubDashboard").addEventListener("click", () => rideHubDashboard.showModal());
@@ -172048,24 +172066,27 @@
       <div><b>Description:</b> ${esc(dataOsuBoundary.description || "")}</div>
       <div class="review-note">Published policy geography. A point-in-time vehicle count does not establish policy compliance, operator intent, or average deployment.</div>`)
   });
+  const OSU_BOUNDARY_CAP = 400;
   const osuVendorRows = [...new Set(vehicles.map(vehicle => vehicle.company).filter(Boolean))].sort().map(vendor => {
     const vendorVehicles = vehicles.filter(vehicle => vehicle.company === vendor);
     const inside = vendorVehicles.filter(vehicle => vehicleInsideFeatureCollection(vehicle, dataOsuBoundary.feature_collection));
+    const compliant = inside.length <= OSU_BOUNDARY_CAP;
     return {
       vendor,
       inside: inside.length,
       available: inside.filter(vehicle => vehicle.available && !vehicle.disabled && !vehicle.reserved).length,
       citywide: vendorVehicles.length,
-      share: vendorVehicles.length ? inside.length / vendorVehicles.length * 100 : 0
+      share: vendorVehicles.length ? inside.length / vendorVehicles.length * 100 : 0,
+      compliant
     };
   });
   const osuSnapshotAt = parseSnapshotTime(dataGbfs.snapshot_id || dataGbfs.fetched_at);
   const osuTimeLabel = osuSnapshotAt ? fmtDateTime(osuSnapshotAt.toISOString()) : "current embedded snapshot";
   document.getElementById("osuBoundaryInsight").innerHTML = `
-    <div class="hub-dashboard-table-wrap"><table class="cbd-insight-table"><thead><tr><th>Vendor</th><th>Inside boundary</th><th>Available</th><th>Citywide published</th><th>Inside share</th></tr></thead><tbody>
-    ${osuVendorRows.map(row => `<tr><td><button type="button" class="cbd-map-button" data-osu-map>${esc(row.vendor)}</button></td><td><strong>${row.inside.toLocaleString()}</strong></td><td>${row.available.toLocaleString()}</td><td>${row.citywide.toLocaleString()}</td><td>${row.share.toFixed(1)}%</td></tr>`).join("")}
+    <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Vendor</th><th>Inside boundary</th><th>Available</th><th>Citywide published</th><th>Inside share</th><th>Status</th></tr></thead><tbody>
+    ${osuVendorRows.map(row => `<tr><td data-label="Vendor"><button type="button" class="cbd-map-button" data-osu-map>${esc(row.vendor)}</button></td><td data-label="Inside boundary"><strong>${row.inside.toLocaleString()}</strong></td><td data-label="Available">${row.available.toLocaleString()}</td><td data-label="Citywide published">${row.citywide.toLocaleString()}</td><td data-label="Inside share">${row.share.toFixed(1)}%</td><td data-label="Status"><span class="compliance-indicator ${row.compliant ? "green" : "red"}">${row.compliant ? "" : "🔴 "}${row.compliant ? "Within compliance" : "Over cap"}</span></td></tr>`).join("")}
     </tbody></table></div>
-    <p class="cbd-insight-note">Snapshot: ${esc(osuTimeLabel)}. Counts use all published GBFS positions in the supplied boundary, independent of map filters. “Available” excludes disabled and reserved devices. This point-in-time snapshot is not an average and does not determine policy compliance.</p>`;
+    <p class="cbd-insight-note">Snapshot: ${esc(osuTimeLabel)}. Counts use all published GBFS positions in the supplied boundary, independent of map filters. “Available” excludes disabled and reserved devices. Status uses a ${OSU_BOUNDARY_CAP}-device cap per operator inside this boundary. This is a point-in-time snapshot, not an average, so the indicator is provisional.</p>`;
   document.querySelectorAll("[data-osu-map]").forEach(button => button.addEventListener("click", () => {
     setLayerVisibility("osu", true);
     updatePresetState();
@@ -172074,6 +172095,7 @@
     const firstFeatureLayer = layerOsuBoundary.getLayers()[0];
     if (firstFeatureLayer) setTimeout(() => firstFeatureLayer.openPopup(), 650);
   }));
+  setTabDot("osu-boundary", !osuVendorRows.some(row => !row.compliant));
 
   function cbdCompliance(percent) {
     if (percent > 30) return { level: "red", label: "Out of compliance" };
@@ -172108,6 +172130,7 @@
       const firstFeatureLayer = layer.getLayers()[0];
       if (firstFeatureLayer) setTimeout(() => firstFeatureLayer.openPopup(), 650);
     }));
+    setTabDot("cbd-distribution", !rows.some(row => row.compliance.level === "red"));
   }
 
   function buildOpportunityDistributionInsight() {
@@ -172135,6 +172158,7 @@
       document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
       map.flyToBounds(zone.layer.getBounds(), { padding: [28, 28], duration: .6 });
     }));
+    setTabDot("opportunity-distribution", !rows.some(row => row.compliance.level === "red"));
   }
 
   // ---- Fleet cap compliance (#6/#11) ----
@@ -172157,10 +172181,12 @@
       ${rows.map(row => `<tr><td data-label="Operator">${esc(row.vendor)}</td><td data-label="Active devices">${row.count.toLocaleString()}</td><td data-label="Cap">${row.cap.toLocaleString()}</td><td data-label="Over/Under">${row.overUnder > 0 ? "+" : ""}${row.overUnder.toLocaleString()}</td><td data-label="% of cap">${row.percent.toFixed(1)}%</td><td data-label="Status"><span class="compliance-indicator ${row.level}">${row.level === "red" ? "🔴 " : ""}${esc(row.label)}</span></td></tr>`).join("")}
       </tbody></table></div>
       <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. Cap is the City of Columbus / Populus.ai authorized device limit (2,000 per operator). “Active” excludes disabled and reserved devices.</p>`;
+    setTabDot("fleet-cap", !rows.some(row => row.level === "red"));
   }
   buildFleetCapInsight();
 
   // ---- Vehicle mix (#9) ----
+  const BIKE_SHARE_MINIMUM = 50;
   function buildVehicleMixInsight() {
     const activeVehicles = vehicles.filter(vehicle => !vehicle.disabled && !vehicle.reserved);
     const rows = ["Veo", "Spin"].map(vendor => {
@@ -172168,13 +172194,16 @@
       const scooters = vendorVehicles.filter(vehicle => /scooter/i.test(vehicle.type)).length;
       const bikes = vendorVehicles.length - scooters;
       const total = vendorVehicles.length;
-      return { vendor, scooters, bikes, total, scooterPct: total ? scooters / total * 100 : 0 };
+      const bikePct = total ? bikes / total * 100 : 0;
+      const compliant = bikePct >= BIKE_SHARE_MINIMUM;
+      return { vendor, scooters, bikes, total, scooterPct: total ? scooters / total * 100 : 0, bikePct, compliant };
     });
     document.getElementById("vehicleMixInsight").innerHTML = `
-      <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Operator</th><th>Scooters</th><th>Bikes</th><th>Total active</th><th>Scooter share</th></tr></thead><tbody>
-      ${rows.map(row => `<tr><td data-label="Operator">${esc(row.vendor)}</td><td data-label="Scooters">${row.scooters.toLocaleString()}</td><td data-label="Bikes">${row.bikes.toLocaleString()}</td><td data-label="Total active">${row.total.toLocaleString()}</td><td data-label="Scooter share">${row.scooterPct.toFixed(1)}%</td></tr>`).join("")}
+      <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Operator</th><th>Scooters</th><th>Bikes</th><th>Total active</th><th>Bike share</th><th>Status</th></tr></thead><tbody>
+      ${rows.map(row => `<tr><td data-label="Operator">${esc(row.vendor)}</td><td data-label="Scooters">${row.scooters.toLocaleString()}</td><td data-label="Bikes">${row.bikes.toLocaleString()}</td><td data-label="Total active">${row.total.toLocaleString()}</td><td data-label="Bike share">${row.bikePct.toFixed(1)}%</td><td data-label="Status"><span class="compliance-indicator ${row.compliant ? "green" : "red"}">${row.compliant ? "" : "🔴 "}${row.compliant ? "Within compliance" : "Out of compliance"}</span></td></tr>`).join("")}
       </tbody></table></div>
-      <p class="cbd-insight-note">“Bikes” includes e-bike and bicycle form factors as reported by each operator’s GBFS feed. “Active” excludes disabled and reserved devices.</p>`;
+      <p class="cbd-insight-note">“Bikes” includes e-bike and bicycle form factors as reported by each operator’s GBFS feed. Status uses the ${BIKE_SHARE_MINIMUM}% minimum bike-share requirement: at least half of each operator’s active fleet must be bikes. “Active” excludes disabled and reserved devices.</p>`;
+    setTabDot("vehicle-mix", !rows.some(row => !row.compliant));
   }
   buildVehicleMixInsight();
 
