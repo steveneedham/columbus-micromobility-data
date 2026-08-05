@@ -43,7 +43,3 @@ jobs:
             git pull --rebase
             git push
           fi
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
-        if: success()
