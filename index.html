@@ -171639,6 +171639,10 @@
   const vehicles = (dataGbfs.vehicles || []).map(v => ({ ...v }));
   const boundaries = dataPolicy.boundaries || [];
   const rideHubs = dataRideHubs.features || [];
+  const populusReferenceUrl = (dataPolicy.source && dataPolicy.source.policy_url) || "";
+  const populusReferenceLink = populusReferenceUrl
+    ? `<a href="${esc(populusReferenceUrl)}" target="_blank" rel="noopener">published Populus policy</a>`
+    : "the published policy interface";
 
   // ---- Priority heuristic (ported verbatim from source app) ----
   function normalizedPriority(complaintType) {
@@ -172095,7 +172099,7 @@
     <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Vendor</th><th>Inside boundary</th><th>Available</th><th>Citywide published</th><th>Inside share</th><th>Status</th></tr></thead><tbody>
     ${osuVendorRows.map(row => `<tr><td data-label="Vendor"><button type="button" class="cbd-map-button" data-osu-map>${esc(row.vendor)}</button></td><td data-label="Inside boundary"><strong>${row.inside.toLocaleString()}</strong></td><td data-label="Available">${row.available.toLocaleString()}</td><td data-label="Citywide published">${row.citywide.toLocaleString()}</td><td data-label="Inside share">${row.share.toFixed(1)}%</td><td data-label="Status"><span class="compliance-indicator ${row.compliant ? "green" : "red"}">${row.compliant ? "" : "🔴 "}${row.compliant ? "Within compliance" : "Over cap"}</span></td></tr>`).join("")}
     </tbody></table></div>
-    <p class="cbd-insight-note">Snapshot: ${esc(osuTimeLabel)}. Counts use all published GBFS positions in the supplied boundary, independent of map filters. “Available” excludes disabled and reserved devices. Status uses a ${OSU_BOUNDARY_CAP}-device cap per operator inside this boundary. This is a point-in-time snapshot, not an average, so the indicator is provisional.</p>`;
+    <p class="cbd-insight-note">Snapshot: ${esc(osuTimeLabel)}. Counts use all published GBFS positions in the supplied boundary, independent of map filters. “Available” excludes disabled and reserved devices. Status uses a ${OSU_BOUNDARY_CAP}-device cap per operator inside this boundary, per the ${populusReferenceLink}. This is a point-in-time snapshot, not an average, so the indicator is provisional.</p>`;
   document.querySelectorAll("[data-osu-map]").forEach(button => button.addEventListener("click", () => {
     setLayerVisibility("osu", true);
     updatePresetState();
@@ -172130,7 +172134,7 @@
       <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Vendor</th><th>CBD active</th><th>Citywide active</th><th>CBD share</th><th>30% line</th><th>Status</th></tr></thead><tbody>
       ${rows.map(row => `<tr><td data-label="Vendor"><button type="button" class="cbd-map-button" data-cbd-map>${row.vendor}</button></td><td data-label="CBD active">${row.inside.toLocaleString()}</td><td data-label="Citywide active">${row.total.toLocaleString()}</td><td data-label="CBD share">${row.percent.toFixed(1)}%</td><td data-label="30% line">${row.percent > 30 ? `+${(row.percent - 30).toFixed(1)} pts` : `${(row.percent - 30).toFixed(1)} pts`}</td><td data-label="Status"><span class="compliance-indicator ${row.compliance.level}">${row.compliance.label}</span></td></tr>`).join("")}
       </tbody></table></div>
-      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. Status uses the 30% maximum: above 30% is out of compliance, 27–30% is borderline, and below 27% is within compliance. This snapshot is outside the policy’s 6:00–8:00 AM averaging window, so the indicator is provisional. “Active” excludes disabled and reserved devices.</p>`;
+      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. Status uses the 30% maximum from the ${populusReferenceLink}: above 30% is out of compliance, 27–30% is borderline, and below 27% is within compliance. This snapshot is outside the policy’s 6:00–8:00 AM averaging window, so the indicator is provisional. “Active” excludes disabled and reserved devices.</p>`;
     document.querySelectorAll("[data-cbd-map]").forEach(button => button.addEventListener("click", () => {
       setLayerVisibility("geographies", true);
       updatePresetState();
@@ -172158,7 +172162,7 @@
       <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Opportunity zone</th><th>Vendor</th><th>Zone active</th><th>Citywide active</th><th>Fleet share</th><th>vs. 5%</th><th>Status</th></tr></thead><tbody>
       ${rows.map(row => `<tr><td data-label="Opportunity zone"><button type="button" class="cbd-map-button" data-opportunity-map="${row.zone.geography.geography_id}">${esc(row.zone.label)}</button></td><td data-label="Vendor">${row.vendor}</td><td data-label="Zone active">${row.inside.toLocaleString()}</td><td data-label="Citywide active">${row.total.toLocaleString()}</td><td data-label="Fleet share">${row.percent.toFixed(1)}%</td><td data-label="vs. 5%">${row.percent >= 5 ? "+" : ""}${(row.percent - 5).toFixed(1)} pts</td><td data-label="Status"><span class="compliance-indicator ${row.compliance.level}">${row.compliance.label}</span></td></tr>`).join("")}
       </tbody></table></div>
-      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. The published policy interface identifies a 5% deployed-device rule for “Ghost - Opportunity Zones”; this table shows each component geography separately. Status uses the 5% minimum described for this analysis: below 4.5% is out of compliance, 4.5% to under 5% is borderline, and 5% or more is within compliance. The published interface screenshot labels 5% as a maximum, so that source discrepancy should be resolved before using these indicators for enforcement. “Active” excludes disabled and reserved devices.</p>`;
+      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. The ${populusReferenceLink} identifies a 5% deployed-device rule for “Ghost - Opportunity Zones”; this table shows each component geography separately. Status uses the 5% minimum described for this analysis: below 4.5% is out of compliance, 4.5% to under 5% is borderline, and 5% or more is within compliance. The published interface screenshot labels 5% as a maximum, so that source discrepancy should be resolved before using these indicators for enforcement. “Active” excludes disabled and reserved devices.</p>`;
     document.querySelectorAll("[data-opportunity-map]").forEach(button => button.addEventListener("click", () => {
       const zone = opportunityZones.find(candidate => candidate.geography.geography_id === button.dataset.opportunityMap);
       if (!zone) return;
@@ -172189,7 +172193,7 @@
       <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Operator</th><th>Active devices</th><th>Cap</th><th>Over/Under</th><th>% of cap</th><th>Status</th></tr></thead><tbody>
       ${rows.map(row => `<tr><td data-label="Operator">${esc(row.vendor)}</td><td data-label="Active devices">${row.count.toLocaleString()}</td><td data-label="Cap">${row.cap.toLocaleString()}</td><td data-label="Over/Under">${row.overUnder > 0 ? "+" : ""}${row.overUnder.toLocaleString()}</td><td data-label="% of cap">${row.percent.toFixed(1)}%</td><td data-label="Status"><span class="compliance-indicator ${row.level}">${row.level === "red" ? "🔴 " : ""}${esc(row.label)}</span></td></tr>`).join("")}
       </tbody></table></div>
-      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. Cap is the City of Columbus / Populus.ai authorized device limit (2,000 per operator). “Active” excludes disabled and reserved devices.</p>`;
+      <p class="cbd-insight-note">Snapshot: ${esc(timeLabel)}. Cap is the City of Columbus / Populus.ai authorized device limit (2,000 per operator), per the ${populusReferenceLink}. “Active” excludes disabled and reserved devices.</p>`;
     setTabDot("fleet-cap", !rows.some(row => row.level === "red"));
   }
   buildFleetCapInsight();
@@ -172211,7 +172215,7 @@
       <div class="hub-dashboard-table-wrap compliance-table-wrap"><table class="cbd-insight-table compliance-table"><thead><tr><th>Operator</th><th>Scooters</th><th>Bikes</th><th>Total active</th><th>Bike share</th><th>Status</th></tr></thead><tbody>
       ${rows.map(row => `<tr><td data-label="Operator">${esc(row.vendor)}</td><td data-label="Scooters">${row.scooters.toLocaleString()}</td><td data-label="Bikes">${row.bikes.toLocaleString()}</td><td data-label="Total active">${row.total.toLocaleString()}</td><td data-label="Bike share">${row.bikePct.toFixed(1)}%</td><td data-label="Status"><span class="compliance-indicator ${row.compliant ? "green" : "red"}">${row.compliant ? "" : "🔴 "}${row.compliant ? "Within compliance" : "Out of compliance"}</span></td></tr>`).join("")}
       </tbody></table></div>
-      <p class="cbd-insight-note">“Bikes” includes e-bike and bicycle form factors as reported by each operator’s GBFS feed. Status uses the ${BIKE_SHARE_MINIMUM}% minimum bike-share requirement: at least half of each operator’s active fleet must be bikes. “Active” excludes disabled and reserved devices.</p>`;
+      <p class="cbd-insight-note">“Bikes” includes e-bike and bicycle form factors as reported by each operator’s GBFS feed. Status uses the ${BIKE_SHARE_MINIMUM}% minimum bike-share requirement from the ${populusReferenceLink}: at least half of each operator’s active fleet must be bikes. “Active” excludes disabled and reserved devices.</p>`;
     setTabDot("vehicle-mix", !rows.some(row => !row.compliant));
   }
   buildVehicleMixInsight();
@@ -172250,13 +172254,25 @@
     });
 
   // ---- Policy boundaries layer ----
+  function populusPolicyUrl(policyId) {
+    const base = dataPolicy.source && dataPolicy.source.policy_url;
+    if (!base || !policyId) return null;
+    try {
+      const url = new URL(base);
+      url.searchParams.set("policy_id", policyId);
+      return url.toString();
+    } catch {
+      return null;
+    }
+  }
   const layerPolicy = L.geoJSON(
     boundaries.map(b => ({
       type: "Feature",
       properties: {
         policy_name: b.policy_name,
         boundary_type: b.boundary_type,
-        description: b.description
+        description: b.description,
+        policy_id: b.policy_id
       },
       geometry: b.geometry
     })),
@@ -172264,10 +172280,12 @@
       style: { color: "#7c3aed", weight: 2, dashArray: "6,5", fillColor: "#7c3aed", fillOpacity: 0.06 },
       onEachFeature: (feature, lyr) => {
         const p = feature.properties || {};
+        const populusUrl = populusPolicyUrl(p.policy_id);
         lyr.bindPopup(`
           <div class="popup-title">${esc(p.policy_name || "Unnamed policy")}</div>
           <div><b>Type:</b> ${esc(titleCase(p.boundary_type))}</div>
           <div><b>Description:</b> ${esc(p.description || "")}</div>
+          ${populusUrl ? `<div><a href="${esc(populusUrl)}" target="_blank" rel="noopener">View this policy on Populus →</a></div>` : ""}
           <div class="review-note">Published policy boundary, not a real-time enforcement zone.</div>
         `);
       }
