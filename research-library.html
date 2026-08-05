@@ -18,14 +18,14 @@
   <section class="reference-library" aria-labelledby="tools-title">
     <p class="eyebrow">Interactive tool</p>
     <h2 id="tools-title">Tools built on this data</h2>
-    <p class="reference-intro">Applies the same live Spin/Veo GBFS feed the dashboard uses to a specific personal question.</p>
+    <p class="reference-intro">Applies the same public Spin/Veo GBFS feed the dashboard uses to a specific personal question.</p>
     <div class="reference-grid">
       <article class="reference-item">
         <div class="reference-label">🧪 Urban Transit Mobility Lab</div>
         <h3>Curb Your Spending</h3>
-        <p>Add your home and a few frequent stops, log recent rides, and get a personalized Spin vs. Veo monthly cost projection built from live fleet density near each location.</p>
+        <p>Add your home and a few frequent stops, log recent rides, and get a personalized Spin vs. Veo monthly cost projection with nearby vehicle density from the public GBFS feed.</p>
         <div class="reference-links">
-          <a href="scooter-challenge/dist/index.html">Open the tool →</a>
+          <a href="scooter-challenge/dist/index.html" data-mobile-popup-link>Open the tool →</a>
         </div>
       </article>
     </div>
@@ -82,5 +82,24 @@
   </section>
 </main>
 <footer>© 2026 Steven Needham · Independent project, public data only.</footer>
+<script>
+  // Open mobile-designed tools (Curb Your Spending) in a mobile-sized popup
+  // on desktop, since the layout is built for a narrow viewport.
+  document.querySelectorAll("[data-mobile-popup-link]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (matchMedia("(max-width: 640px)").matches) return;
+      event.preventDefault();
+      const width = 430;
+      const height = 900;
+      const left = Math.max(0, Math.round((screen.width - width) / 2));
+      const top = Math.max(0, Math.round((screen.height - height) / 2));
+      window.open(
+        link.href,
+        "curbYourSpending",
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+      );
+    });
+  });
+</script>
 </body>
 </html>
