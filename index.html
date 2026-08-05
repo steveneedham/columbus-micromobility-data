@@ -926,7 +926,7 @@
     <a href="#map-workspace">Map</a>
     <a href="#insights">Insights</a>
     <a href="#lookup-tool">Tools</a>
-    <a href="scooter-challenge/dist/index.html">Curb Your Spending</a>
+    <a href="scooter-challenge/dist/index.html" data-mobile-popup-link>Curb Your Spending</a>
     <a href="research-library.html">Research library</a>
   </div>
 </nav>
@@ -1194,9 +1194,9 @@
     <div>
       <p class="eyebrow">🧪 Urban Transit Mobility Lab</p>
       <h2 id="scooter-challenge-promo-title">Curb Your Spending</h2>
-      <p>Add your home and a few frequent stops, log recent rides, and get a personalized Spin vs. Veo cost projection built from this same live GBFS data.</p>
+      <p>Add your home and a few frequent stops, log recent rides, and get a personalized Spin vs. Veo cost projection with nearby vehicle density from the public GBFS feed.</p>
     </div>
-    <a href="scooter-challenge/dist/index.html">Open Curb Your Spending →</a>
+    <a href="scooter-challenge/dist/index.html" data-mobile-popup-link>Open Curb Your Spending →</a>
   </section>
 
   <section class="research-promo" aria-labelledby="research-promo-title">
@@ -187138,6 +187138,24 @@
     const url = `https://github.com/steveneedham/columbus-micromobility-data/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=suggestion`;
     window.open(url, "_blank", "noopener");
     field.value = "";
+  });
+
+  // ---- Open mobile-designed tools (Curb Your Spending) in a mobile-sized
+  // popup on desktop, since the layout is built for a narrow viewport ----
+  document.querySelectorAll("[data-mobile-popup-link]").forEach(link => {
+    link.addEventListener("click", event => {
+      if (matchMedia("(max-width: 640px)").matches) return;
+      event.preventDefault();
+      const width = 430;
+      const height = 900;
+      const left = Math.max(0, Math.round((screen.width - width) / 2));
+      const top = Math.max(0, Math.round((screen.height - height) / 2));
+      window.open(
+        link.href,
+        "curbYourSpending",
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+      );
+    });
   });
 
   // ---- Installable app and offline state ----
