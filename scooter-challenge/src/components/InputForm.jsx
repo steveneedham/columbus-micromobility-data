@@ -98,7 +98,9 @@ export function InputForm({ onSubmit }) {
 
       <section>
         <h2 className="font-display text-xl text-ink">Your recent rides</h2>
-        <p className="mt-1 text-sm text-note">Enter operator, duration, and cost from recent receipts.</p>
+        <p className="mt-1 text-sm text-note">
+          Enter operator, duration, and cost from recent receipts, or scan a screenshot to fill them in.
+        </p>
         <div className="mt-3 space-y-3">
           {receipts.map((receipt, i) => (
             <ReceiptInput

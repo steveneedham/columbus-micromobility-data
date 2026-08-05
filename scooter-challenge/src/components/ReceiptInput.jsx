@@ -1,6 +1,39 @@
+import { useRef, useState } from 'react';
+import { scanReceiptImage } from '../utils/receiptOCR.js';
+
+const SCAN_STATUS_TEXT = {
+  scanning: 'Reading your screenshot…',
+  done: 'Filled in from your screenshot — double check the fields before continuing.',
+  empty: "Couldn't make out any details in that image — enter the ride manually.",
+  error: "Couldn't read that image — enter the ride manually.",
+};
+
 export function ReceiptInput({ receipt, onChange, onRemove, removable }) {
+  const [scanStatus, setScanStatus] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFile = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+
+    setScanStatus('scanning');
+    try {
+      const { fields } = await scanReceiptImage(file);
+      if (Object.keys(fields).length === 0) {
+        setScanStatus('empty');
+        return;
+      }
+      onChange({ ...receipt, ...fields });
+      setScanStatus('done');
+    } catch {
+      setScanStatus('error');
+    }
+  };
+
   return (
-    <div className="grid grid-cols-2 gap-2 rounded-sheet border border-rule bg-sheet p-4 sm:grid-cols-4">
+    <div className="rounded-sheet border border-rule bg-sheet p-4">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
       <select
         value={receipt.operator}
         onChange={(e) => onChange({ ...receipt, operator: e.target.value })}
@@ -46,6 +79,31 @@ export function ReceiptInput({ receipt, onChange, onRemove, removable }) {
           >
             ✕
           </button>
+        )}
+      </div>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-rule pt-3">
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={scanStatus === 'scanning'}
+          className="rounded border border-rule px-2 py-1.5 font-mono text-xs text-note hover:border-ink hover:text-ink disabled:opacity-50"
+        >
+          📷 Scan receipt screenshot
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFile}
+          className="hidden"
+          aria-label="Upload a screenshot of your Spin or Veo receipt"
+        />
+        {scanStatus && (
+          <span className={`font-mono text-xs ${scanStatus === 'done' ? 'text-river' : 'text-note'}`}>
+            {SCAN_STATUS_TEXT[scanStatus]}
+          </span>
         )}
       </div>
     </div>
