@@ -37,7 +37,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add snapshots/311_requests_*.json data-311.json 2>/dev/null || true
+          git add snapshots/311_requests_*.json data-311.json index.html 2>/dev/null || true
 
           if git diff --cached --exit-code > /dev/null; then
             echo "No new 311 data to commit"
