@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
 Rebuild data-311.json (the live site's 311 layer) from the latest
-snapshots/311_requests_latest.json pull. Run by
-.github/workflows/pull-311-data.yml after each hourly fetch.
+snapshots/311_requests_latest.json pull, and sync the same payload into
+index.html's embedded #data-311 script tag (what the dashboard actually
+renders its stats from). Run by .github/workflows/pull-311-data.yml
+after each hourly fetch.
 
 Note: the source 311 API has no free-text description field, so
 complaint_type cannot be classified automatically (ada_ramp / sidewalk_block
@@ -10,6 +12,7 @@ complaint_type cannot be classified automatically (ada_ramp / sidewalk_block
 priority heuristic treats as standard priority.
 """
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOT_PATH = ROOT / "snapshots" / "311_requests_latest.json"
 OUTPUT_PATH = ROOT / "data-311.json"
+INDEX_HTML_PATH = ROOT / "index.html"
 
 
 def epoch_ms_to_iso(value):
@@ -50,6 +54,27 @@ def transform(record):
         "council_district": record.get("COUNCILDISTRICT") or "",
         "zip": record.get("ZIP") or "",
     }
+
+
+def replace_embedded_script(html, element_id, new_json_text):
+    pattern = re.compile(
+        rf'(<script type="application/json" id="{element_id}">\n).*?(\n</script>)',
+        re.DOTALL,
+    )
+    new_html, count = pattern.subn(lambda m: m.group(1) + new_json_text + m.group(2), html, count=1)
+    if count != 1:
+        raise RuntimeError(f"Expected exactly one #{element_id} script block, found {count}")
+    return new_html
+
+
+def sync_index_html(payload):
+    """The dashboard renders its 311 stats from the #data-311 script tag
+    baked into index.html at load time, not from data-311.json directly
+    (that file is only polled client-side for a "refresh available"
+    notification). Keep the embedded copy current too."""
+    html = INDEX_HTML_PATH.read_text()
+    html = replace_embedded_script(html, "data-311", json.dumps(payload, indent=2))
+    INDEX_HTML_PATH.write_text(html)
 
 
 def main():
@@ -86,8 +111,9 @@ def main():
     }
 
     OUTPUT_PATH.write_text(json.dumps(output, indent=2) + "\n")
+    sync_index_html(output)
     print(
-        f"Wrote {OUTPUT_PATH.name}: {len(records)} records "
+        f"Wrote {OUTPUT_PATH.name} and synced index.html: {len(records)} records "
         f"({duplicate_count} duplicates, {invalid_count} invalid skipped)",
         file=sys.stderr,
     )
