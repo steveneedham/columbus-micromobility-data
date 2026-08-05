@@ -445,6 +445,18 @@
   .pileup-recurring-badge.recurring { background: var(--amber-100); color: var(--amber-800); }
   .pileup-recurring-badge.non-recurring { background: var(--slate-100); color: var(--slate-600); }
   .pileup-list-toggle { width: calc(100% - 32px); margin: 0 16px 14px; }
+  .veo-movement-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 0 16px 12px; }
+  .veo-movement-filters label { font: 600 .64rem var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--slate-500); }
+  .veo-movement-filters select { padding: 5px 7px; border: 1px solid var(--slate-300); background: var(--source-sheet); font: inherit; font-size: .82rem; }
+  .veo-movement-apply { display: flex; align-items: center; gap: 5px; text-transform: none; letter-spacing: normal; font: 500 .82rem var(--body); color: var(--slate-700); }
+  .veo-movement-apply input { margin: 0; }
+  .veo-movement-status { min-height: 1.4em; margin: 0; padding: 0 16px 8px; color: var(--slate-600); font: 600 .72rem var(--mono); }
+  .veo-movement-badge { display: inline-block; padding: 1px 6px; margin-right: 6px; border-radius: 0; font: 700 0.6rem var(--mono); text-transform: uppercase; letter-spacing: 0.03em; }
+  .veo-movement-badge.moved { background: var(--amber-100); color: var(--amber-800); }
+  .veo-movement-badge.stationary { background: var(--slate-100); color: var(--slate-600); }
+  .veo-range-trend.up { color: #245f39; }
+  .veo-range-trend.down { color: var(--red-600); }
+  .veo-range-trend.unchanged, .veo-range-trend.unknown { color: var(--slate-600); }
   .research-promo { margin-top: 52px; padding: 30px 0 8px; border-top: 1px solid var(--slate-300); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
   .research-promo .eyebrow { margin: 0 0 7px; color: var(--red-600); }
   .research-promo h2 { margin: 0; font: 500 clamp(1.7rem, 3vw, 2.4rem)/1.1 var(--display); }
@@ -785,7 +797,8 @@
   .hub-dashboard-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--slate-300); }
   .hub-dashboard-list li { border-bottom: 1px solid var(--slate-300); }
   .hub-dashboard-list li:nth-child(even) { border-left: 1px solid var(--slate-300); }
-  .hub-map-link { width: 100%; padding: 10px 12px; border: 0; background: transparent; color: var(--slate-800); font: inherit; text-align: left; cursor: pointer; }
+  .hub-map-link { width: 100%; padding: 10px 12px; border: 0; background: transparent; color: var(--slate-800); font: inherit; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .hub-status-dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--red-600); }
   .hub-map-link:hover { background: var(--amber-100); color: var(--slate-900); }
   .hub-dashboard-table-wrap { overflow-x: auto; }
   .hub-dashboard-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
@@ -953,7 +966,7 @@
       <section class="guide-item"><h3>2 · Toggle map layers</h3><p>On phones, select Layers &amp; filters over the map to open the control sheet. On larger screens, the controls remain beside the map. Layers include 311 requests, GBFS vehicles, Ride Hubs, vendor review areas, pile-ups, policy boundaries, and published MDS geographies.</p></section>
       <section class="guide-item"><h3>3 · Read map symbols</h3><p>311 requests use priority-colored diamonds; GBFS vehicles use vendor-colored circles (Veo teal, Spin orange — see the map legend for the full key). Ride Hubs use signed markers with nearby-vehicle badges. Dashed circles mark vendor review areas, outlined rings mark pile-ups, dashed lines mark policy boundaries, and shaded polygons mark MDS geographies.</p></section>
       <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow the GBFS positions shown on the map. Ride Hub counts and distribution tables continue to use the complete active snapshot, independent of those display filters.</p></section>
-      <section class="guide-item"><h3>5 · Review insights</h3><p>Insights are grouped into two tabs: Compliance (Ride Hubs, CBD distribution, Opportunity zones, Ohio State, Fleet cap, Vehicle mix — each with a red/green status dot) and Distribution, Range &amp; Availability (Vendor changes, Pile-ups, 311 records — descriptive signals with no defined pass/fail threshold). Select a linked hub, geography, review area, pile-up, or 311 case to enable its layer and return to the relevant map area.</p></section>
+      <section class="guide-item"><h3>5 · Review insights</h3><p>Insights are grouped into two tabs: Compliance (Ride Hubs, CBD distribution, Opportunity zones, Ohio State, Fleet cap, Vehicle mix — each with a red/green status dot) and Distribution, Range &amp; Availability (Vendor changes, Pile-ups, 311 records, Veo movement — descriptive signals with no defined pass/fail threshold). Select a linked hub, geography, review area, pile-up, 311 case, or Veo vehicle to enable its layer and return to the relevant map area.</p></section>
       <section class="guide-item"><h3>6 · Read distribution status</h3><p>CBD status uses a 30% maximum: red is above 30%, yellow is 27–30%, and green is below 27%. Opportunity-zone status uses the supplied 5% minimum: red is below 4.5%, yellow is 4.5% to under 5%, and green is 5% or more. These point-in-time indicators remain provisional; read the note below each table for timing and source limitations.</p></section>
       <section class="guide-item"><h3>7 · Inspect Ride Hubs</h3><p>Open the Ride Hub Status dashboard to compare empty and capacity-exceeding proximity signals. Select any row to enable the hub layer and jump to its map marker.</p></section>
       <section class="guide-item"><h3>8 · Follow vendor changes</h3><p>The perpetual observation history preserves every committed GBFS comparison for fleet size, published range, availability, and geographic concentration without using 311 reports. Each entry shows ↑ Up, ↓ Down, or — Unchanged; geographic entries also jump to their review area on the map.</p></section>
@@ -1079,6 +1092,7 @@
       <button type="button" class="insight-tab" role="tab" id="tab-vendor-changes" aria-controls="panel-vendor-changes" aria-selected="false" data-insight="vendor-changes">Vendor changes</button>
       <button type="button" class="insight-tab" role="tab" id="tab-pileups" aria-controls="panel-pileups" aria-selected="false" data-insight="pileups">Pile-ups</button>
       <button type="button" class="insight-tab" role="tab" id="tab-311-list" aria-controls="panel-311-list" aria-selected="false" data-insight="311-list">311 records</button>
+      <button type="button" class="insight-tab" role="tab" id="tab-veo-movement" aria-controls="panel-veo-movement" aria-selected="false" data-insight="veo-movement">Veo movement</button>
     </div>
     <div class="insight-panel" id="panel-ride-hubs" role="tabpanel" aria-labelledby="tab-ride-hubs" data-insight-panel="ride-hubs">
       <div class="insight-hub-card"><div><h3>Ride Hub status dashboard</h3><p id="rideHubInsightSummary">Compare empty and over-capacity proximity signals from the current GBFS snapshot.</p></div><button type="button" class="hub-dashboard-button" id="openRideHubDashboardInsights" aria-haspopup="dialog">Open Ride Hub status</button></div>
@@ -1111,6 +1125,34 @@
     </div>
     <div class="insight-panel" id="panel-311-list" role="tabpanel" aria-labelledby="tab-311-list" data-insight-panel="311-list" hidden>
       <div class="panel insight-pileups"><div class="panel-header">Most recent 311 requests</div><p class="pileup-snapshot-freshness" id="request311Freshness"></p><div class="pileup-list" id="request311List"></div><button type="button" class="pileup-list-toggle" id="toggleRequest311List" aria-expanded="false">Show all 311 requests</button></div>
+    </div>
+    <div class="insight-panel" id="panel-veo-movement" role="tabpanel" aria-labelledby="tab-veo-movement" data-insight-panel="veo-movement" hidden>
+      <div class="panel insight-pileups">
+        <div class="panel-header">Veo vehicle movement</div>
+        <p class="pileup-snapshot-freshness" id="veoMovementFreshness"></p>
+        <div class="veo-movement-filters">
+          <label for="veoMovementFilter">Movement</label>
+          <select id="veoMovementFilter">
+            <option value="all">All Veo vehicles</option>
+            <option value="moved">Moved since prior snapshot</option>
+            <option value="stationary">Stationary</option>
+          </select>
+          <label for="veoRangeTrendFilter">Range trend</label>
+          <select id="veoRangeTrendFilter">
+            <option value="all">All</option>
+            <option value="up">Increased</option>
+            <option value="down">Decreased</option>
+            <option value="unchanged">Unchanged</option>
+            <option value="unknown">No prior snapshot</option>
+          </select>
+          <label class="veo-movement-apply"><input type="checkbox" id="veoMovementApplyToMap"> Apply filters to map</label>
+          <button type="button" class="pileup-list-toggle" id="animateVeoMovement">▶ Animate movement</button>
+        </div>
+        <p class="veo-movement-status" id="veoMovementStatus" aria-live="polite"></p>
+        <div class="pileup-list" id="veoMovementList"></div>
+        <button type="button" class="pileup-list-toggle" id="toggleVeoMovementList" aria-expanded="false">Show all Veo vehicles</button>
+        <p class="cbd-insight-note">Known data limits: Veo’s GBFS feed does not report a battery percentage for any vehicle, so range trend (remaining published miles) is used here as the closest available proxy for charge level — it is not the same measurement. Spin’s vehicle IDs are reassigned on every pull, so movement and range trend can only be tracked for Veo; Spin devices do report a battery percentage but can’t be matched across snapshots to compute a trend.</p>
+      </div>
     </div>
     <div class="insight-panel" id="panel-fleet-cap" role="tabpanel" aria-labelledby="tab-fleet-cap" data-insight-panel="fleet-cap" hidden>
       <div class="cbd-insight-card">
@@ -185889,7 +185931,7 @@
   // ---- Insight groups: Compliance vs. Distribution, Range & Availability ----
   const insightGroupMembers = {
     compliance: ["ride-hubs", "cbd-distribution", "opportunity-distribution", "osu-boundary", "fleet-cap", "vehicle-mix"],
-    distribution: ["vendor-changes", "pileups", "311-list"]
+    distribution: ["vendor-changes", "pileups", "311-list", "veo-movement"]
   };
   function selectInsightGroup(name) {
     document.querySelectorAll("[data-insight-group]").forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.insightGroup === name)));
@@ -186176,6 +186218,7 @@
       if (opFilter !== "all" && v.company !== opFilter) return;
       if (availFilter === "available" && !v.available) return;
       if (availFilter === "unavailable" && v.available) return;
+      if (v.company === "Veo" && veoMovementApplyToMapChecked() && !veoMovementMatches(v, currentVeoMovementFilters())) return;
       const color = VENDOR_COLORS[v.company] || "#475569";
       const marker = L.circleMarker([v.lat, v.lng], {
         radius: 3.5,
@@ -186305,7 +186348,7 @@
     document.getElementById("rideHubDashboardLede").textContent = snapshotAt
       ? `Based on the GBFS snapshot from ${fmtDateTime(snapshotAt.toISOString())}. Hub capacity comes from the City-published Ride Hub layer.`
       : "Based on the current embedded GBFS snapshot and City-published Ride Hub capacity.";
-    const emptyRows = empty.map(hub => `<li><button type="button" class="hub-map-link" data-hub-index="${hub.index}">${esc(hub.name)}</button></li>`).join("");
+    const emptyRows = empty.map(hub => `<li><button type="button" class="hub-map-link" data-hub-index="${hub.index}" aria-label="${esc(hub.name)} — no vendor vehicle within ${HUB_VEHICLE_RADIUS_M} m, show on map"><span class="hub-status-dot" aria-hidden="true" title="No vendor vehicle in proximity"></span>${esc(hub.name)}</button></li>`).join("");
     const overRows = overCapacity.map(hub => `<tr><td><button type="button" class="hub-map-link" data-hub-index="${hub.index}">${esc(hub.name)}</button></td><td>${hub.capacity}</td><td><strong>${hub.total}</strong></td><td>${hub.veo}</td><td>${hub.spin}</td></tr>`).join("");
     document.getElementById("rideHubInsightSummary").textContent = `${empty.length} empty and ${overCapacity.length} over-capacity proximity signals in the current snapshot.`;
     document.getElementById("rideHubDashboardContent").innerHTML = `
@@ -187125,6 +187168,175 @@
     document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
     map.flyTo([rec.latitude, rec.longitude], Math.max(map.getZoom(), 17), { duration: 0.6 });
     marker.openPopup();
+  });
+
+  // ---- Veo movement (#22 follow-up): range trend, filters, animation ----
+  function veoRangeTrend(v) {
+    if (v.range_delta == null) return "unknown";
+    if (v.range_delta > 0.05) return "up";
+    if (v.range_delta < -0.05) return "down";
+    return "unchanged";
+  }
+  function veoMoved(v) {
+    return v.moved_m != null && v.moved_m > 0;
+  }
+  function veoMovementApplyToMapChecked() {
+    const el = document.getElementById("veoMovementApplyToMap");
+    return !!(el && el.checked);
+  }
+  function currentVeoMovementFilters() {
+    return {
+      movement: document.getElementById("veoMovementFilter").value,
+      rangeTrend: document.getElementById("veoRangeTrendFilter").value
+    };
+  }
+  function veoMovementMatches(v, filters) {
+    if (filters.movement === "moved" && !veoMoved(v)) return false;
+    if (filters.movement === "stationary" && veoMoved(v)) return false;
+    if (filters.rangeTrend !== "all" && veoRangeTrend(v) !== filters.rangeTrend) return false;
+    return true;
+  }
+
+  const veoVehicles = vehicles.filter(v => v.company === "Veo" && typeof v.lat === "number" && typeof v.lng === "number");
+  const veoMovementPreviewCount = 10;
+  let veoMovementListExpanded = false;
+  const veoMovementSorted = veoVehicles.toSorted((a, b) => (b.moved_m || 0) - (a.moved_m || 0));
+  const veoPrevSnapshotEntry = veoVehicles.find(v => v.prev_snapshot_id);
+  document.getElementById("veoMovementFreshness").textContent = veoPrevSnapshotEntry
+    ? `Comparing the current snapshot (${freshnessLabel(dataGbfs.snapshot_id || dataGbfs.fetched_at)}) against the prior one (${freshnessLabel(veoPrevSnapshotEntry.prev_snapshot_id)}) · ${veoVehicles.length.toLocaleString()} Veo vehicles`
+    : `${veoVehicles.length.toLocaleString()} Veo vehicles · no prior snapshot to compare against yet`;
+
+  function buildVeoMovementList() {
+    const filters = currentVeoMovementFilters();
+    const filtered = veoMovementSorted.filter(v => veoMovementMatches(v, filters));
+    const list = document.getElementById("veoMovementList");
+    const toggle = document.getElementById("toggleVeoMovementList");
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty-note">No Veo vehicles match these filters in the current snapshot.</div>`;
+      toggle.hidden = true;
+      return;
+    }
+    const visible = veoMovementListExpanded ? filtered : filtered.slice(0, veoMovementPreviewCount);
+    list.innerHTML = visible.map(v => {
+      const trend = veoRangeTrend(v);
+      const trendArrow = trend === "up" ? "↑" : trend === "down" ? "↓" : "—";
+      const trendLabel = trend === "up" || trend === "down"
+        ? `${v.range_delta > 0 ? "+" : ""}${v.range_delta} mi`
+        : trend === "unchanged" ? "no change" : "no prior snapshot";
+      const moved = veoMoved(v);
+      return `
+      <button type="button" class="pileup-item" data-veo-id="${esc(v.id || "")}" aria-label="Show Veo vehicle ${esc(String(v.id || "").slice(0, 8))} on the map">
+        <div class="id">${esc(String(v.id || "").slice(0, 8))}</div>
+        <div class="meta"><span class="veo-movement-badge ${moved ? "moved" : "stationary"}">${moved ? "Moved" : "Stationary"}</span>${moved ? `${v.moved_m.toLocaleString()} m since prior snapshot` : ""}</div>
+        <div class="meta">Range trend: <span class="veo-range-trend ${trend}">${trendArrow} ${esc(trendLabel)}</span></div>
+      </button>
+    `;
+    }).join("");
+    toggle.hidden = filtered.length <= veoMovementPreviewCount;
+    toggle.textContent = veoMovementListExpanded ? "Show top 10" : `Show all ${filtered.length} Veo vehicles`;
+    toggle.setAttribute("aria-expanded", String(veoMovementListExpanded));
+  }
+  buildVeoMovementList();
+  document.getElementById("toggleVeoMovementList").addEventListener("click", () => {
+    veoMovementListExpanded = !veoMovementListExpanded;
+    buildVeoMovementList();
+  });
+  ["veoMovementFilter", "veoRangeTrendFilter"].forEach(id => {
+    document.getElementById(id).addEventListener("change", () => {
+      veoMovementListExpanded = false;
+      buildVeoMovementList();
+      if (veoMovementApplyToMapChecked()) {
+        buildGbfsLayer();
+        if (layerControls.gbfs.checkbox.checked) layerGbfs.addTo(map);
+      }
+    });
+  });
+  document.getElementById("veoMovementApplyToMap").addEventListener("change", () => {
+    buildGbfsLayer();
+    if (layerControls.gbfs.checkbox.checked) layerGbfs.addTo(map);
+  });
+  document.getElementById("veoMovementList").addEventListener("click", event => {
+    const item = event.target.closest("[data-veo-id]");
+    if (!item) return;
+    const v = veoVehicles.find(candidate => candidate.id === item.dataset.veoId);
+    if (!v) return;
+    document.getElementById("operatorFilter").value = "Veo";
+    document.getElementById("availFilter").value = "all";
+    buildGbfsLayer();
+    if (!map.hasLayer(layerGbfs)) setLayerVisibility("gbfs", true);
+    updatePresetState();
+    syncViewUrl();
+    const entry = gbfsMarkers.find(candidate => candidate.vehicle.id === v.id);
+    document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+    map.flyTo([v.lat, v.lng], Math.max(map.getZoom(), 17), { duration: 0.6 });
+    if (entry) entry.marker.openPopup();
+  });
+
+  const veoMovementStatusEl = document.getElementById("veoMovementStatus");
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  document.getElementById("animateVeoMovement").addEventListener("click", () => {
+    const filters = currentVeoMovementFilters();
+    const targets = veoMovementSorted.filter(v =>
+      veoMovementMatches(v, filters) && veoMoved(v) &&
+      typeof v.prev_lat === "number" && typeof v.prev_lng === "number"
+    );
+    if (!targets.length) {
+      veoMovementStatusEl.textContent = "No Veo vehicles show measurable movement under these filters.";
+      return;
+    }
+    document.getElementById("operatorFilter").value = "Veo";
+    document.getElementById("availFilter").value = "all";
+    buildGbfsLayer();
+    if (!map.hasLayer(layerGbfs)) setLayerVisibility("gbfs", true);
+    updatePresetState();
+    syncViewUrl();
+    document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "center" });
+
+    const bounds = L.latLngBounds(targets.flatMap(v => [[v.lat, v.lng], [v.prev_lat, v.prev_lng]]));
+    map.flyToBounds(bounds, { padding: [48, 48], duration: 0.6 });
+
+    const animatables = targets
+      .map(v => ({ vehicle: v, entry: gbfsMarkers.find(candidate => candidate.vehicle.id === v.id) }))
+      .filter(item => item.entry);
+
+    const trails = animatables.map(item => {
+      const trail = L.polyline(
+        [[item.vehicle.prev_lat, item.vehicle.prev_lng], [item.vehicle.lat, item.vehicle.lng]],
+        { color: VENDOR_COLORS.Veo || "#0d9488", weight: 2, opacity: 0.5, dashArray: "4 5" }
+      );
+      trail.addTo(layerGbfs);
+      return trail;
+    });
+
+    animatables.forEach(item => item.entry.marker.setLatLng([item.vehicle.prev_lat, item.vehicle.prev_lng]));
+
+    veoMovementStatusEl.textContent =
+      `Animating ${animatables.length.toLocaleString()} Veo vehicle${animatables.length === 1 ? "" : "s"} that moved since the prior snapshot…`;
+
+    const DURATION_MS = 1400;
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min(1, (now - start) / DURATION_MS);
+      const eased = easeInOutCubic(progress);
+      animatables.forEach(item => {
+        const v = item.vehicle;
+        const lat = v.prev_lat + (v.lat - v.prev_lat) * eased;
+        const lng = v.prev_lng + (v.lng - v.prev_lng) * eased;
+        item.entry.marker.setLatLng([lat, lng]);
+      });
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        setTimeout(() => {
+          trails.forEach(trail => layerGbfs.removeLayer(trail));
+          veoMovementStatusEl.textContent =
+            `Done — showing current positions for ${animatables.length.toLocaleString()} Veo vehicle${animatables.length === 1 ? "" : "s"}.`;
+        }, 900);
+      }
+    }
+    requestAnimationFrame(step);
   });
 
   // ---- Suggest your own insight (#12) ----
