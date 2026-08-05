@@ -691,6 +691,8 @@
     font: 0.72rem var(--mono);
     border-top: 1px solid var(--slate-300);
   }
+  .workflow-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 12px; }
+  .workflow-badges img { display: block; height: 20px; }
   .leaflet-popup-content { font-size: 0.82rem; line-height: 1.45; }
   .leaflet-popup-content b { color: var(--slate-900); }
   .popup-title { font-weight: 700; margin-bottom: 4px; font-size: 0.88rem; }
@@ -1173,7 +1175,14 @@
   </section>
 </main>
 
-<footer>© 2026 Steven Needham · Independent project, public data only · GA4 + privacy-limited PostHog analytics enabled · <a href="https://steveneedham.github.io/portfolio/">Steven Needham’s portfolio</a></footer>
+<footer>
+  <div class="workflow-badges">
+    <a href="https://github.com/steveneedham/columbus-micromobility-data/actions/workflows/pull-311-data.yml"><img src="https://github.com/steveneedham/columbus-micromobility-data/actions/workflows/pull-311-data.yml/badge.svg" alt="Pull 311 Data workflow status" loading="lazy"></a>
+    <a href="https://github.com/steveneedham/columbus-micromobility-data/actions/workflows/pull-gbfs-data.yml"><img src="https://github.com/steveneedham/columbus-micromobility-data/actions/workflows/pull-gbfs-data.yml/badge.svg" alt="Pull GBFS Data workflow status" loading="lazy"></a>
+    <a href="https://github.com/steveneedham/columbus-micromobility-data/actions/workflows/fleet-export.yml"><img src="https://github.com/steveneedham/columbus-micromobility-data/actions/workflows/fleet-export.yml/badge.svg" alt="Columbus Micromobility Fleet Export workflow status" loading="lazy"></a>
+  </div>
+  © 2026 Steven Needham · Independent project, public data only · GA4 + privacy-limited PostHog analytics enabled · <a href="https://steveneedham.github.io/portfolio/">Steven Needham’s portfolio</a>
+</footer>
 
 <script type="application/json" id="data-311">
 {
