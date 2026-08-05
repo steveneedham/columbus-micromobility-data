@@ -29,12 +29,16 @@ jobs:
         run: |
           python scripts/pull_311.py
 
+      - name: Rebuild site's 311 layer
+        run: |
+          python scripts/build_311_data.py
+
       - name: Commit and push 311 data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add snapshots/311_requests_*.json 2>/dev/null || true
-          
+          git add snapshots/311_requests_*.json data-311.json 2>/dev/null || true
+
           if git diff --cached --exit-code > /dev/null; then
             echo "No new 311 data to commit"
           else
