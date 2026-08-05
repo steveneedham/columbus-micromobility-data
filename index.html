@@ -514,7 +514,21 @@
   .insights-header .eyebrow { margin: 0 0 7px; color: var(--red-600); }
   .insights-header h2 { margin: 0; font: 500 clamp(1.8rem, 3vw, 2.6rem) var(--display); }
   .insights-header p { margin: 0; color: var(--slate-600); font-size: .86rem; }
-  .insight-tabs { display: flex; gap: 0; margin-top: 20px; border-bottom: 1px solid var(--slate-300); overflow-x: auto; }
+  .insight-group-tabs { display: flex; gap: 8px; margin-top: 24px; }
+  .insight-group-tab {
+    padding: 8px 16px;
+    border: 1px solid var(--violet-600);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--violet-600);
+    font: 700 .7rem var(--mono);
+    letter-spacing: .02em;
+    cursor: pointer;
+  }
+  .insight-group-tab:hover { background: var(--amber-100); color: var(--slate-900); border-color: var(--slate-900); }
+  .insight-group-tab[aria-selected="true"] { background: var(--violet-600); color: white; }
+  .insight-tabs { display: flex; gap: 0; margin-top: 12px; border-bottom: 1px solid var(--slate-300); overflow-x: auto; }
+  .insight-tabs[hidden] { display: none; }
   .insight-tab { min-height: 44px; padding: 10px 14px; border: 1px solid var(--slate-300); border-bottom: 0; background: var(--source-sheet); color: var(--slate-600); font: 600 .68rem var(--mono); white-space: nowrap; cursor: pointer; }
   .insight-tab + .insight-tab { border-left: 0; }
   .insight-tab[aria-selected="true"] { background: var(--blue-700); color: white; border-color: var(--blue-700); }
@@ -938,7 +952,7 @@
       <section class="guide-item"><h3>2 · Toggle map layers</h3><p>On phones, select Layers &amp; filters over the map to open the control sheet. On larger screens, the controls remain beside the map. Layers include 311 requests, GBFS vehicles, Ride Hubs, vendor review areas, pile-ups, policy boundaries, and published MDS geographies.</p></section>
       <section class="guide-item"><h3>3 · Read map symbols</h3><p>311 requests use priority-colored diamonds; GBFS vehicles use vendor-colored circles (Veo teal, Spin orange — see the map legend for the full key). Ride Hubs use signed markers with nearby-vehicle badges. Dashed circles mark vendor review areas, outlined rings mark pile-ups, dashed lines mark policy boundaries, and shaded polygons mark MDS geographies.</p></section>
       <section class="guide-item"><h3>4 · Filter vehicles</h3><p>Use Operator and Availability to narrow the GBFS positions shown on the map. Ride Hub counts and distribution tables continue to use the complete active snapshot, independent of those display filters.</p></section>
-      <section class="guide-item"><h3>5 · Review insights</h3><p>Use the Ride Hubs, CBD distribution, Opportunity zones, Ohio State, Vendor changes, Pile-ups, 311 records, Fleet cap, and Vehicle mix tabs. Select a linked hub, geography, review area, pile-up, or 311 case to enable its layer and return to the relevant map area.</p></section>
+      <section class="guide-item"><h3>5 · Review insights</h3><p>Insights are grouped into two tabs: Compliance (Ride Hubs, CBD distribution, Opportunity zones, Ohio State, Fleet cap, Vehicle mix — each with a red/green status dot) and Distribution, Range &amp; Availability (Vendor changes, Pile-ups, 311 records — descriptive signals with no defined pass/fail threshold). Select a linked hub, geography, review area, pile-up, or 311 case to enable its layer and return to the relevant map area.</p></section>
       <section class="guide-item"><h3>6 · Read distribution status</h3><p>CBD status uses a 30% maximum: red is above 30%, yellow is 27–30%, and green is below 27%. Opportunity-zone status uses the supplied 5% minimum: red is below 4.5%, yellow is 4.5% to under 5%, and green is 5% or more. These point-in-time indicators remain provisional; read the note below each table for timing and source limitations.</p></section>
       <section class="guide-item"><h3>7 · Inspect Ride Hubs</h3><p>Open the Ride Hub Status dashboard to compare empty and capacity-exceeding proximity signals. Select any row to enable the hub layer and jump to its map marker.</p></section>
       <section class="guide-item"><h3>8 · Follow vendor changes</h3><p>The perpetual observation history preserves every committed GBFS comparison for fleet size, published range, availability, and geographic concentration without using 311 reports. Each entry shows ↑ Up, ↓ Down, or — Unchanged; geographic entries also jump to their review area on the map.</p></section>
@@ -1048,16 +1062,22 @@
       <div><p class="eyebrow">Current snapshot signals</p><h2 id="insights-title">Insights</h2></div>
       <p>Review Ride Hub capacity signals, fleet distribution, municipal geography counts, vendor changes between snapshots, cross-vendor pile-ups, fleet cap compliance, or vehicle mix. Every relevant result can take you back to the map.</p>
     </div>
-    <div class="insight-tabs" role="tablist" aria-label="Insight views">
+    <div class="insight-group-tabs" role="tablist" aria-label="Insight groups">
+      <button type="button" class="insight-group-tab" role="tab" id="group-tab-compliance" aria-selected="true" data-insight-group="compliance">Compliance</button>
+      <button type="button" class="insight-group-tab" role="tab" id="group-tab-distribution" aria-selected="false" data-insight-group="distribution">Distribution, Range &amp; Availability</button>
+    </div>
+    <div class="insight-tabs" role="tablist" aria-label="Compliance insight views" data-insight-group-panel="compliance">
       <button type="button" class="insight-tab" role="tab" id="tab-ride-hubs" aria-controls="panel-ride-hubs" aria-selected="true" data-insight="ride-hubs">Ride Hubs<span class="insight-tab-dot" id="tabDot-ride-hubs" aria-hidden="true"></span></button>
       <button type="button" class="insight-tab" role="tab" id="tab-cbd-distribution" aria-controls="panel-cbd-distribution" aria-selected="false" data-insight="cbd-distribution">CBD distribution<span class="insight-tab-dot" id="tabDot-cbd-distribution" aria-hidden="true"></span></button>
       <button type="button" class="insight-tab" role="tab" id="tab-opportunity-distribution" aria-controls="panel-opportunity-distribution" aria-selected="false" data-insight="opportunity-distribution">Opportunity zones<span class="insight-tab-dot" id="tabDot-opportunity-distribution" aria-hidden="true"></span></button>
       <button type="button" class="insight-tab" role="tab" id="tab-osu-boundary" aria-controls="panel-osu-boundary" aria-selected="false" data-insight="osu-boundary">Ohio State<span class="insight-tab-dot" id="tabDot-osu-boundary" aria-hidden="true"></span></button>
+      <button type="button" class="insight-tab" role="tab" id="tab-fleet-cap" aria-controls="panel-fleet-cap" aria-selected="false" data-insight="fleet-cap">Fleet cap<span class="insight-tab-dot" id="tabDot-fleet-cap" aria-hidden="true"></span></button>
+      <button type="button" class="insight-tab" role="tab" id="tab-vehicle-mix" aria-controls="panel-vehicle-mix" aria-selected="false" data-insight="vehicle-mix">Vehicle mix<span class="insight-tab-dot" id="tabDot-vehicle-mix" aria-hidden="true"></span></button>
+    </div>
+    <div class="insight-tabs" role="tablist" aria-label="Distribution, range and availability insight views" data-insight-group-panel="distribution" hidden>
       <button type="button" class="insight-tab" role="tab" id="tab-vendor-changes" aria-controls="panel-vendor-changes" aria-selected="false" data-insight="vendor-changes">Vendor changes</button>
       <button type="button" class="insight-tab" role="tab" id="tab-pileups" aria-controls="panel-pileups" aria-selected="false" data-insight="pileups">Pile-ups</button>
       <button type="button" class="insight-tab" role="tab" id="tab-311-list" aria-controls="panel-311-list" aria-selected="false" data-insight="311-list">311 records</button>
-      <button type="button" class="insight-tab" role="tab" id="tab-fleet-cap" aria-controls="panel-fleet-cap" aria-selected="false" data-insight="fleet-cap">Fleet cap<span class="insight-tab-dot" id="tabDot-fleet-cap" aria-hidden="true"></span></button>
-      <button type="button" class="insight-tab" role="tab" id="tab-vehicle-mix" aria-controls="panel-vehicle-mix" aria-selected="false" data-insight="vehicle-mix">Vehicle mix<span class="insight-tab-dot" id="tabDot-vehicle-mix" aria-hidden="true"></span></button>
     </div>
     <div class="insight-panel" id="panel-ride-hubs" role="tabpanel" aria-labelledby="tab-ride-hubs" data-insight-panel="ride-hubs">
       <div class="insight-hub-card"><div><h3>Ride Hub status dashboard</h3><p id="rideHubInsightSummary">Compare empty and over-capacity proximity signals from the current GBFS snapshot.</p></div><button type="button" class="hub-dashboard-button" id="openRideHubDashboardInsights" aria-haspopup="dialog">Open Ride Hub status</button></div>
@@ -174235,6 +174255,19 @@
     document.querySelectorAll("[data-insight-panel]").forEach(panel => { panel.hidden = panel.dataset.insightPanel !== name; });
   }
   document.querySelectorAll("[data-insight]").forEach(tab => tab.addEventListener("click", () => selectInsight(tab.dataset.insight)));
+
+  // ---- Insight groups: Compliance vs. Distribution, Range & Availability ----
+  const insightGroupMembers = {
+    compliance: ["ride-hubs", "cbd-distribution", "opportunity-distribution", "osu-boundary", "fleet-cap", "vehicle-mix"],
+    distribution: ["vendor-changes", "pileups", "311-list"]
+  };
+  function selectInsightGroup(name) {
+    document.querySelectorAll("[data-insight-group]").forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.insightGroup === name)));
+    document.querySelectorAll("[data-insight-group-panel]").forEach(panel => { panel.hidden = panel.dataset.insightGroupPanel !== name; });
+    const firstInsight = insightGroupMembers[name] && insightGroupMembers[name][0];
+    if (firstInsight) selectInsight(firstInsight);
+  }
+  document.querySelectorAll("[data-insight-group]").forEach(tab => tab.addEventListener("click", () => selectInsightGroup(tab.dataset.insightGroup)));
 
   // ---- Load embedded data ----
   const data311 = JSON.parse(document.getElementById("data-311").textContent);
