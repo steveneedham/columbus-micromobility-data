@@ -171588,7 +171588,12 @@
     return "standard";
   }
   const PRIORITY_COLOR = { critical: "#dc2626", high: "#f97316", standard: "#64748b" };
-  const COMPANY_COLOR = { Veo: "#0d9488", Spin: "#f97316" };
+  // Operator vehicle-marker colors. Veo (teal) and Spin (orange) are the two
+  // operators actually active in Columbus and match their real-world brand
+  // colors. Lime and Bird aren't in this market's data today; their tokens
+  // are here so a marker gets a real color instead of the gray fallback if
+  // either ever appears in a GBFS pull, not sourced from an official brand kit.
+  const VENDOR_COLORS = { Veo: "#0d9488", Spin: "#f97316", Lime: "#32cd32", Bird: "#26ccf0" };
 
   // ---- Cross-vendor pile-up detection (ported verbatim from source app) ----
   function distanceMeters(a, b) {
@@ -171803,7 +171808,7 @@
       if (opFilter !== "all" && v.company !== opFilter) return;
       if (availFilter === "available" && !v.available) return;
       if (availFilter === "unavailable" && v.available) return;
-      const color = COMPANY_COLOR[v.company] || "#475569";
+      const color = VENDOR_COLORS[v.company] || "#475569";
       const marker = L.circleMarker([v.lat, v.lng], {
         radius: 3.5,
         color: color,
