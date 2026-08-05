@@ -1,17 +1,23 @@
+// Rate figures (monthlyFee/perRideFlat/perMinRate) live in rates.json, the
+// single source of truth for every visitor -- there is no per-user or
+// per-session override anywhere in this app, so everyone always sees the
+// same published numbers. Update rates by editing that file (see
+// scooter-challenge/admin/index.html for a form that generates its
+// content), not by changing anything here.
+import RATES from './rates.json';
+
+export const RATES_UPDATED_AT = RATES.updated_at;
+
 export const OPERATORS = {
   spin: {
     name: 'Spin',
-    monthlyFee: 0.99,
-    perRideFlat: 2.39,
-    perMinRate: null,
+    ...RATES.spin,
     speedMph: { min: 18, max: 22 },
     accent: '#A94728',
   },
   veo: {
     name: 'Veo',
-    monthlyFee: 5.99,
-    perRideFlat: null,
-    perMinRate: 0.475,
+    ...RATES.veo,
     speedMph: { min: 17, max: 17 },
     accent: '#236A73',
   },
