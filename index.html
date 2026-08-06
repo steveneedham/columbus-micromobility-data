@@ -170,6 +170,13 @@
     gap: 14px;
     margin-bottom: 22px;
   }
+  .stat-card-wrap { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .stat-cadence {
+    font: 600 0.62rem var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--slate-500);
+  }
   .card {
     background: var(--source-sheet);
     border: 1px solid var(--slate-300);
@@ -838,6 +845,7 @@
     .card .value { font-size: 1.6rem; }
     .card .sub { font-size: .68rem; }
     .card .freshness { font-size: .56rem; margin-top: 7px; padding-top: 6px; }
+    .stat-cadence { font-size: .56rem; }
     .section-nav { display: none; }
     .mobile-bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1300; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--slate-400); background: rgba(251,250,246,.98); }
     .mobile-bottom-nav a { display: grid; place-items: center; min-height: 58px; padding: 7px 4px; color: var(--slate-700); font: 600 .62rem var(--mono); text-decoration: none; }
@@ -186809,33 +186817,40 @@
         label: "311 records loaded",
         value: records311.length,
         sub: statusSub,
-        refreshedAt: data311.fetched_at
+        refreshedAt: data311.fetched_at,
+        cadence: "Refreshes hourly"
       },
       {
         label: "GBFS vehicles loaded",
         value: vehicles.length,
         sub: companySub,
-        refreshedAt: dataGbfs.snapshot_id
+        refreshedAt: dataGbfs.snapshot_id,
+        cadence: "Refreshes ~3x daily + on demand"
       },
       {
         label: "Cross-vendor pile-ups detected",
         value: pileups.length,
         sub: pileups.length ? "≥4 vehicles, 2+ companies, within 20m" : "None found in this snapshot",
-        refreshedAt: dataGbfs.snapshot_id
+        refreshedAt: dataGbfs.snapshot_id,
+        cadence: "Refreshes ~3x daily + on demand"
       },
       {
         label: "Policy boundaries loaded",
         value: boundaries.length,
         sub: `of ${dataPolicy.summary && dataPolicy.summary.boundary_feature_count != null ? dataPolicy.summary.boundary_feature_count : "?"} published (complete snapshot)`,
-        refreshedAt: dataPolicy.generated_at
+        refreshedAt: dataPolicy.generated_at,
+        cadence: "Refreshed manually, as needed"
       }
     ];
     statGrid.innerHTML = cards.map(c => `
-      <div class="card">
-        <div class="label">${esc(c.label)}</div>
-        <div class="value">${esc(c.value)}</div>
-        <div class="sub">${esc(c.sub)}</div>
-        <div class="freshness">${esc(freshnessLabel(c.refreshedAt))}</div>
+      <div class="stat-card-wrap">
+        <div class="stat-cadence">${esc(c.cadence)}</div>
+        <div class="card">
+          <div class="label">${esc(c.label)}</div>
+          <div class="value">${esc(c.value)}</div>
+          <div class="sub">${esc(c.sub)}</div>
+          <div class="freshness">${esc(freshnessLabel(c.refreshedAt))}</div>
+        </div>
       </div>
     `).join("");
   }
