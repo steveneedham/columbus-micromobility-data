@@ -278,7 +278,7 @@ def refresh_observations():
     index.html. A no-op (with a note) on the very first run, when there's no
     prior snapshot to compare against yet."""
     result = subprocess.run(
-        [sys.executable, str(BUILD_OBSERVATIONS_SCRIPT), "--archive-root", str(ROOT)],
+        [sys.executable, str(BUILD_OBSERVATIONS_SCRIPT), "--archive-root", str(ROOT), "--backfill"],
         cwd=ROOT,
         capture_output=True,
         text=True,
