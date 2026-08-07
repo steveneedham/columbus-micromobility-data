@@ -33,9 +33,15 @@ function getWorker() {
   });
 }
 
+const MONTHS = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+
 // Receipt screenshots often list more than one dollar amount (unlock fee,
-// per-minute rate, total) -- the total is almost always the last one printed.
-function lastCostMatch(text) {
+// per-minute rate, total). Prefer one explicitly anchored to a "Total"
+// keyword when present -- see RECEIPT_PATTERNS.costTotal for why -- and
+// fall back to the last plain "$X.XX" match otherwise.
+function bestCostMatch(text) {
+  const totalMatches = [...text.matchAll(new RegExp(RECEIPT_PATTERNS.costTotal, 'gi'))];
+  if (totalMatches.length) return totalMatches[totalMatches.length - 1];
   const matches = [...text.matchAll(new RegExp(RECEIPT_PATTERNS.cost, 'g'))];
   return matches.length ? matches[matches.length - 1] : null;
 }
@@ -49,7 +55,7 @@ export function parseReceiptText(text) {
   const durationMatch = text.match(RECEIPT_PATTERNS.duration);
   if (durationMatch) fields.durationMin = parseInt(durationMatch[1], 10);
 
-  const costMatch = lastCostMatch(text);
+  const costMatch = bestCostMatch(text);
   if (costMatch) fields.costUSD = parseFloat(costMatch[1]);
 
   const dateMatch = text.match(RECEIPT_PATTERNS.date);
@@ -57,6 +63,12 @@ export function parseReceiptText(text) {
     const [, month, day, year] = dateMatch;
     const fullYear = year.length === 2 ? `20${year}` : year;
     fields.date = `${fullYear.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  } else {
+    const namedMatch = text.match(RECEIPT_PATTERNS.dateNamed);
+    const month = namedMatch && MONTHS[namedMatch[1].slice(0, 3).toLowerCase()];
+    if (month) {
+      fields.date = `${namedMatch[3]}-${String(month).padStart(2, '0')}-${namedMatch[2].padStart(2, '0')}`;
+    }
   }
 
   return fields;

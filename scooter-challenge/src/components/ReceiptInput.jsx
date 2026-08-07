@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import { scanReceiptImage } from '../utils/receiptOCR.js';
 
+const FIELD_LABELS = { operator: 'operator', durationMin: 'duration', costUSD: 'cost', date: 'date' };
+
 const SCAN_STATUS_TEXT = {
   scanning: 'Reading your screenshot…',
   done: 'Filled in from your screenshot — double check the fields before continuing.',
@@ -8,8 +10,21 @@ const SCAN_STATUS_TEXT = {
   error: "Couldn't read that image — enter the ride manually.",
 };
 
+function joinWithAnd(items, conjunction) {
+  if (items.length <= 1) return items.join('');
+  if (items.length === 2) return `${items[0]} ${conjunction} ${items[1]}`;
+  return `${items.slice(0, -1).join(', ')}, ${conjunction} ${items[items.length - 1]}`;
+}
+
+function partialScanMessage(fields) {
+  const found = Object.keys(fields).map((key) => FIELD_LABELS[key]);
+  const missing = Object.keys(FIELD_LABELS).filter((key) => !(key in fields)).map((key) => FIELD_LABELS[key]);
+  return `Filled in ${joinWithAnd(found, 'and')} from your screenshot — couldn't identify ${joinWithAnd(missing, 'or')}, so please check ${missing.length > 1 ? 'those' : 'that'} yourself.`;
+}
+
 export function ReceiptInput({ receipt, onChange, onRemove, removable }) {
   const [scanStatus, setScanStatus] = useState(null);
+  const [scanMessage, setScanMessage] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleFile = async (event) => {
@@ -18,14 +33,21 @@ export function ReceiptInput({ receipt, onChange, onRemove, removable }) {
     if (!file) return;
 
     setScanStatus('scanning');
+    setScanMessage(null);
     try {
       const { fields } = await scanReceiptImage(file);
-      if (Object.keys(fields).length === 0) {
+      const foundCount = Object.keys(fields).length;
+      if (foundCount === 0) {
         setScanStatus('empty');
         return;
       }
       onChange({ ...receipt, ...fields });
-      setScanStatus('done');
+      if (foundCount < Object.keys(FIELD_LABELS).length) {
+        setScanStatus('partial');
+        setScanMessage(partialScanMessage(fields));
+      } else {
+        setScanStatus('done');
+      }
     } catch {
       setScanStatus('error');
     }
@@ -102,7 +124,7 @@ export function ReceiptInput({ receipt, onChange, onRemove, removable }) {
         />
         {scanStatus && (
           <span className={`font-mono text-xs ${scanStatus === 'done' ? 'text-river' : 'text-note'}`}>
-            {SCAN_STATUS_TEXT[scanStatus]}
+            {scanMessage || SCAN_STATUS_TEXT[scanStatus]}
           </span>
         )}
       </div>
