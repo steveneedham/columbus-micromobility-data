@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { InputForm } from './components/InputForm.jsx';
 import { ResultsCard } from './components/ResultsCard.jsx';
 import { Ticker } from './components/Ticker.jsx';
+import { SubmissionsGauge } from './components/SubmissionsGauge.jsx';
 import { useGBFS } from './hooks/useGBFS.js';
 import { useCostCalculator } from './hooks/useCostCalculator.js';
 import { COPY } from './constants/messages.js';
@@ -62,6 +63,10 @@ export default function App() {
           <p className="mt-2 text-note">{COPY.tagline}</p>
           {!results && <p className="mt-2 text-sm text-note">{COPY.intro}</p>}
         </header>
+
+        <div className="mb-8">
+          <SubmissionsGauge />
+        </div>
 
         <main>
           {gbfsError && (
