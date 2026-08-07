@@ -28,7 +28,7 @@ export default function App() {
     const locationData = data.locations
       .filter((loc) => (loc.address || (loc.lat != null && loc.lon != null)))
       .map((loc) => {
-        const nearby = loc.lat != null && loc.lon != null ? getNearbyCount(loc.lat, loc.lon) : null;
+        const nearby = loc.lat != null && loc.lon != null ? getNearbyCount(loc.lat, loc.lon, { spin, veo }) : null;
         return {
           name: loc.name,
           lat: loc.lat,
