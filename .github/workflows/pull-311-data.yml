@@ -1,0 +1,48 @@
+name: Pull 311 Data
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Every hour
+  workflow_dispatch:
+
+jobs:
+  fetch-311:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Fetch 311 data
+        run: |
+          python scripts/pull_311.py
+
+      - name: Rebuild site's 311 layer
+        run: |
+          python scripts/build_311_data.py
+
+      - name: Commit and push 311 data
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add snapshots/311_requests_*.json data-311.json index.html 2>/dev/null || true
+
+          if git diff --cached --exit-code > /dev/null; then
+            echo "No new 311 data to commit"
+          else
+            git commit -m "311 data: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi

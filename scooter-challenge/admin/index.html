@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Curb Your Spending — Admin: Update Rates</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AA%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --paper: #f3f0e8; --sheet: #fbfaf6; --ink: #202a2e; --note: #6e797c;
+    --rule: #bdb6a9; --red: #a94728; --spin: #A94728; --veo: #236A73;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --body: "IBM Plex Sans", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); line-height: 1.5; }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 20px 64px; }
+  .eyebrow { font: 700 0.7rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--red); margin: 0 0 8px; }
+  h1 { margin: 0 0 6px; font-size: 1.8rem; }
+  .lede { color: var(--note); margin: 0 0 28px; font-size: 0.9rem; }
+  .card { background: var(--sheet); border: 1px solid var(--rule); padding: 20px; margin-bottom: 20px; }
+  .card h2 { margin: 0 0 4px; font-size: 1.1rem; }
+  .card.spin h2 { color: var(--spin); }
+  .card.veo h2 { color: var(--veo); }
+  .field { margin-top: 14px; }
+  label { display: block; font: 600 0.72rem var(--mono); text-transform: uppercase; letter-spacing: 0.03em; color: var(--note); margin-bottom: 4px; }
+  input[type="number"] {
+    width: 100%; padding: 9px 10px; border: 1px solid var(--rule); background: #fff;
+    font: 400 0.95rem var(--body); color: var(--ink);
+  }
+  input[type="number"]:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
+  .hint { margin: 4px 0 0; font-size: 0.76rem; color: var(--note); }
+  button {
+    padding: 10px 16px; border: 1px solid var(--red); background: transparent; color: var(--red);
+    font: 700 0.75rem var(--mono); text-transform: uppercase; letter-spacing: 0.03em; cursor: pointer;
+  }
+  button:hover { background: var(--red); color: #fff; }
+  #output { display: none; }
+  #output.visible { display: block; }
+  textarea {
+    width: 100%; min-height: 180px; margin-top: 10px; padding: 12px; border: 1px solid var(--rule);
+    background: #fff; font: 0.82rem/1.4 var(--mono); color: var(--ink); resize: vertical;
+  }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  a.github-link {
+    display: inline-block; padding: 10px 16px; border: 1px solid var(--ink); color: var(--ink);
+    background: #fff; font: 700 0.75rem var(--mono); text-transform: uppercase; letter-spacing: 0.03em;
+    text-decoration: none;
+  }
+  a.github-link:hover { background: var(--ink); color: #fff; }
+  .status { font: 600 0.76rem var(--mono); color: var(--veo); min-height: 1.2em; margin-top: 8px; }
+  .note-box { margin-top: 28px; padding: 14px 16px; border-left: 3px solid var(--rule); color: var(--note); font-size: 0.82rem; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Admin only · not linked from the public site</p>
+  <h1>Update Curb Your Spending rates</h1>
+  <p class="lede">Edits <code>scooter-challenge/src/constants/rates.json</code> — the single file every visitor's cost calculation reads. Fill in current rates, generate the file content below, then use the GitHub link to save it. Nothing here changes what anyone sees until that file is committed.</p>
+
+  <form id="ratesForm">
+    <div class="card spin">
+      <h2>Spin</h2>
+      <div class="field">
+        <label for="spinMonthlyFee">Monthly membership fee (USD)</label>
+        <input type="number" id="spinMonthlyFee" step="0.01" min="0" required>
+      </div>
+      <div class="field">
+        <label for="spinPerRide">Per-ride flat rate (USD)</label>
+        <input type="number" id="spinPerRide" step="0.01" min="0" required>
+        <p class="hint">Spin charges a flat rate per ride under its membership, not per-minute.</p>
+      </div>
+    </div>
+
+    <div class="card veo">
+      <h2>Veo</h2>
+      <div class="field">
+        <label for="veoMonthlyFee">Monthly membership fee (USD)</label>
+        <input type="number" id="veoMonthlyFee" step="0.01" min="0" required>
+      </div>
+      <div class="field">
+        <label for="veoPerMin">Per-minute rate (USD)</label>
+        <input type="number" id="veoPerMin" step="0.001" min="0" required>
+        <p class="hint">Veo charges per minute under its membership, not a flat per-ride rate.</p>
+      </div>
+    </div>
+
+    <button type="submit">Generate rates.json</button>
+    <p class="status" id="loadStatus">Loading current rates…</p>
+  </form>
+
+  <div id="output">
+    <h2 style="font-size: 1rem; margin: 24px 0 0;">rates.json</h2>
+    <textarea id="jsonPreview" readonly></textarea>
+    <div class="actions">
+      <button type="button" id="copyButton">Copy JSON</button>
+      <a class="github-link" id="githubLink" href="#" target="_blank" rel="noopener">Open rates.json on GitHub to save →</a>
+    </div>
+    <p class="status" id="copyStatus"></p>
+  </div>
+
+  <div class="note-box">
+    GitHub's editor can't be pre-filled with new content via link, only opened — copy the JSON above, click through, select all the existing content in GitHub's editor, paste this in, and commit. Committing automatically triggers the Scooter Challenge build workflow, which rebuilds the live site with the new rates baked in — usually done within a couple of minutes, no manual build step needed on your end.
+  </div>
+</main>
+
+<script>
+  const RATES_PATH = '../src/constants/rates.json';
+  const GITHUB_EDIT_URL = 'https://github.com/steveneedham/columbus-micromobility-data/edit/main/scooter-challenge/src/constants/rates.json';
+
+  const form = document.getElementById('ratesForm');
+  const loadStatus = document.getElementById('loadStatus');
+  const output = document.getElementById('output');
+  const jsonPreview = document.getElementById('jsonPreview');
+  const copyButton = document.getElementById('copyButton');
+  const copyStatus = document.getElementById('copyStatus');
+  const githubLink = document.getElementById('githubLink');
+
+  githubLink.href = GITHUB_EDIT_URL;
+
+  fetch(RATES_PATH, { cache: 'no-store' })
+    .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+    .then((rates) => {
+      document.getElementById('spinMonthlyFee').value = rates.spin.monthlyFee;
+      document.getElementById('spinPerRide').value = rates.spin.perRideFlat;
+      document.getElementById('veoMonthlyFee').value = rates.veo.monthlyFee;
+      document.getElementById('veoPerMin').value = rates.veo.perMinRate;
+      loadStatus.textContent = `Loaded current rates (as of ${rates.updated_at}).`;
+    })
+    .catch((err) => {
+      loadStatus.textContent = `Could not load current rates.json (${err.message}) — fill in all fields manually.`;
+    });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const rates = {
+      updated_at: new Date().toISOString().slice(0, 10),
+      spin: {
+        monthlyFee: Number(document.getElementById('spinMonthlyFee').value),
+        perRideFlat: Number(document.getElementById('spinPerRide').value),
+        perMinRate: null,
+      },
+      veo: {
+        monthlyFee: Number(document.getElementById('veoMonthlyFee').value),
+        perRideFlat: null,
+        perMinRate: Number(document.getElementById('veoPerMin').value),
+      },
+    };
+    jsonPreview.value = JSON.stringify(rates, null, 2) + '\n';
+    output.classList.add('visible');
+    output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  copyButton.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(jsonPreview.value);
+      copyStatus.textContent = 'Copied.';
+    } catch {
+      jsonPreview.select();
+      copyStatus.textContent = 'Could not auto-copy — text is selected, use Ctrl/Cmd+C.';
+    }
+  });
+</script>
+</body>
+</html>

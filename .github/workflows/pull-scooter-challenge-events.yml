@@ -1,0 +1,44 @@
+name: Pull Scooter Challenge Events
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"  # every 6 hours
+  workflow_dispatch:
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Pull PostHog events
+        env:
+          POSTHOG_PROJECT_ID: ${{ secrets.POSTHOG_PROJECT_ID }}
+          POSTHOG_PERSONAL_API_KEY: ${{ secrets.POSTHOG_PERSONAL_API_KEY }}
+        run: python scripts/pull_scooter_challenge_events.py
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add scooter-challenge/src/constants/submissions.json
+
+          if git diff --cached --exit-code > /dev/null; then
+            echo "No new events"
+          else
+            git commit -m "Pull scooter challenge events: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi

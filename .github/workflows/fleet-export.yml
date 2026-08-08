@@ -1,0 +1,35 @@
+name: Columbus Micromobility Fleet Export
+
+on:
+  schedule:
+    - cron: "0 4 * * *"      # daily at 4:00 UTC
+  workflow_dispatch:         # manual / on-demand run
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        pip install requests pandas matplotlib seaborn
+
+    - name: Run fleet export script
+      run: |
+        python scripts/export_fleet.py
+
+    - name: Commit & push results
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add snapshots/ daily_summary/ plots/ data-gbfs.json data-gbfs-observations.json data-pileup-history.json index.html
+        git commit -m "Automated fleet export $(date -u +"%Y-%m-%dT%H:%M:%SZ")" || echo "No changes to commit"
+        git push

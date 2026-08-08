@@ -1,0 +1,234 @@
+COMPLETE FILE MANIFEST — Columbus Micromobility Data Automation Pipeline
+==========================================================================
+
+GITHUB ACTIONS WORKFLOWS
+========================
+
+File: /mnt/project/.github/workflows/pull-311-data.yml
+Environment: GitHub Actions CI/CD (runs on ubuntu-latest)
+Purpose: Hourly 311 data fetch
+Trigger: Scheduled cron (0 * * * *) OR manual dispatch
+Runs: Python 3.11
+Dependencies: requests
+Output: snapshots/311_requests_*.json
+Commits: Auto-commits to main branch
+
+File: /mnt/project/.github/workflows/pull-gbfs-data.yml
+Environment: GitHub Actions CI/CD (runs on ubuntu-latest)
+Purpose: 2x daily GBFS notebook execution
+Trigger: Scheduled cron (0 8 * * * AND 0 20 * * *) OR manual dispatch
+Runs: Python 3.11 + Papermill
+Dependencies: papermill, ipykernel, pandas, requests
+Output: snapshots/columbus_scooters_*.csv + plots/*.png
+Commits: Auto-commits to main branch
+
+File: /mnt/project/.github/workflows/rebuild-site.yml
+Environment: GitHub Actions CI/CD (runs on ubuntu-latest)
+Purpose: Aggregate data + regenerate dashboard
+Trigger: Workflow dispatch (called by pull-311-data.yml and pull-gbfs-data.yml)
+Runs: Python 3.11
+Dependencies: pandas, requests
+Output: docs/index.html, docs/gbfs_vehicles.geojson, docs/311_complaints.geojson
+Deployment: GitHub Pages (steveneedham.github.io/columbus-micromobility-data)
+
+PYTHON SCRIPTS
+==============
+
+File: /mnt/project/scripts/pull_311.py
+Environment: Python 3.11 (invoked by GitHub Actions or local)
+Purpose: Fetch Columbus 311 complaints from GIS REST API
+API Endpoint: https://maps2.columbus.gov/arcgis/rest/services/Applications/ServiceRequests/MapServer/0/query
+Auth: None (public read-only)
+Timeout: 30 seconds
+Output: snapshots/311_requests_YYYYMMDDTHHMMSSZ.json + snapshots/311_requests_latest.json
+Error Handling: Exits with code 1 on failure, logs to stderr
+
+File: /mnt/project/scripts/rebuild_site.py
+Environment: Python 3.11 (invoked by GitHub Actions or local)
+Purpose: Load snapshots + generate dashboard HTML + GeoJSON layers
+Inputs: snapshots/311_requests_latest.json, snapshots/columbus_scooters_*.csv
+Output: docs/index.html, docs/gbfs_vehicles.geojson, docs/311_complaints.geojson
+Dependencies: Standard library only (json, csv, pathlib, datetime)
+Deployment: GitHub Pages automatic (GitHub Actions handles push)
+
+DOCUMENTATION
+==============
+
+File: /mnt/project/README.md
+Purpose: Complete project documentation
+Audience: Public + maintainers
+Sections:
+  - Pipeline overview
+  - GBFS CSV schema (11 columns)
+  - 311 JSON schema (14 fields)
+  - Directory structure
+  - Civic context (regulatory caps)
+  - Data access instructions
+  - Contributing guidelines
+
+File: /mnt/project/SETUP.md
+Purpose: Deployment instructions
+Audience: People deploying their own fork
+Sections:
+  - GitHub Actions setup
+  - GitHub Pages setup
+  - Manual run instructions
+  - Customization (schedules, filters)
+  - Troubleshooting
+  - Production checklist
+
+File: /mnt/project/AUTOMATION_MANIFEST.md
+Purpose: Technical inventory + data flow diagram
+Audience: Developers maintaining the pipeline
+Sections:
+  - Workflow-by-workflow breakdown
+  - Script function documentation
+  - File manifest tree
+  - Data flow diagram
+  - Troubleshooting reference
+  - Enhancement roadmap
+
+GIT CONFIGURATION
+==================
+
+File: /mnt/project/.gitignore
+Purpose: Exclude auto-generated files
+Excludes:
+  - snapshots/ (timestamped data pulled hourly/2x daily)
+  - __pycache__, *.pyc, venv/, .env
+  - .DS_Store, .vscode/, .idea/
+  - .ipynb_checkpoints
+
+File: /mnt/project/snapshots/.gitkeep
+Purpose: Preserve snapshots/ directory in git
+Note: Directory exists but contents are ignored (see .gitignore)
+
+REPOSITORY STRUCTURE
+====================
+
+/mnt/project/
+├── .github/
+│   └── workflows/
+│       ├── pull-311-data.yml          [1.4 KB] — Hourly 311 fetch
+│       ├── pull-gbfs-data.yml         [1.6 KB] — 2x daily GBFS
+│       └── rebuild-site.yml           [1.1 KB] — Shared rebuild
+├── scripts/
+│   ├── pull_311.py                    [3.8 KB] — 311 API client
+│   └── rebuild_site.py                [12 KB] — Dashboard generator
+├── snapshots/
+│   └── .gitkeep                       (directory marker)
+├── docs/                              (auto-generated, not tracked)
+│   ├── index.html
+│   ├── gbfs_vehicles.geojson
+│   └── 311_complaints.geojson
+├── README.md                          [8.7 KB] — Full documentation
+├── SETUP.md                           [5.4 KB] — Deployment guide
+├── AUTOMATION_MANIFEST.md             [7.1 KB] — Technical inventory
+└── .gitignore                         — Exclude auto-generated files
+
+DATA FLOW
+=========
+
+311 Data:
+  Pull: https://maps2.columbus.gov/arcgis/rest/services/Applications/ServiceRequests/MapServer/0/query
+  Fetch: pull_311.py (via pull-311-data.yml, hourly)
+  Store: snapshots/311_requests_YYYYMMDDTHHMMSSZ.json (committed to repo)
+  Consume: rebuild_site.py
+  Output: docs/index.html, docs/311_complaints.geojson
+  Deploy: GitHub Pages (automatic)
+
+GBFS Data:
+  Pull: Veo (https://cluster-prod.veoride.com/api/shares/name/cbs/gbfs/...)
+         Spin (https://mds.bird.co/gbfs/v2/public/provider/spin/columbus/...)
+  Fetch: Veo_Spin_CBS_GBFS_Extract.ipynb (via pull-gbfs-data.yml, 2x daily)
+  Store: snapshots/columbus_scooters_YYYYMMDDTHHMMSSZ.csv (committed to repo)
+  Consume: rebuild_site.py
+  Output: docs/index.html, docs/gbfs_vehicles.geojson
+  Deploy: GitHub Pages (automatic)
+
+DEPLOYMENT TARGETS
+==================
+
+GitHub Pages:
+  URL: https://steveneedham.github.io/columbus-micromobility-data
+  Source: /docs directory on main branch
+  Deploy: Automatic (GitHub Actions pushes, Pages rebuilds ~2 min after commit)
+  Files Served:
+    - index.html (interactive dashboard)
+    - gbfs_vehicles.geojson (Spin/Veo fleet layer)
+    - 311_complaints.geojson (complaints layer)
+
+GitHub Repository:
+  Repo: steveneedham/columbus-micromobility-data
+  Branch: main (all workflows commit here)
+  Snapshots: /snapshots/ directory (auto-generated, not tracked)
+
+PERMISSION REQUIREMENTS
+=======================
+
+GitHub Actions:
+  - Actions enabled on repo
+  - Workflow permissions: Read and write
+  - Contents: write (to commit snapshots)
+  - Pages: write (to deploy)
+  - ID token: write (GitHub Pages)
+
+GitHub Pages:
+  - Pages enabled
+  - Source: Deploy from branch (main, /docs)
+  - Access: Public (no auth required)
+
+External APIs:
+  - Columbus GIS (read-only, no auth)
+  - Veo GBFS (read-only, no auth)
+  - Spin GBFS (read-only, no auth)
+
+SCHEDULE
+========
+
+311 Data:
+  Frequency: Every hour at :00
+  Cron: 0 * * * *
+  UTC times: 00:00, 01:00, 02:00, ..., 23:00
+
+GBFS Data:
+  Frequency: 2x daily
+  Cron: 0 8 * * * (8am UTC)
+  Cron: 0 20 * * * (8pm UTC)
+  UTC times: 08:00 and 20:00 every day
+
+Rebuild:
+  Frequency: After each 311 or GBFS pull
+  Trigger: workflow_call (internal GitHub event, not HTTP)
+  Latency: ~1-2 minutes from data fetch to site live
+
+ENVIRONMENT VARIABLES
+=====================
+
+None required. All workflows use hardcoded endpoints (public APIs, no auth).
+
+Optional for local testing:
+  - GITHUB_SHA (auto-set by Actions, can be overridden for testing)
+
+FAILURE MODES
+=============
+
+If 311 fetch fails:
+  - Workflow exits with code 1
+  - Snapshot NOT committed
+  - Error logged to GitHub Actions log
+  - Rebuild NOT triggered
+  - Site continues showing stale 311 data
+
+If GBFS fetch fails:
+  - Papermill logs error
+  - Snapshot NOT committed
+  - Error logged to GitHub Actions log
+  - Rebuild NOT triggered
+  - Site continues showing stale GBFS data
+
+If rebuild fails:
+  - Site NOT updated
+  - Error logged to GitHub Actions log
+  - Previous version remains live on GitHub Pages
+

@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "purpose": "Operator brand color tokens for the Columbus micromobility market",
+    "method": "Sampled directly from each operator's live public website — computed CTA button background colors and/or logo pixel sampling via headless browser inspection, not approximated from memory.",
+    "verified_at": "2026-07-28",
+    "note": "Third-party trademarks, referenced here only to visually identify each operator's own public vehicle/data records in a neutral, informational context — not an endorsement or claim of affiliation."
+  },
+  "operators": {
+    "spin": {
+      "hex": "#E03F23",
+      "rgb": "rgb(224, 63, 35)",
+      "source": "https://www.spin.app/",
+      "sampled_from": "dominant vivid accent color across site (used in text/borders/highlights)"
+    },
+    "veo": {
+      "hex": "#00B8AA",
+      "rgb": "rgb(0, 184, 170)",
+      "source": "https://www.veoride.com/",
+      "sampled_from": "favicon (cropped-veo-favicon-1-270x270.png) and VeoPlus logo, consistent across both"
+    },
+    "bird": {
+      "hex": "#26CCF0",
+      "rgb": "rgb(38, 204, 240)",
+      "source": "https://bird.co/",
+      "sampled_from": "\"Download the App\" CTA button background (computed style), paired with #002139 as on-button text color"
+    },
+    "lime": {
+      "hex": "#00DD00",
+      "rgb": "rgb(0, 221, 0)",
+      "source": "https://www.li.me/",
+      "sampled_from": "\"Download App\" CTA button background (computed style), paired with black on-button text"
+    }
+  },
+  "unknown": {
+    "hex": "#8B93A1",
+    "note": "Fallback for records where the source data does not identify an operator."
+  }
+}

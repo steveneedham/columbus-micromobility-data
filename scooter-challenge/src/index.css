@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #f3f0e8;
+  color: #202a2e;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-content {
+  animation: ticker-scroll 35s linear infinite;
+}
+
+.ticker-track:hover .ticker-content {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-content {
+    animation: none;
+  }
+}
+
+.share-card-svg-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}

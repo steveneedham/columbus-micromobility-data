@@ -1,0 +1,60 @@
+name: Pull GBFS Data
+
+on:
+  schedule:
+    - cron: '0 8 * * *'   # 8am UTC
+    - cron: '0 20 * * *'  # 8pm UTC
+  workflow_dispatch:
+
+jobs:
+  pull-gbfs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install papermill ipykernel pandas requests matplotlib seaborn
+
+      - name: Execute GBFS notebook
+        run: |
+          papermill Veo_Spin_CBS_GBFS_Extract.ipynb /dev/null
+
+      - name: Commit and push GBFS data
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add snapshots/columbus_scooters_*.csv 2>/dev/null || true
+          git add plots/ 2>/dev/null || true
+          git add daily_summary/ 2>/dev/null || true
+          
+          if git diff --cached --exit-code > /dev/null; then
+            echo "No new GBFS data to commit"
+          else
+            TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M UTC')
+            git commit -m "Automated fleet export $TIMESTAMP"
+            git pull --rebase
+            git push
+          fi
+
+      - name: Trigger site rebuild
+        uses: actions/github-script@v7
+        if: success()
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'fleet-export.yml',
+              ref: 'main'
+            })
