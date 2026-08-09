@@ -35,3 +35,23 @@ body {
   width: 100%;
   height: auto;
 }
+
+@keyframes step-flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+.step-arrow {
+  animation: step-flash 0.9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-arrow {
+    animation: none;
+  }
+}
