@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LocationInput } from './LocationInput.jsx';
 import { ReceiptInput } from './ReceiptInput.jsx';
 import { validateReceipt } from '../utils/receiptParser.js';
@@ -14,11 +14,63 @@ function emptyReceipt() {
   return { operator: 'spin', durationMin: 13, costUSD: 2.39, date: new Date().toISOString().slice(0, 10) };
 }
 
+function hasLocationValue(loc) {
+  return Boolean(loc.address) || (loc.lat != null && loc.lon != null);
+}
+
+function StepArrow() {
+  return (
+    <span className="step-arrow mr-1 text-brick" aria-hidden="true">
+      ➤
+    </span>
+  );
+}
+
+function StepBox({ number, title, subtitle, active, locked, children }) {
+  return (
+    <section
+      className={`rounded-sheet border p-4 transition-opacity ${
+        locked ? 'border-rule opacity-50' : active ? 'border-river' : 'border-rule'
+      }`}
+    >
+      <div className="flex items-baseline gap-2">
+        {active && <StepArrow />}
+        <span className="font-display text-xl leading-none text-river">{number}</span>
+        <h2 className="font-display text-xl text-ink">{title}</h2>
+      </div>
+      {subtitle && <p className="mt-1 text-sm text-note">{subtitle}</p>}
+      <fieldset disabled={locked} className="m-0 mt-3 min-w-0 border-0 p-0">
+        {children}
+      </fieldset>
+      {locked && <p className="mt-2 font-mono text-xs text-note">Complete the step above to unlock this.</p>}
+    </section>
+  );
+}
+
 export function InputForm({ onSubmit }) {
   const [locations, setLocations] = useState([emptyLocation('Home')]);
   const [receipts, setReceipts] = useState([emptyReceipt()]);
   const [frequency, setFrequency] = useState(25);
+  const [frequencyTouched, setFrequencyTouched] = useState(false);
   const [errors, setErrors] = useState([]);
+
+  const step2Ref = useRef(null);
+  const step3Ref = useRef(null);
+  const step4Ref = useRef(null);
+  const prevStepRef = useRef(null);
+
+  const step1Done = locations.filter(hasLocationValue).length >= 2;
+  const step2Done = step1Done && receipts.some((r) => validateReceipt(r).valid);
+  const step3Done = step2Done && frequencyTouched;
+  const currentStep = !step1Done ? 1 : !step2Done ? 2 : !step3Done ? 3 : 4;
+
+  useEffect(() => {
+    const refs = { 2: step2Ref, 3: step3Ref, 4: step4Ref };
+    if (prevStepRef.current != null && currentStep > prevStepRef.current) {
+      refs[currentStep]?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    prevStepRef.current = currentStep;
+  }, [currentStep]);
 
   const updateLocation = (index, updated) => {
     setLocations((prev) => prev.map((loc, i) => (i === index ? updated : loc)));
@@ -45,6 +97,11 @@ export function InputForm({ onSubmit }) {
 
   const removeReceipt = (index) => {
     setReceipts((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleFrequencyChange = (e) => {
+    setFrequency(parseInt(e.target.value, 10));
+    setFrequencyTouched(true);
   };
 
   const handleSubmit = (e) => {
@@ -87,10 +144,8 @@ export function InputForm({ onSubmit }) {
         </div>
       </section>
 
-      <section>
-        <h2 className="font-display text-xl text-ink">Where do you ride?</h2>
-        <p className="mt-1 text-sm text-note">Home is required. Add up to 3 more frequent stops.</p>
-        <div className="mt-3 space-y-3">
+      <StepBox number={1} title="Where do you ride?" subtitle="Home is required. Add up to 3 more frequent stops." active={currentStep === 1} locked={false}>
+        <div className="space-y-3">
           {locations.map((location, i) => (
             <LocationInput
               key={i}
@@ -111,48 +166,51 @@ export function InputForm({ onSubmit }) {
             + Add another location
           </button>
         )}
-      </section>
+      </StepBox>
 
-      <section>
-        <h2 className="font-display text-xl text-ink">Your recent rides</h2>
-        <p className="mt-1 text-sm text-note">
-          Enter operator, duration, and cost from recent receipts, or scan a screenshot to fill them in.
-        </p>
-        <div className="mt-3 space-y-3">
-          {receipts.map((receipt, i) => (
-            <ReceiptInput
-              key={i}
-              receipt={receipt}
-              removable={receipts.length > 1}
-              onChange={(updated) => updateReceipt(i, updated)}
-              onRemove={() => removeReceipt(i)}
-            />
-          ))}
-        </div>
-        {receipts.length < MAX_RECEIPTS && (
-          <button
-            type="button"
-            onClick={addReceipt}
-            className="-mx-1 mt-1 px-1 py-2 font-mono text-xs text-river hover:underline"
-          >
-            + Add another ride
-          </button>
-        )}
-      </section>
+      <div ref={step2Ref}>
+        <StepBox
+          number={2}
+          title="Your recent rides"
+          subtitle="Enter operator, duration, and cost from recent receipts, or scan a screenshot to fill them in."
+          active={currentStep === 2}
+          locked={currentStep < 2}
+        >
+          <div className="space-y-3">
+            {receipts.map((receipt, i) => (
+              <ReceiptInput
+                key={i}
+                receipt={receipt}
+                removable={receipts.length > 1}
+                onChange={(updated) => updateReceipt(i, updated)}
+                onRemove={() => removeReceipt(i)}
+              />
+            ))}
+          </div>
+          {receipts.length < MAX_RECEIPTS && (
+            <button
+              type="button"
+              onClick={addReceipt}
+              className="-mx-1 mt-1 px-1 py-2 font-mono text-xs text-river hover:underline"
+            >
+              + Add another ride
+            </button>
+          )}
+        </StepBox>
+      </div>
 
-      <section>
-        <label className="font-display text-xl text-ink">
-          About {frequency} rides per month
-        </label>
-        <input
-          type="range"
-          min="5"
-          max="50"
-          value={frequency}
-          onChange={(e) => setFrequency(parseInt(e.target.value, 10))}
-          className="mt-3 w-full accent-river"
-        />
-      </section>
+      <div ref={step3Ref}>
+        <StepBox number={3} title={`About ${frequency} rides per month`} active={currentStep === 3} locked={currentStep < 3}>
+          <input
+            type="range"
+            min="5"
+            max="50"
+            value={frequency}
+            onChange={handleFrequencyChange}
+            className="w-full accent-river"
+          />
+        </StepBox>
+      </div>
 
       {errors.length > 0 && (
         <div className="rounded-sheet border border-brick-dim bg-sheet p-4 text-sm text-brick">
@@ -164,12 +222,16 @@ export function InputForm({ onSubmit }) {
         </div>
       )}
 
-      <button
-        type="submit"
-        className="w-full rounded-sheet bg-river px-6 py-3 font-mono text-sm uppercase tracking-wide text-sheet hover:opacity-90"
-      >
-        Analyze my costs
-      </button>
+      <div ref={step4Ref}>
+        <StepBox number={4} title="Analyze" active={currentStep === 4} locked={currentStep < 4}>
+          <button
+            type="submit"
+            className="w-full rounded-sheet bg-river px-6 py-3 font-mono text-sm uppercase tracking-wide text-sheet hover:opacity-90 disabled:opacity-50"
+          >
+            Analyze my costs
+          </button>
+        </StepBox>
+      </div>
     </form>
   );
 }
