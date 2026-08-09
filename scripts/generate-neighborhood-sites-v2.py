@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate neighborhood-specific micro-sites - simplified version.
+Generate neighborhood-specific micro-sites - minimal version without external dependencies.
 """
 
 import json
@@ -13,7 +13,7 @@ def load_json_file(filepath: str) -> dict:
         return json.load(f)
 
 def generate_neighborhood_html(neighborhood: dict, c311_count: int, gbfs_count: int) -> str:
-    """Generate simplified HTML for a neighborhood micro-site."""
+    """Generate minimal HTML for a neighborhood micro-site."""
 
     slug = neighborhood['slug']
     name = neighborhood['name']
@@ -28,7 +28,6 @@ def generate_neighborhood_html(neighborhood: dict, c311_count: int, gbfs_count: 
     <meta name="description" content="Neighborhood data: {description}">
     <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/{slug}/">
     <link rel="icon" type="image/svg+xml" href="../../assets/field-ledger-mark.svg">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
 
@@ -120,13 +119,6 @@ def generate_neighborhood_html(neighborhood: dict, c311_count: int, gbfs_count: 
             font-family: 'IBM Plex Mono', monospace;
         }}
 
-        #map {{
-            height: 500px;
-            border-radius: 8px;
-            border: 1px solid var(--color-border);
-            margin: 2rem 0;
-        }}
-
         .info-section {{
             margin: 2rem 0;
             padding: 1.5rem;
@@ -147,6 +139,20 @@ def generate_neighborhood_html(neighborhood: dict, c311_count: int, gbfs_count: 
             margin-bottom: 0.5rem;
         }}
 
+        .location-info {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }}
+
+        .location-detail {{
+            padding: 1rem;
+            background: rgba(250, 167, 26, 0.1);
+            border-left: 3px solid var(--color-accent-amber);
+            border-radius: 4px;
+        }}
+
         footer {{
             margin-top: 3rem;
             padding-top: 2rem;
@@ -158,7 +164,6 @@ def generate_neighborhood_html(neighborhood: dict, c311_count: int, gbfs_count: 
         @media (max-width: 768px) {{
             .container {{ padding: 1rem; }}
             h1 {{ font-size: 1.75rem; }}
-            #map {{ height: 300px; }}
         }}
     </style>
 </head>
@@ -176,59 +181,38 @@ def generate_neighborhood_html(neighborhood: dict, c311_count: int, gbfs_count: 
                 <div class="metric-value">{c311_count}</div>
             </div>
             <div class="metric-card">
-                <div class="metric-label">Vehicles</div>
+                <div class="metric-label">Active Vehicles</div>
                 <div class="metric-value">{gbfs_count}</div>
             </div>
         </div>
 
-        <div id="map"></div>
+        <div class="info-section">
+            <h2>Neighborhood Data Summary</h2>
+            <p>This neighborhood has <strong>{c311_count} 311 service requests</strong> related to shared electric bikes and scooters, and <strong>{gbfs_count} active vehicles</strong> currently tracked in the system.</p>
+            <div class="location-info">
+                <div class="location-detail">
+                    <strong>311 Service Requests</strong><br>
+                    City complaints and service requests related to micromobility (parking, safety, accessibility)
+                </div>
+                <div class="location-detail">
+                    <strong>Active Vehicles</strong><br>
+                    Real-time or recent scooters and bikes from operators like Veo and Spin
+                </div>
+            </div>
+        </div>
 
         <div class="info-section">
-            <h2>About This Data</h2>
-            <p><strong>311 Service Requests:</strong> City service requests related to shared electric bikes and scooters, including parking violations, safety concerns, and accessibility issues.</p>
-            <p><strong>Vehicle Data:</strong> Real-time or recent snapshots of available scooters and bikes from operators like Veo and Spin, showing location, battery status, and availability.</p>
+            <h2>Data Sources</h2>
+            <p><strong>311 Data:</strong> Columbus 311 Service Request public map</p>
+            <p><strong>Vehicle Data:</strong> GBFS feeds from Veo and Spin (public bike/scooter sharing feeds)</p>
+            <p><strong>Geography:</strong> OpenStreetMap municipality and neighborhood boundaries</p>
         </div>
 
         <footer>
-            <p>Data sources: Columbus 311 Service Requests, GBFS operators (Veo, Spin), OpenStreetMap</p>
             <p>Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}</p>
+            <p><a href="../">Browse all neighborhoods →</a></p>
         </footer>
     </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Neighborhood configuration
-        const neighborhood = {json.dumps(neighborhood)};
-
-        // Initialize map
-        const map = L.map('map').setView(neighborhood.center, neighborhood.zoom);
-
-        // Add tile layer
-        L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 19
-        }}).addTo(map);
-
-        // Add neighborhood bounds if available
-        if (neighborhood.bounds) {{
-            const bounds = L.latLngBounds(
-                [neighborhood.bounds[0][1], neighborhood.bounds[0][0]],
-                [neighborhood.bounds[1][1], neighborhood.bounds[1][0]]
-            );
-            L.rectangle(bounds, {{
-                color: '#faa71a',
-                weight: 2,
-                fill: false,
-                opacity: 0.8,
-                dashArray: '5, 5'
-            }}).addTo(map);
-        }}
-
-        // Fallback message if map doesn't load
-        if (!window.L) {{
-            document.getElementById('map').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--color-text-secondary);">Map failed to load. <a href="https://www.openstreetmap.org" target="_blank">View on OpenStreetMap</a></div>';
-        }}
-    </script>
 </body>
 </html>'''
 
@@ -240,7 +224,6 @@ def main():
     neighborhoods = load_json_file('neighborhoods-data.json')['neighborhoods']
     c311_data = load_json_file('data-311.json')['records']
     gbfs_data = load_json_file('data-gbfs.json').get('vehicles', [])
-    municipality_boundaries = load_json_file('data-municipality-boundaries.json')
 
     # Create output directory
     micro_sites_dir = Path('micro-sites')
