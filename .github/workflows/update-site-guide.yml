@@ -1,0 +1,92 @@
+name: Update Site Guide
+
+# Keeps the dashboard's "How to use this site" guide, the mirrored README
+# section, and Curb Your Spending's "Start here" list in sync with real
+# feature changes -- see scripts/update_site_guide.py for exactly how.
+#
+# Requires the ANTHROPIC_API_KEY secret (Settings > Secrets and variables >
+# Actions > New repository secret). Without it, the sync step logs a clear
+# message and exits cleanly rather than failing every day -- it only
+# actually needs the key on days where something relevant changed.
+#
+# Optional: set the SITE_GUIDE_MODEL repository *variable* (not secret) to
+# override the default model id if the Anthropic API rejects it.
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Daily at 09:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-guide:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history -- the script diffs against an older commit by SHA
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Check ANTHROPIC_API_KEY is configured
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "::warning::ANTHROPIC_API_KEY secret is not set. The sync will still run and track state, but any day with a real content change will be skipped (and retried once the key is added) until it's configured."
+          fi
+
+      - name: Sync site guide
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SITE_GUIDE_MODEL: ${{ vars.SITE_GUIDE_MODEL }}
+        run: python scripts/update_site_guide.py
+
+      - name: Check whether Curb Your Spending needs a rebuild
+        id: check_jsx
+        run: |
+          if git diff --quiet -- scooter-challenge/src/components/InputForm.jsx; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node
+        if: steps.check_jsx.outputs.changed == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: scooter-challenge/package-lock.json
+
+      - name: Rebuild Curb Your Spending
+        if: steps.check_jsx.outputs.changed == 'true'
+        working-directory: scooter-challenge
+        run: |
+          npm ci
+          npm run build
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add index.html README.md scooter-challenge/src/components/InputForm.jsx scooter-challenge/dist .github/site-guide-sync-state.json 2>/dev/null || true
+
+          if git diff --cached --exit-code > /dev/null; then
+            echo "No site guide changes to commit"
+          else
+            SUMMARY="Sync site guide with recent changes"
+            if [ -f .github/site-guide-sync-summary.txt ]; then
+              SUMMARY=$(cat .github/site-guide-sync-summary.txt)
+            fi
+            git commit -m "Site guide sync: ${SUMMARY}" -m "Automated daily sync via scripts/update_site_guide.py (Claude API)."
+            git pull --rebase
+            git push
+          fi

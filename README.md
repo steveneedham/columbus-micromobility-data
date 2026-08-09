@@ -136,6 +136,22 @@ Interactive map showing:
 - Zone concentrations and deployment heatmaps
 - Vehicle availability by operator
 
+### How to Use This Site
+
+<!-- HOW-TO-USE-THIS-SITE:START (auto-synced daily by scripts/update_site_guide.py -- see that file's docstring before hand-editing) -->
+Mirrors the "How to use this site" guide in the dashboard itself (click the button in the top nav for the full version with live links):
+
+1. **Check data age.** The four summary cards show record counts, last refresh timestamp, and relative age for the 311, GBFS, pile-up, and policy snapshots.
+2. **Toggle map layers.** Layers include 311 requests, GBFS vehicles, Ride Hubs, vendor review areas, pile-ups, policy boundaries, and published MDS geographies.
+3. **Read map symbols.** 311 requests use priority-colored diamonds; GBFS vehicles use vendor-colored circles; Ride Hubs use signed markers with nearby-vehicle badges.
+4. **Filter vehicles** by Operator and Availability.
+5. **Review insights** across the Compliance and Distribution/Range/Availability tabs.
+6. **Focus and share a view** with a preset or a Municipality view (Ohio State, Marble Cliff, Grandview Heights, Upper Arlington, Bexley, Dublin), then copy the view link.
+7. **Suggest an insight** — opens a pre-filled GitHub issue you post yourself.
+
+**Curb Your Spending** (`/scooter-challenge/`) walks you through the same idea for the cost-comparison tool: add your home + one more address, add or edit a ride receipt, set your rides-per-month, then analyze.
+<!-- HOW-TO-USE-THIS-SITE:END -->
+
 ### CSV Access
 
 Latest GBFS snapshot:
