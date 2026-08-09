@@ -52,6 +52,7 @@ export function InputForm({ onSubmit }) {
   const [receipts, setReceipts] = useState([emptyReceipt()]);
   const [frequency, setFrequency] = useState(25);
   const [frequencyTouched, setFrequencyTouched] = useState(false);
+  const [receiptsTouched, setReceiptsTouched] = useState(false);
   const [errors, setErrors] = useState([]);
 
   const step2Ref = useRef(null);
@@ -60,7 +61,7 @@ export function InputForm({ onSubmit }) {
   const prevStepRef = useRef(null);
 
   const step1Done = locations.filter(hasLocationValue).length >= 2;
-  const step2Done = step1Done && receipts.some((r) => validateReceipt(r).valid);
+  const step2Done = step1Done && receiptsTouched && receipts.some((r) => validateReceipt(r).valid);
   const step3Done = step2Done && frequencyTouched;
   const currentStep = !step1Done ? 1 : !step2Done ? 2 : !step3Done ? 3 : 4;
 
@@ -88,15 +89,18 @@ export function InputForm({ onSubmit }) {
 
   const updateReceipt = (index, updated) => {
     setReceipts((prev) => prev.map((r, i) => (i === index ? updated : r)));
+    setReceiptsTouched(true);
   };
 
   const addReceipt = () => {
     if (receipts.length >= MAX_RECEIPTS) return;
     setReceipts((prev) => [...prev, emptyReceipt()]);
+    setReceiptsTouched(true);
   };
 
   const removeReceipt = (index) => {
     setReceipts((prev) => prev.filter((_, i) => i !== index));
+    setReceiptsTouched(true);
   };
 
   const handleFrequencyChange = (e) => {
@@ -176,6 +180,11 @@ export function InputForm({ onSubmit }) {
           active={currentStep === 2}
           locked={currentStep < 2}
         >
+          {currentStep === 2 && !receiptsTouched && (
+            <p className="mb-2 font-mono text-xs text-note">
+              Still showing a placeholder ride — edit a field or scan a screenshot to continue.
+            </p>
+          )}
           <div className="space-y-3">
             {receipts.map((receipt, i) => (
               <ReceiptInput
