@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downtown — Columbus Micromobility Data</title>
+    <meta name="description" content="Neighborhood data view: Columbus's central business and entertainment district.">
+    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/downtown/">
+    <meta property="og:title" content="Downtown — Columbus Micromobility">
+    <meta property="og:description" content="Columbus's central business and entertainment district.">
+    <meta property="og:url" content="https://steveneedham.github.io/columbus-micromobility-data/downtown/">
+    <link rel="icon" type="image/svg+xml" href="../../assets/field-ledger-mark.svg">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
+
+        :root {
+            --color-surface: #f3f0e8;
+            --color-text: #1a1714;
+            --color-text-secondary: #5a5550;
+            --color-border: #ccc8bf;
+            --color-accent-amber: #faa71a;
+            --color-accent-teal: #00bfa5;
+            --color-status-success: #4caf50;
+            --color-status-warning: #ff9800;
+            --color-status-error: #f44336;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-surface: #1a1714;
+                --color-text: #f3f0e8;
+                --color-text-secondary: #a89f95;
+                --color-border: #3a3530;
+                --color-accent-amber: #faa71a;
+                --color-accent-teal: #00bfa5;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 2rem;
+        }
+
+        header a {
+            color: var(--color-accent-amber);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            font-family: 'Newsreader', serif;
+        }
+
+        .description {
+            color: var(--color-text-secondary);
+            font-size: 1.125rem;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-accent-amber);
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            margin: 2rem 0;
+        }
+
+        .data-section {
+            margin: 3rem 0;
+        }
+
+        .data-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-family: 'Newsreader', serif;
+        }
+
+        .no-data {
+            color: var(--color-text-secondary);
+            padding: 2rem;
+            background: var(--color-surface);
+            border: 1px dashed var(--color-border);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../">← Back to all neighborhoods</a>
+            <h1>Downtown</h1>
+            <p class="description">Columbus's central business and entertainment district.</p>
+        </header>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-label">311 Requests</div>
+                <div class="metric-value">21</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">GBFS Records</div>
+                <div class="metric-value">1000</div>
+            </div>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="data-section">
+            <h2>311 Service Requests</h2>
+            
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1rem; margin-bottom: 1rem;">Summary</h3>
+        <div style="margin-bottom: 0.5rem;"><strong>closed:</strong> 19</div><div style="margin-bottom: 0.5rem;"><strong>received:</strong> 2</div>
+    </div>
+    <p style="color: var(--color-text-secondary); font-size: 0.875rem;">
+        Total: 21 requests
+    </p>
+    
+        </div>
+
+        <div class="data-section">
+            <h2>Micromobility Data</h2>
+            
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1rem; margin-bottom: 1rem;">By Operator</h3>
+        <div style="margin-bottom: 0.5rem;"><strong>Spin:</strong> 478</div><div style="margin-bottom: 0.5rem;"><strong>Veo:</strong> 522</div>
+    </div>
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1rem; margin-bottom: 1rem;">By Type</h3>
+        <div style="margin-bottom: 0.5rem;"><strong>bicycle:</strong> 230</div><div style="margin-bottom: 0.5rem;"><strong>e-bike:</strong> 336</div><div style="margin-bottom: 0.5rem;"><strong>scooter:</strong> 434</div>
+    </div>
+    <p style="color: var(--color-text-secondary); font-size: 0.875rem;">
+        Total: 1000 vehicles
+    </p>
+    
+        </div>
+
+        <footer>
+            <p>Generated on 2026-08-09 18:58 UTC</p>
+            <p>Data sources: Columbus 311, GBFS operators, OpenStreetMap</p>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const neighborhood = {"id": "downtown", "name": "Downtown", "slug": "downtown", "description": "Columbus's central business and entertainment district.", "boundary_source": "neighborhood-zone", "zone_ids": ["Victorian Village"], "center": [-83.0093, 39.9616], "zoom": 13, "bounds": [[-83.0237, 39.94], [-82.9949, 39.98]]};
+        const c311Data = [{"source_id": "CAS-3107474-P9D7F3", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "755 DENNISON AVE", "latitude": 39.9773586499, "longitude": -83.0091846146, "zone_id": "Victorian Village", "reported_at": "2026-08-08T23:31:38Z", "status": "received", "source_status": "Received", "source_status_at": "", "source_updated_at": "2026-08-08T23:31:40Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3105930-C4Q7S8", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "BUTTLES AVE & PARK ST", "latitude": 39.9772363089, "longitude": -83.005170021, "zone_id": "Victorian Village", "reported_at": "2026-08-07T11:39:13Z", "status": "received", "source_status": "Received", "source_status_at": "", "source_updated_at": "2026-08-07T11:39:14Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3105929-X7P7S1", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "W HUBBARD AVE & PARK ST", "latitude": 39.9786166835, "longitude": -83.0054333692, "zone_id": "Victorian Village", "reported_at": "2026-08-07T11:37:27Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-08-07T13:25:37Z", "source_updated_at": "2026-08-07T13:25:37Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3105526-R7Q3Y8", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "BUTTLES AVE & PARK ST", "latitude": 39.9772134603, "longitude": -83.0051674919, "zone_id": "Victorian Village", "reported_at": "2026-08-06T19:36:05Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-08-07T13:06:09Z", "source_updated_at": "2026-08-07T13:06:09Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3103000-Y5R4F8", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "PARK ST & W RUSSELL ST", "latitude": 39.9753096829, "longitude": -83.004799999, "zone_id": "Victorian Village", "reported_at": "2026-08-05T11:41:52Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-08-05T14:53:28Z", "source_updated_at": "2026-08-05T14:53:28Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3099951-C2P3W8", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "W 5TH AVE & NEIL AVE", "latitude": 39.9873222412, "longitude": -83.0131030083, "zone_id": "Victorian Village", "reported_at": "2026-08-03T14:33:46Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-08-04T16:36:29Z", "source_updated_at": "2026-08-04T16:36:29Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3098829-V6P1X6", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "939 NEIL AVE", "latitude": 39.9808273995, "longitude": -83.0119206799, "zone_id": "Victorian Village", "reported_at": "2026-08-01T20:48:47Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-08-03T16:42:39Z", "source_updated_at": "2026-08-03T16:42:39Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3098075-F1M0N7", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "1243 NEIL AVE", "latitude": 39.9868092987, "longitude": -83.0130645297, "zone_id": "Victorian Village", "reported_at": "2026-07-31T18:33:21Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-08-03T16:30:01Z", "source_updated_at": "2026-08-03T16:30:01Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3097838-J7N0X0", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "DENNISON AVE & W HUBBARD AVE", "latitude": 39.9783272997, "longitude": -83.0089930646, "zone_id": "Victorian Village", "reported_at": "2026-07-31T16:51:16Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-08-03T16:24:25Z", "source_updated_at": "2026-08-03T16:24:25Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3090046-L1Z6G0", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "W 1ST AVE & N WALL ST", "latitude": 39.9800650985, "longitude": -83.0049840333, "zone_id": "Victorian Village", "reported_at": "2026-07-27T11:12:30Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-29T13:01:37Z", "source_updated_at": "2026-07-29T13:01:37Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}];
+        const gbfsData = [{"id": "382004be-28eb-5b5e-af97-bd2b1495fe0a", "company": "Veo", "type": "bicycle", "lat": 39.958822, "lng": -82.999887, "battery": 0, "range": 27.77, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.958822, "prev_lng": -82.999887, "moved_m": 0.0, "range_delta": 0.0}, {"id": "5fc64fa7-9947-52c8-9094-7da139bbf432", "company": "Veo", "type": "bicycle", "lat": 39.962134, "lng": -83.004197, "battery": 0, "range": 23.33, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.962134, "prev_lng": -83.004197, "moved_m": 0.0, "range_delta": 0.0}, {"id": "e7d124b1-4bb7-5407-873e-cc7a58f52547", "company": "Veo", "type": "scooter", "lat": 39.958823, "lng": -83.012728, "battery": 0, "range": 20.37, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.958823, "prev_lng": -83.012728, "moved_m": 0.0, "range_delta": 0.0}, {"id": "4cfaff98-a8cd-5b89-a9b6-3fb8c236c64d", "company": "Veo", "type": "scooter", "lat": 39.943732, "lng": -83.02149, "battery": 0, "range": 27.02, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.943732, "prev_lng": -83.02149, "moved_m": 0.0, "range_delta": 0.0}, {"id": "545ae4e5-6f55-56bf-8a02-0d0a7699730d", "company": "Veo", "type": "scooter", "lat": 39.958677, "lng": -83.001135, "battery": 0, "range": 16.84, "available": false, "disabled": false, "reserved": true, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.958677, "prev_lng": -83.001135, "moved_m": 0.0, "range_delta": 0.0}, {"id": "96790376-0152-5837-a36b-94b399b27f14", "company": "Veo", "type": "scooter", "lat": 39.96004, "lng": -83.012585, "battery": 0, "range": 8.78, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.96004, "prev_lng": -83.012585, "moved_m": 0.0, "range_delta": 0.0}, {"id": "059cd353-27df-504a-b662-ee4c2c497a42", "company": "Veo", "type": "bicycle", "lat": 39.94377, "lng": -83.021491, "battery": 0, "range": 1.83, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.94377, "prev_lng": -83.021491, "moved_m": 0.0, "range_delta": 0.0}, {"id": "1a60f38c-b163-5dca-a178-ca9467c57b92", "company": "Veo", "type": "scooter", "lat": 39.961258, "lng": -83.006496, "battery": 0, "range": 14.43, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.961258, "prev_lng": -83.006496, "moved_m": 0.0, "range_delta": 0.0}, {"id": "3282be43-f6e8-5998-ac5d-75cabfd52ec2", "company": "Veo", "type": "scooter", "lat": 39.969073, "lng": -83.00744, "battery": 0, "range": 28.14, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.969073, "prev_lng": -83.00744, "moved_m": 0.0, "range_delta": 0.0}, {"id": "45e16f64-6f54-58bb-868b-8fa776557ba8", "company": "Veo", "type": "scooter", "lat": 39.971038, "lng": -83.000471, "battery": 0, "range": 28.01, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.971038, "prev_lng": -83.000471, "moved_m": 0.0, "range_delta": 0.0}];
+
+        // Initialize map
+        const map = L.map('map').setView(neighborhood.center, neighborhood.zoom);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Add neighborhood bounds rectangle if available
+        if (neighborhood.bounds) {
+            const bounds = L.latLngBounds(
+                [neighborhood.bounds[0][1], neighborhood.bounds[0][0]],
+                [neighborhood.bounds[1][1], neighborhood.bounds[1][0]]
+            );
+            L.rectangle(bounds, {
+                color: '#faa71a',
+                weight: 2,
+                fill: false,
+                opacity: 0.7
+            }).addTo(map);
+        }
+
+        // Add 311 markers
+        c311Data.forEach(record => {
+            const color = record.status === 'received' ? '#ff9800' : '#4caf50';
+            L.circleMarker([record.latitude, record.longitude], {
+                radius: 5,
+                fillColor: color,
+                color: color,
+                weight: 1,
+                opacity: 0.7,
+                fillOpacity: 0.6
+            }).addTo(map).bindPopup(
+                '<strong>' + record.descriptor + '</strong><br/>' +
+                record.address + '<br/>' +
+                'Status: ' + record.status
+            );
+        });
+
+        // Add GBFS markers
+        gbfsData.forEach(record => {
+            L.circleMarker([record.lat, record.lng], {
+                radius: 4,
+                fillColor: '#00bfa5',
+                color: '#00bfa5',
+                weight: 1,
+                opacity: 0.7,
+                fillOpacity: 0.5
+            }).addTo(map).bindPopup(
+                '<strong>' + (record.company || 'Unknown') + ' ' + (record.type || 'vehicle') + '</strong><br/>' +
+                'Battery: ' + (record.battery || 'N/A') + '%<br/>' +
+                'Range: ' + (record.range ? record.range.toFixed(1) : 'N/A') + ' km'
+            );
+        });
+    </script>
+</body>
+</html>
