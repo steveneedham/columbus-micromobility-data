@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harrison West — Columbus Micromobility Data</title>
-    <meta name="description" content="Neighborhood data view: Vibrant neighborhood with mixed-use development near downtown.">
-    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/harrison-west/">
-    <meta property="og:title" content="Harrison West — Columbus Micromobility">
-    <meta property="og:description" content="Vibrant neighborhood with mixed-use development near downtown.">
-    <meta property="og:url" content="https://steveneedham.github.io/columbus-micromobility-data/harrison-west/">
+    <meta name="description" content="Neighborhood data: Vibrant neighborhood with mixed-use development near downtown.">
+    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/harrison-west/">
     <link rel="icon" type="image/svg+xml" href="../../assets/field-ledger-mark.svg">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
@@ -21,9 +18,6 @@
             --color-border: #ccc8bf;
             --color-accent-amber: #faa71a;
             --color-accent-teal: #00bfa5;
-            --color-status-success: #4caf50;
-            --color-status-warning: #ff9800;
-            --color-status-error: #f44336;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -32,8 +26,6 @@
                 --color-text: #f3f0e8;
                 --color-text-secondary: #a89f95;
                 --color-border: #3a3530;
-                --color-accent-amber: #faa71a;
-                --color-accent-teal: #00bfa5;
             }
         }
 
@@ -62,6 +54,8 @@
             color: var(--color-accent-amber);
             text-decoration: none;
             font-size: 0.875rem;
+            display: inline-block;
+            margin-bottom: 1rem;
         }
 
         h1 {
@@ -78,7 +72,7 @@
 
         .metrics {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
@@ -88,9 +82,6 @@
             border: 1px solid var(--color-border);
             border-radius: 8px;
             padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
         }
 
         .metric-label {
@@ -98,39 +89,41 @@
             color: var(--color-text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
         }
 
         .metric-value {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 600;
             color: var(--color-accent-amber);
+            font-family: 'IBM Plex Mono', monospace;
         }
 
         #map {
-            height: 400px;
+            height: 500px;
             border-radius: 8px;
             border: 1px solid var(--color-border);
             margin: 2rem 0;
         }
 
-        .data-section {
-            margin: 3rem 0;
+        .info-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
         }
 
-        .data-section h2 {
-            font-size: 1.5rem;
+        .info-section h2 {
+            font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 1rem;
             font-family: 'Newsreader', serif;
         }
 
-        .no-data {
+        .info-section p {
             color: var(--color-text-secondary);
-            padding: 2rem;
-            background: var(--color-surface);
-            border: 1px dashed var(--color-border);
-            border-radius: 8px;
-            text-align: center;
+            margin-bottom: 0.5rem;
         }
 
         footer {
@@ -140,12 +133,18 @@
             font-size: 0.875rem;
             color: var(--color-text-secondary);
         }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.75rem; }
+            #map { height: 300px; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <a href="../">← Back to all neighborhoods</a>
+            <a href="../">← All neighborhoods</a>
             <h1>Harrison West</h1>
             <p class="description">Vibrant neighborhood with mixed-use development near downtown.</p>
         </header>
@@ -156,63 +155,40 @@
                 <div class="metric-value">12</div>
             </div>
             <div class="metric-card">
-                <div class="metric-label">GBFS Records</div>
+                <div class="metric-label">Vehicles</div>
                 <div class="metric-value">136</div>
             </div>
         </div>
 
         <div id="map"></div>
 
-        <div class="data-section">
-            <h2>311 Service Requests</h2>
-            
-    <div style="margin-bottom: 2rem;">
-        <h3 style="font-size: 1rem; margin-bottom: 1rem;">Summary</h3>
-        <div style="margin-bottom: 0.5rem;"><strong>closed:</strong> 11</div><div style="margin-bottom: 0.5rem;"><strong>received:</strong> 1</div>
-    </div>
-    <p style="color: var(--color-text-secondary); font-size: 0.875rem;">
-        Total: 12 requests
-    </p>
-    
-        </div>
-
-        <div class="data-section">
-            <h2>Micromobility Data</h2>
-            
-    <div style="margin-bottom: 2rem;">
-        <h3 style="font-size: 1rem; margin-bottom: 1rem;">By Operator</h3>
-        <div style="margin-bottom: 0.5rem;"><strong>Spin:</strong> 68</div><div style="margin-bottom: 0.5rem;"><strong>Veo:</strong> 68</div>
-    </div>
-    <div style="margin-bottom: 2rem;">
-        <h3 style="font-size: 1rem; margin-bottom: 1rem;">By Type</h3>
-        <div style="margin-bottom: 0.5rem;"><strong>bicycle:</strong> 32</div><div style="margin-bottom: 0.5rem;"><strong>e-bike:</strong> 45</div><div style="margin-bottom: 0.5rem;"><strong>scooter:</strong> 59</div>
-    </div>
-    <p style="color: var(--color-text-secondary); font-size: 0.875rem;">
-        Total: 136 vehicles
-    </p>
-    
+        <div class="info-section">
+            <h2>About This Data</h2>
+            <p><strong>311 Service Requests:</strong> City service requests related to shared electric bikes and scooters, including parking violations, safety concerns, and accessibility issues.</p>
+            <p><strong>Vehicle Data:</strong> Real-time or recent snapshots of available scooters and bikes from operators like Veo and Spin, showing location, battery status, and availability.</p>
         </div>
 
         <footer>
-            <p>Generated on 2026-08-09 18:58 UTC</p>
-            <p>Data sources: Columbus 311, GBFS operators, OpenStreetMap</p>
+            <p>Data sources: Columbus 311 Service Requests, GBFS operators (Veo, Spin), OpenStreetMap</p>
+            <p>Last updated: 2026-08-09 19:05 UTC</p>
         </footer>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // Neighborhood configuration
         const neighborhood = {"id": "harrisonwest", "name": "Harrison West", "slug": "harrison-west", "description": "Vibrant neighborhood with mixed-use development near downtown.", "boundary_source": "neighborhood-zone", "zone_ids": ["Harrison West"], "center": [-83.0265, 40.0063], "zoom": 13, "bounds": [[-83.04, 39.9968], [-83.013, 40.0158]]};
-        const c311Data = [{"source_id": "CAS-3106647-X4Q6Z7", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "460 HELEN CT", "latitude": 39.9853438956, "longitude": -83.0177561712, "zone_id": "Harrison West", "reported_at": "2026-08-07T17:58:53Z", "status": "received", "source_status": "Received", "source_status_at": "", "source_updated_at": "2026-08-07T17:58:55Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3093842-S3D4G9", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "976 PERRY ST", "latitude": 39.9805167236, "longitude": -83.0191875304, "zone_id": "Harrison West", "reported_at": "2026-07-29T01:59:21Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-29T17:46:30Z", "source_updated_at": "2026-07-29T17:46:30Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3093802-P9P6F8", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "832 THURBER DR W", "latitude": 39.9778982879, "longitude": -83.0158165865, "zone_id": "Harrison West", "reported_at": "2026-07-29T00:39:32Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-29T13:20:06Z", "source_updated_at": "2026-07-29T13:20:06Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3089925-K4G4H8", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "875 HARRISON AVE", "latitude": 39.9788141258, "longitude": -83.0144559748, "zone_id": "Harrison West", "reported_at": "2026-07-26T23:58:29Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-29T13:10:44Z", "source_updated_at": "2026-07-29T13:10:44Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3089738-Y9V4N1", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "W 1ST AVE & OREGON AVE", "latitude": 39.9807591279, "longitude": -83.0180906218, "zone_id": "Harrison West", "reported_at": "2026-07-26T17:28:48Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-29T13:13:14Z", "source_updated_at": "2026-07-29T13:13:15Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3082644-P9D1M0", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "875 MICHIGAN AVE", "latitude": 39.9790579874, "longitude": -83.0172382029, "zone_id": "Harrison West", "reported_at": "2026-07-21T12:31:46Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-22T11:54:50Z", "source_updated_at": "2026-07-22T11:54:50Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43215"}, {"source_id": "CAS-3080271-C9W2L2", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "1009 OREGON AVE", "latitude": 39.9813961553, "longitude": -83.0181181686, "zone_id": "Harrison West", "reported_at": "2026-07-19T15:04:24Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-20T11:10:39Z", "source_updated_at": "2026-07-20T11:10:39Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3076307-V8C4S4", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "424 W 1ST AVE", "latitude": 39.9806584836, "longitude": -83.0157538345, "zone_id": "Harrison West", "reported_at": "2026-07-15T18:17:33Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-16T11:42:20Z", "source_updated_at": "2026-07-16T11:42:20Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3072483-B6C5K7", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "1174 OREGON AVE", "latitude": 39.9847886797, "longitude": -83.0177450855, "zone_id": "Harrison West", "reported_at": "2026-07-13T17:59:48Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-14T11:40:09Z", "source_updated_at": "2026-07-14T11:40:09Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}, {"source_id": "CAS-3072477-V9D9S3", "city": "columbus", "operator": "unknown", "complaint_type": "unclassified", "descriptor": "Shared Electric Bike & Scooters", "address": "1156 OREGON AVE", "latitude": 39.9844679949, "longitude": -83.0177695995, "zone_id": "Harrison West", "reported_at": "2026-07-13T17:58:34Z", "status": "closed", "source_status": "Closed", "source_status_at": "2026-07-14T11:39:45Z", "source_updated_at": "2026-07-14T11:39:46Z", "source_name": "City of Columbus 311 public map", "source_url": "https://gis.columbus.gov/coc311map/", "council_district": "District 7", "zip": "43201"}];
-        const gbfsData = [{"id": "a7c4f178-e324-56f0-96cf-7835d6d50e8a", "company": "Veo", "type": "scooter", "lat": 40.000675, "lng": -83.020971, "battery": 0, "range": 22.39, "available": false, "disabled": true, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 40.000675, "prev_lng": -83.020971, "moved_m": 0.0, "range_delta": 0.0}, {"id": "0b94c380-a606-5fb1-9f37-5ff508d2e511", "company": "Veo", "type": "bicycle", "lat": 40.000125, "lng": -83.023261, "battery": 0, "range": 6.31, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 40.000125, "prev_lng": -83.023261, "moved_m": 0.0, "range_delta": 0.0}, {"id": "f95ec366-9553-589e-b060-5d9d77e124f9", "company": "Veo", "type": "scooter", "lat": 40.000223, "lng": -83.017972, "battery": 0, "range": 27.18, "available": false, "disabled": true, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 40.000223, "prev_lng": -83.017972, "moved_m": 0.0, "range_delta": 0.0}, {"id": "0c6bffe6-8bc1-5b00-aebf-62e20beb41d1", "company": "Veo", "type": "scooter", "lat": 40.000336, "lng": -83.017957, "battery": 0, "range": 13.39, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 40.000336, "prev_lng": -83.017957, "moved_m": 0.0, "range_delta": 0.0}, {"id": "be85746d-ebfd-540e-9959-cfadc762b9a3", "company": "Veo", "type": "scooter", "lat": 40.009996, "lng": -83.024081, "battery": 0, "range": 13.86, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 40.009996, "prev_lng": -83.024081, "moved_m": 0.0, "range_delta": 0.0}, {"id": "7d6442bf-aef7-50f1-9719-d8d09ab7e7d5", "company": "Veo", "type": "bicycle", "lat": 40.000255, "lng": -83.017982, "battery": 0, "range": 13.86, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 40.000255, "prev_lng": -83.017982, "moved_m": 0.0, "range_delta": 0.0}, {"id": "c83c19eb-a9a4-5648-bee4-dd0e44fd50fe", "company": "Veo", "type": "bicycle", "lat": 39.99747, "lng": -83.021008, "battery": 0, "range": 5.59, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.99747, "prev_lng": -83.021008, "moved_m": 0.0, "range_delta": 0.0}, {"id": "ba26d45a-bce1-53cb-9bae-5cdc4624febd", "company": "Veo", "type": "bicycle", "lat": 39.99849, "lng": -83.01734, "battery": 0, "range": 25.94, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.99849, "prev_lng": -83.01734, "moved_m": 0.0, "range_delta": 0.0}, {"id": "5f7d3cd4-0f57-5958-becb-6222f41db52e", "company": "Veo", "type": "bicycle", "lat": 39.999269, "lng": -83.021487, "battery": 0, "range": 16.39, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 39.999269, "prev_lng": -83.021487, "moved_m": 0.0, "range_delta": 0.0}, {"id": "c1e2c0ee-71c5-5c08-b6a3-762f8a52838c", "company": "Veo", "type": "bicycle", "lat": 40.00453, "lng": -83.017001, "battery": 0, "range": 28.14, "available": true, "disabled": false, "reserved": false, "prev_snapshot_id": "20260809T085337Z", "prev_lat": 40.00453, "prev_lng": -83.017001, "moved_m": 0.0, "range_delta": 0.0}];
 
         // Initialize map
         const map = L.map('map').setView(neighborhood.center, neighborhood.zoom);
+
+        // Add tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
         }).addTo(map);
 
-        // Add neighborhood bounds rectangle if available
+        // Add neighborhood bounds if available
         if (neighborhood.bounds) {
             const bounds = L.latLngBounds(
                 [neighborhood.bounds[0][1], neighborhood.bounds[0][0]],
@@ -222,42 +198,15 @@
                 color: '#faa71a',
                 weight: 2,
                 fill: false,
-                opacity: 0.7
+                opacity: 0.8,
+                dashArray: '5, 5'
             }).addTo(map);
         }
 
-        // Add 311 markers
-        c311Data.forEach(record => {
-            const color = record.status === 'received' ? '#ff9800' : '#4caf50';
-            L.circleMarker([record.latitude, record.longitude], {
-                radius: 5,
-                fillColor: color,
-                color: color,
-                weight: 1,
-                opacity: 0.7,
-                fillOpacity: 0.6
-            }).addTo(map).bindPopup(
-                '<strong>' + record.descriptor + '</strong><br/>' +
-                record.address + '<br/>' +
-                'Status: ' + record.status
-            );
-        });
-
-        // Add GBFS markers
-        gbfsData.forEach(record => {
-            L.circleMarker([record.lat, record.lng], {
-                radius: 4,
-                fillColor: '#00bfa5',
-                color: '#00bfa5',
-                weight: 1,
-                opacity: 0.7,
-                fillOpacity: 0.5
-            }).addTo(map).bindPopup(
-                '<strong>' + (record.company || 'Unknown') + ' ' + (record.type || 'vehicle') + '</strong><br/>' +
-                'Battery: ' + (record.battery || 'N/A') + '%<br/>' +
-                'Range: ' + (record.range ? record.range.toFixed(1) : 'N/A') + ' km'
-            );
-        });
+        // Fallback message if map doesn't load
+        if (!window.L) {
+            document.getElementById('map').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--color-text-secondary);">Map failed to load. <a href="https://www.openstreetmap.org" target="_blank">View on OpenStreetMap</a></div>';
+        }
     </script>
 </body>
 </html>
