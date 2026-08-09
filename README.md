@@ -246,6 +246,7 @@ If you fork this repo, workflows will run with your GitHub Actions quota. No add
 - Spin GBFS: `https://mds.bird.co/gbfs/v2/public/provider/spin/columbus/`
 - Veo GBFS: `https://cluster-prod.veoride.com/api/shares/name/cbs/gbfs/`
 - Columbus 311: `https://gis.columbus.gov/coc311map/`
+- Municipality boundaries (`data-municipality-boundaries.json`): The Ohio State University boundary is a supplied policy geography export (see `data-osu-boundary.json`); Marble Cliff, Grandview Heights, Upper Arlington, Bexley, and Dublin are from [OpenStreetMap](https://www.openstreetmap.org/copyright) (ODbL) via the Overpass API — see `scripts/build_municipality_boundaries.py` to regenerate.
 
 ---
 
