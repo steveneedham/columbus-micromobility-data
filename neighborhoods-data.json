@@ -1,0 +1,108 @@
+{
+  "neighborhoods": [
+    {
+      "id": "bexley",
+      "name": "Bexley",
+      "slug": "bexley",
+      "description": "Eastern suburb of Columbus with established residential and commercial areas.",
+      "boundary_source": "municipality-boundaries",
+      "zone_ids": ["Near East"],
+      "center": [-83.0072, 39.9761],
+      "zoom": 12
+    },
+    {
+      "id": "dublin",
+      "name": "Dublin",
+      "slug": "dublin",
+      "description": "Northern suburb with mixed residential and commercial development.",
+      "boundary_source": "municipality-boundaries",
+      "zone_ids": ["Dublin Road Corridor"],
+      "center": [-83.1103, 40.0997],
+      "zoom": 12
+    },
+    {
+      "id": "osu",
+      "name": "The Ohio State University",
+      "slug": "the-ohio-state-university",
+      "description": "Ohio State University campus and surrounding academic area.",
+      "boundary_source": "municipality-boundaries",
+      "zone_ids": [],
+      "center": [-83.0048, 40.0075],
+      "zoom": 13
+    },
+    {
+      "id": "grandview",
+      "name": "Grandview Heights",
+      "slug": "grandview-heights",
+      "description": "Northern suburb with residential neighborhoods.",
+      "boundary_source": "municipality-boundaries",
+      "zone_ids": ["North Central"],
+      "center": [-83.0823, 40.0516],
+      "zoom": 12
+    },
+    {
+      "id": "marblecliff",
+      "name": "Marble Cliff",
+      "slug": "marble-cliff",
+      "description": "Upscale residential suburb north of downtown.",
+      "boundary_source": "municipality-boundaries",
+      "zone_ids": [],
+      "center": [-83.0549, 40.0243],
+      "zoom": 12
+    },
+    {
+      "id": "ua",
+      "name": "Upper Arlington",
+      "slug": "upper-arlington",
+      "description": "Affluent residential suburb west of downtown.",
+      "boundary_source": "municipality-boundaries",
+      "zone_ids": ["Northwest"],
+      "center": [-83.0858, 40.0038],
+      "zoom": 12
+    },
+    {
+      "id": "harrisonwest",
+      "name": "Harrison West",
+      "slug": "harrison-west",
+      "description": "Vibrant neighborhood with mixed-use development near downtown.",
+      "boundary_source": "neighborhood-zone",
+      "zone_ids": ["Harrison West"],
+      "center": [-83.0265, 40.0063],
+      "zoom": 13,
+      "bounds": [[-83.0400, 39.9968], [-83.0130, 40.0158]]
+    },
+    {
+      "id": "shortnorth",
+      "name": "Short North",
+      "slug": "short-north",
+      "description": "Trendy urban neighborhood with galleries, shops, and restaurants.",
+      "boundary_source": "neighborhood-zone",
+      "zone_ids": ["Victorian Village"],
+      "center": [-83.0048, 40.0168],
+      "zoom": 13,
+      "bounds": [[-83.0155, 39.9700], [-82.9941, 40.0300]]
+    },
+    {
+      "id": "italianvillage",
+      "name": "Italian Village",
+      "slug": "italian-village",
+      "description": "Historic neighborhood with Italian heritage and urban character.",
+      "boundary_source": "neighborhood-zone",
+      "zone_ids": ["Victorian Village", "Greater Hilltop"],
+      "center": [-83.0145, 39.9887],
+      "zoom": 13,
+      "bounds": [[-83.0248, 39.9450], [-83.0042, 40.0000]]
+    },
+    {
+      "id": "downtown",
+      "name": "Downtown",
+      "slug": "downtown",
+      "description": "Columbus's central business and entertainment district.",
+      "boundary_source": "neighborhood-zone",
+      "zone_ids": ["Victorian Village"],
+      "center": [-83.0093, 39.9616],
+      "zoom": 13,
+      "bounds": [[-83.0237, 39.9400], [-82.9949, 39.9800]]
+    }
+  ]
+}
