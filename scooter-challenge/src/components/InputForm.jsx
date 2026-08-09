@@ -71,6 +71,23 @@ export function InputForm({ onSubmit }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <section>
+        <p className="font-mono text-xs uppercase tracking-wide text-river">🧪 Start here</p>
+        <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {[
+            'Add your home + at least one more address.',
+            'Add at least 1 receipt — 2+ from different operators (Spin and Veo) preferred for a more accurate comparison.',
+            'Set about how many rides you take per month.',
+            'Click "Analyze my costs."',
+          ].map((step, i) => (
+            <div key={i} className="flex gap-3 rounded-sheet border border-rule bg-sheet p-3">
+              <span className="font-display text-xl leading-none text-river">{i + 1}</span>
+              <p className="text-sm text-note">{step}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
         <h2 className="font-display text-xl text-ink">Where do you ride?</h2>
         <p className="mt-1 text-sm text-note">Home is required. Add up to 3 more frequent stops.</p>
         <div className="mt-3 space-y-3">
