@@ -151,7 +151,7 @@ export function InputForm({ onSubmit }) {
         </div>
       </section>
 
-      <StepBox number={1} title="Where do you ride?" subtitle="Home is required. Add up to 3 more frequent stops." active={currentStep === 1} locked={false}>
+      <StepBox number={1} title="Where do you ride?" subtitle="Home is required and 1 frequent stop. Add up to 2 more frequent stops." active={currentStep === 1} locked={false}>
         <div className="space-y-3">
           {locations.map((location, i) => (
             <LocationInput
