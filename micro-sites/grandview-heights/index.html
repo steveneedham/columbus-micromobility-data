@@ -422,6 +422,7 @@
 
         function updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsFetchedAt, c311FetchedAt) {
             const metricsContainer = document.getElementById('metricsContainer');
+            const { area, density } = calculateDensity(boundaryGeoJSON, totalVehicles);
             metricsContainer.innerHTML = `
                 <div class="metric-card">
                     <div class="metric-label">311 Requests</div>
@@ -430,6 +431,11 @@
                 <div class="metric-card">
                     <div class="metric-label">Active Vehicles</div>
                     <div class="metric-value">${totalVehicles}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Vehicle Density</div>
+                    <div class="metric-value">${density}</div>
+                    <div class="metric-loading">per sq mi</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
@@ -441,16 +447,26 @@
             const dataSummary = document.getElementById('dataSummary');
             dataSummary.innerHTML = `This neighborhood has <strong>${c311Count} 311 service request${c311Count !== 1 ? 's' : ''}</strong>, <strong>${totalVehicles} active vehicle${totalVehicles !== 1 ? 's' : ''}</strong> from Veo and Spin, and <strong>${hubsCount} CBUS Ride Hub${hubsCount !== 1 ? 's' : ''}</strong> inside this boundary.`;
 
-            // Update vehicle breakdown
+            // Update vehicle breakdown with density
+            const { area, density } = calculateDensity(boundaryGeoJSON, totalVehicles);
             const vehicleBreakdown = document.getElementById('vehicleBreakdown');
+            
+            // Calculate density per operator
+            const veoCount = vehiclesByOperator.Veo || 0;
+            const spinCount = vehiclesByOperator.Spin || 0;
+            const veoDensity = area > 0 ? (veoCount / area).toFixed(2) : 0;
+            const spinDensity = area > 0 ? (spinCount / area).toFixed(2) : 0;
+            
             vehicleBreakdown.innerHTML = `
                 <div class="vehicle-operator">
                     <div class="operator-name">Veo</div>
-                    <div class="operator-count">${vehiclesByOperator.Veo || 0}</div>
+                    <div class="operator-count">${veoCount}</div>
+                    <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.25rem;">${veoDensity} per sq mi</div>
                 </div>
                 <div class="vehicle-operator">
                     <div class="operator-name">Spin</div>
-                    <div class="operator-count">${vehiclesByOperator.Spin || 0}</div>
+                    <div class="operator-count">${spinCount}</div>
+                    <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.25rem;">${spinDensity} per sq mi</div>
                 </div>
             `;
 
@@ -465,7 +481,29 @@
             generateForecast(c311Count, totalVehicles, hubsCount);
 }
 
-        function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount) {
+
+        function calculateDensity(boundaryGeoJSON, vehicles) {
+            // Calculate area in square miles
+            let area = 0;
+            try {
+                if (boundaryGeoJSON && boundaryGeoJSON.features && boundaryGeoJSON.features.length > 0) {
+                    const feature = boundaryGeoJSON.features[0];
+                    // turf.area returns area in square meters
+                    area = turf.area(feature) / 2.59e6; // Convert to square miles
+                } else if (boundaryGeoJSON && boundaryGeoJSON.geometry) {
+                    area = turf.area(boundaryGeoJSON) / 2.59e6;
+                }
+            } catch (e) {
+                console.error('Error calculating area:', e);
+            }
+            
+            return {
+                area: area.toFixed(2),
+                density: area > 0 ? (vehicles / area).toFixed(2) : 0
+            };
+        }
+
+                function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount) {
             const insightsContainer = document.getElementById('insightsContainer');
             const interventionsContainer = document.getElementById('interventionsContainer');
 
