@@ -822,10 +822,12 @@
                     if (!gbfsResp.ok) throw new Error('GBFS fetch failed: ' + gbfsResp.status);
                     if (!c311Resp.ok) throw new Error('311 fetch failed: ' + c311Resp.status);
                     if (!hubsResp.ok) throw new Error('Hubs fetch failed: ' + hubsResp.status);
+                    if (!vendorResp.ok) throw new Error('Vendor hubs fetch failed: ' + vendorResp.status);
 
                     gbfsData = await gbfsResp.json();
                     c311Data = await c311Resp.json();
                     hubsData = await hubsResp.json();
+                    vendorHubsData = await vendorResp.json();
 
                     if (vendorResp.ok) {
                         vendorHubsData = await vendorResp.json();
