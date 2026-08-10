@@ -793,7 +793,7 @@
 
 
         // Initialize
-        window.addEventListener('DOMContentLoaded', async function() {
+        (async function() {
             try {
                 console.log('Page loaded, starting initialization...');
                 
@@ -898,7 +898,7 @@
                 document.getElementById('debugMessages').style.display = 'block';
                 document.getElementById('debugText').textContent = 'ERROR: ' + e.message;
             }
-        });
+        })();
 
 
     </script>
