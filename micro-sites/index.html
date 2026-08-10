@@ -44,27 +44,82 @@
             <p>Data sources: Columbus 311, GBFS operators (Veo, Spin), OpenStreetMap</p>
         </footer>
     </div>
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script>
         const neighborhoods = [
-            { slug: "bexley", name: "Bexley", description: "Eastern suburb", icon: "bexley", c311: 5, gbfs: 0 },
-            { slug: "dublin", name: "Dublin", description: "Northern suburb", icon: "dublin", c311: 1, gbfs: 0 },
-            { slug: "the-ohio-state-university", name: "The Ohio State University", description: "Campus area", icon: "the-ohio-state-university", c311: 0, gbfs: 0 },
-            { slug: "grandview-heights", name: "Grandview Heights", description: "Northern residential", icon: "grandview-heights", c311: 2, gbfs: 0 },
-            { slug: "marble-cliff", name: "Marble Cliff", description: "Upscale suburb", icon: "marble-cliff", c311: 0, gbfs: 0 },
-            { slug: "upper-arlington", name: "Upper Arlington", description: "Residential west", icon: "upper-arlington", c311: 1, gbfs: 0 },
-            { slug: "harrison-west", name: "Harrison West", description: "Mixed-use downtown", icon: "harrison-west", c311: 12, gbfs: 136 },
-            { slug: "short-north", name: "Short North", description: "Trendy urban", icon: "short-north", c311: 21, gbfs: 1093 },
-            { slug: "italian-village", name: "Italian Village", description: "Historic district", icon: "italian-village", c311: 58, gbfs: 852 },
-            { slug: "downtown", name: "Downtown", description: "Business district", icon: "downtown", c311: 21, gbfs: 1000 }
+            { slug: "bexley", name: "Bexley", description: "Eastern suburb", icon: "bexley" },
+            { slug: "dublin", name: "Dublin", description: "Northern suburb", icon: "dublin" },
+            { slug: "the-ohio-state-university", name: "The Ohio State University", description: "Campus area", icon: "the-ohio-state-university" },
+            { slug: "grandview-heights", name: "Grandview Heights", description: "Northern residential", icon: "grandview-heights" },
+            { slug: "marble-cliff", name: "Marble Cliff", description: "Upscale suburb", icon: "marble-cliff" },
+            { slug: "upper-arlington", name: "Upper Arlington", description: "Residential west", icon: "upper-arlington" },
+            { slug: "harrison-west", name: "Harrison West", description: "Mixed-use downtown", icon: "harrison-west" },
+            { slug: "short-north", name: "Short North", description: "Trendy urban", icon: "short-north" },
+            { slug: "italian-village", name: "Italian Village", description: "Historic district", icon: "italian-village" },
+            { slug: "downtown", name: "Downtown", description: "Business district", icon: "downtown" }
         ];
-        const container = document.getElementById('neighborhoods');
-        neighborhoods.forEach(n => {
-            const card = document.createElement('a');
-            card.href = n.slug + '/';
-            card.className = 'neighborhood-card';
-            card.innerHTML = `<img src="../assets/neighborhood-icons/${n.icon}.svg" alt="" class="card-icon"><div class="card-title">${n.name}</div><div class="card-description">${n.description}</div><div class="card-stats"><div class="stat"><div class="stat-label">311</div><div class="stat-value">${n.c311}</div></div><div class="stat"><div class="stat-label">Vehicles</div><div class="stat-value">${n.gbfs}</div></div></div>`;
-            container.appendChild(card);
-        });
+
+        function pointInPolygon(point, polygon) {
+            try {
+                return turf.booleanPointInPolygon(point, polygon);
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function loadAndDisplayNeighborhoods() {
+            try {
+                // Load data files
+                const [gbfsResponse, c311Response, hubsResponse] = await Promise.all([
+                    fetch('/columbus-micromobility-data/data-gbfs.json'),
+                    fetch('/columbus-micromobility-data/data-311.json'),
+                    fetch('/columbus-micromobility-data/data-ride-hubs.json')
+                ]);
+
+                const gbfsData = await gbfsResponse.json();
+                const c311Data = await c311Response.json();
+
+                // Load all neighborhood boundaries in parallel
+                const boundaryPromises = neighborhoods.map(n =>
+                    fetch(`${n.slug}/boundary.geojson`).then(r => r.json()).catch(() => null)
+                );
+                const boundaries = await Promise.all(boundaryPromises);
+
+                // Calculate counts for each neighborhood
+                const container = document.getElementById('neighborhoods');
+                neighborhoods.forEach((n, index) => {
+                    const boundary = boundaries[index];
+                    let c311Count = 0, gbfsCount = 0;
+
+                    if (boundary) {
+                        // Filter 311 requests
+                        c311Count = c311Data.records.filter(record => {
+                            const point = turf.point([record.longitude, record.latitude]);
+                            return pointInPolygon(point, boundary);
+                        }).length;
+
+                        // Filter vehicles
+                        gbfsData.vehicles.forEach(vehicle => {
+                            const point = turf.point([vehicle.lng, vehicle.lat]);
+                            if (pointInPolygon(point, boundary)) {
+                                gbfsCount++;
+                            }
+                        });
+                    }
+
+                    // Create card
+                    const card = document.createElement('a');
+                    card.href = n.slug + '/';
+                    card.className = 'neighborhood-card';
+                    card.innerHTML = `<img src="../assets/neighborhood-icons/${n.icon}.svg" alt="" class="card-icon"><div class="card-title">${n.name}</div><div class="card-description">${n.description}</div><div class="card-stats"><div class="stat"><div class="stat-label">311</div><div class="stat-value">${c311Count}</div></div><div class="stat"><div class="stat-label">Vehicles</div><div class="stat-value">${gbfsCount}</div></div></div>`;
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error('Error loading neighborhood data:', err);
+            }
+        }
+
+        loadAndDisplayNeighborhoods();
     </script>
 </body>
 </html>
