@@ -795,11 +795,17 @@
         }
 
         // Initialize map
-        const map = L.map('neighborhood-map').setView([39.96, -82.99], 14);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 19
-        }).addTo(map);
+        try {
+            const map = L.map('neighborhood-map').setView([39.96, -82.99], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+        } catch (mapError) {
+            document.getElementById('debugMessages').style.display = 'block';
+            document.getElementById('debugText').innerHTML = 'ERROR initializing map: ' + mapError.message + ' (Leaflet loaded: ' + (typeof L !== 'undefined' ? 'yes' : 'NO') + ')';
+            throw mapError;
+        }
 
         addDebugMessage('Page initialized, loading boundary...');
 
