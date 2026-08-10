@@ -312,9 +312,9 @@
 
             try {
                 const [gbfsResponse, c311Response, hubsResponse] = await Promise.all([
-                    fetch('/columbus-micromobility-data/data-gbfs.json'),
-                    fetch('/columbus-micromobility-data/data-311.json'),
-                    fetch('/columbus-micromobility-data/data-ride-hubs.json')
+                    fetch('../../data-gbfs.json'),
+                    fetch('../../data-311.json'),
+                    fetch('../../data-ride-hubs.json')
                 ]);
 
                 const gbfsData = await gbfsResponse.json();
