@@ -45,9 +45,19 @@
         }
 
         header {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--color-border);
             padding-bottom: 2rem;
+        }
+
+        .header-icon {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            opacity: 0.9;
         }
 
         header a {
@@ -167,9 +177,11 @@
     </style>
 </head>
 <body>
-    <div class="container">
         <header>
-            <a href="../">← All neighborhoods</a>
+            <img src="../../assets/neighborhood-icons/grandview-heights.svg" alt="Grandview Heights icon" class="header-icon">
+            <div>
+                <a href="../">← All neighborhoods</a>
+                <h1>Grandview Heights</h1>
             <h1>Grandview Heights</h1>
             <p class="description">Northern suburb with residential neighborhoods.</p>
         </header>

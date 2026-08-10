@@ -21,6 +21,7 @@
         .neighborhoods-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
         .neighborhood-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.2s ease; display: flex; flex-direction: column; }
         .neighborhood-card:hover { border-color: var(--color-accent-amber); box-shadow: 0 4px 12px rgba(250, 167, 26, 0.1); transform: translateY(-2px); }
+        .card-icon { width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.9; }
         .card-title { font-size: 1.25rem; font-weight: 600; color: var(--color-text); font-family: 'Newsreader', serif; }
         .card-description { font-size: 0.875rem; color: var(--color-text-secondary); line-height: 1.5; }
         .card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--color-border); }
@@ -45,23 +46,23 @@
     </div>
     <script>
         const neighborhoods = [
-            { slug: "bexley", name: "Bexley", description: "Eastern suburb", c311: 5, gbfs: 0 },
-            { slug: "dublin", name: "Dublin", description: "Northern suburb", c311: 1, gbfs: 0 },
-            { slug: "the-ohio-state-university", name: "The Ohio State University", description: "Campus area", c311: 0, gbfs: 0 },
-            { slug: "grandview-heights", name: "Grandview Heights", description: "Northern residential", c311: 2, gbfs: 0 },
-            { slug: "marble-cliff", name: "Marble Cliff", description: "Upscale suburb", c311: 0, gbfs: 0 },
-            { slug: "upper-arlington", name: "Upper Arlington", description: "Residential west", c311: 1, gbfs: 0 },
-            { slug: "harrison-west", name: "Harrison West", description: "Mixed-use downtown", c311: 12, gbfs: 136 },
-            { slug: "short-north", name: "Short North", description: "Trendy urban", c311: 21, gbfs: 1093 },
-            { slug: "italian-village", name: "Italian Village", description: "Historic district", c311: 58, gbfs: 852 },
-            { slug: "downtown", name: "Downtown", description: "Business district", c311: 21, gbfs: 1000 }
+            { slug: "bexley", name: "Bexley", description: "Eastern suburb", icon: "bexley", c311: 5, gbfs: 0 },
+            { slug: "dublin", name: "Dublin", description: "Northern suburb", icon: "dublin", c311: 1, gbfs: 0 },
+            { slug: "the-ohio-state-university", name: "The Ohio State University", description: "Campus area", icon: "the-ohio-state-university", c311: 0, gbfs: 0 },
+            { slug: "grandview-heights", name: "Grandview Heights", description: "Northern residential", icon: "grandview-heights", c311: 2, gbfs: 0 },
+            { slug: "marble-cliff", name: "Marble Cliff", description: "Upscale suburb", icon: "marble-cliff", c311: 0, gbfs: 0 },
+            { slug: "upper-arlington", name: "Upper Arlington", description: "Residential west", icon: "upper-arlington", c311: 1, gbfs: 0 },
+            { slug: "harrison-west", name: "Harrison West", description: "Mixed-use downtown", icon: "harrison-west", c311: 12, gbfs: 136 },
+            { slug: "short-north", name: "Short North", description: "Trendy urban", icon: "short-north", c311: 21, gbfs: 1093 },
+            { slug: "italian-village", name: "Italian Village", description: "Historic district", icon: "italian-village", c311: 58, gbfs: 852 },
+            { slug: "downtown", name: "Downtown", description: "Business district", icon: "downtown", c311: 21, gbfs: 1000 }
         ];
         const container = document.getElementById('neighborhoods');
         neighborhoods.forEach(n => {
             const card = document.createElement('a');
             card.href = n.slug + '/';
             card.className = 'neighborhood-card';
-            card.innerHTML = `<div class="card-title">${n.name}</div><div class="card-description">${n.description}</div><div class="card-stats"><div class="stat"><div class="stat-label">311</div><div class="stat-value">${n.c311}</div></div><div class="stat"><div class="stat-label">Vehicles</div><div class="stat-value">${n.gbfs}</div></div></div>`;
+            card.innerHTML = `<img src="../assets/neighborhood-icons/${n.icon}.svg" alt="" class="card-icon"><div class="card-title">${n.name}</div><div class="card-description">${n.description}</div><div class="card-stats"><div class="stat"><div class="stat-label">311</div><div class="stat-value">${n.c311}</div></div><div class="stat"><div class="stat-label">Vehicles</div><div class="stat-value">${n.gbfs}</div></div></div>`;
             container.appendChild(card);
         });
     </script>

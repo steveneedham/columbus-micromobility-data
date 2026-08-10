@@ -48,6 +48,16 @@
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--color-border);
             padding-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .header-icon {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            opacity: 0.9;
         }
 
         header a {
@@ -169,9 +179,12 @@
 <body>
     <div class="container">
         <header>
-            <a href="../">← All neighborhoods</a>
-            <h1>Downtown</h1>
-            <p class="description">Columbus's central business and entertainment district.</p>
+            <img src="../../assets/neighborhood-icons/downtown.svg" alt="Downtown icon" class="header-icon">
+            <div>
+                <a href="../">← All neighborhoods</a>
+                <h1>Downtown</h1>
+                <p class="description">Columbus's central business and entertainment district.</p>
+            </div>
         </header>
 
         <div class="metrics">
