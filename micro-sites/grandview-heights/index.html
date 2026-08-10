@@ -398,7 +398,8 @@
                 const [gbfsResponse, c311Response, hubsResponse] = await Promise.all([
                     fetch('/columbus-micromobility-data/data-gbfs.json'),
                     fetch('/columbus-micromobility-data/data-311.json'),
-                    fetch('/columbus-micromobility-data/data-ride-hubs.json')
+                    fetch('/columbus-micromobility-data/data-ride-hubs.json'),
+                        fetch('/columbus-micromobility-data/data-vendor-hubs.json')
                 ]);
 
                 const gbfsData = await gbfsResponse.json();
@@ -815,12 +816,13 @@
                 }
                 
                 // Try to load data files
-                let gbfsData = null, c311Data = null, hubsData = null;
+                let gbfsData = null, c311Data = null, hubsData = null, vendorHubsData = null;
                 try {
-                    const [gbfsResp, c311Resp, hubsResp] = await Promise.all([
+                    const [gbfsResp, c311Resp, hubsResp, vendorResp] = await Promise.all([
                         fetch('/columbus-micromobility-data/data-gbfs.json'),
                         fetch('/columbus-micromobility-data/data-311.json'),
-                        fetch('/columbus-micromobility-data/data-ride-hubs.json')
+                        fetch('/columbus-micromobility-data/data-ride-hubs.json'),
+                        fetch('/columbus-micromobility-data/data-vendor-hubs.json')
                     ]);
                     
                     if (!gbfsResp.ok) throw new Error('GBFS fetch failed: ' + gbfsResp.status);
