@@ -796,6 +796,8 @@
 
 
         // Initialize
+        document.getElementById('debugMessages').style.display = 'block';
+        document.getElementById('debugText').textContent = '⏳ Loading data...';
         (async function() {
             try {
                 console.log('Page loaded, starting initialization...');
@@ -895,6 +897,7 @@
                 `;
                 
                 console.log('Metrics updated:', {vehicleCount, c311Count, hubsCount});
+                document.getElementById('debugMessages').style.display = 'none';
                 
             } catch (e) {
                 console.error('Initialization error:', e);
