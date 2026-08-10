@@ -288,8 +288,10 @@
             return date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
-        function pointInPolygon(point, polygon) {
+        function pointInPolygon(point, boundaryGeoJSON) {
             try {
+                const polygon = boundaryGeoJSON.features[0];
+                const polygon = boundaryGeoJSON.features[0];
                 return turf.booleanPointInPolygon(point, polygon);
             } catch (e) {
                 return false;
