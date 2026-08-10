@@ -325,29 +325,71 @@
                 const c311Data = await c311Response.json();
                 const hubsData = await hubsResponse.json();
 
-                // Filter vehicles by boundary
+                // Filter and display vehicles by boundary
                 const vehiclesByOperator = { Veo: 0, Spin: 0 };
+                const vehiclesInBoundary = [];
                 gbfsData.vehicles.forEach(vehicle => {
                     const point = turf.point([vehicle.lng, vehicle.lat]);
                     if (pointInPolygon(point, boundaryGeoJSON)) {
                         vehiclesByOperator[vehicle.company] = (vehiclesByOperator[vehicle.company] || 0) + 1;
+                        vehiclesInBoundary.push(vehicle);
+
+                        // Add marker to map
+                        const color = vehicle.company === 'Veo' ? '#00bfa5' : '#ff8c42';
+                        L.circleMarker([vehicle.lat, vehicle.lng], {
+                            radius: 6,
+                            fillColor: color,
+                            color: color,
+                            weight: 2,
+                            opacity: 0.8,
+                            fillOpacity: 0.7
+                        }).bindPopup(`<strong>${vehicle.company}</strong><br>ID: ${vehicle.vehicle_id}<br>Type: ${vehicle.vehicle_type || 'unknown'}`).addTo(map);
                     }
                 });
 
-                // Filter 311 requests by boundary
-                const c311Count = c311Data.records.filter(record => {
+                // Filter and display 311 requests by boundary
+                const c311RequestsInBoundary = [];
+                c311Data.records.forEach(record => {
                     const point = turf.point([record.longitude, record.latitude]);
-                    return pointInPolygon(point, boundaryGeoJSON);
-                }).length;
+                    if (pointInPolygon(point, boundaryGeoJSON)) {
+                        c311RequestsInBoundary.push(record);
 
-                // Filter ride hubs by boundary
-                const hubsCount = hubsData.features.filter(hub => {
+                        // Add marker to map
+                        const priorityColor = record.priority === 'High' ? '#d32f2f' : record.priority === 'Medium' ? '#f57c00' : '#fbc02d';
+                        L.circleMarker([record.latitude, record.longitude], {
+                            radius: 5,
+                            fillColor: priorityColor,
+                            color: priorityColor,
+                            weight: 1,
+                            opacity: 0.6,
+                            fillOpacity: 0.5
+                        }).bindPopup(`<strong>311 Request</strong><br>Priority: ${record.priority || 'unknown'}<br>Type: ${record.complaint_type || 'unknown'}<br>Status: ${record.status || 'unknown'}`).addTo(map);
+                    }
+                });
+
+                // Filter and display ride hubs by boundary
+                const hubsInBoundary = [];
+                hubsData.features.forEach(hub => {
                     const point = turf.point([hub.geometry.coordinates[0], hub.geometry.coordinates[1]]);
-                    return pointInPolygon(point, boundaryGeoJSON);
-                }).length;
+                    if (pointInPolygon(point, boundaryGeoJSON)) {
+                        hubsInBoundary.push(hub);
+
+                        // Add marker to map
+                        L.circleMarker([hub.geometry.coordinates[1], hub.geometry.coordinates[0]], {
+                            radius: 8,
+                            fillColor: '#9c27b0',
+                            color: '#9c27b0',
+                            weight: 2,
+                            opacity: 0.8,
+                            fillOpacity: 0.6
+                        }).bindPopup(`<strong>CBUS Ride Hub</strong><br>Name: ${hub.properties.name || 'unknown'}<br>Capacity: ${hub.properties.capacity || 'unknown'}<br>Bikes: ${hub.properties.bikes || 'unknown'}`).addTo(map);
+                    }
+                });
 
                 // Update metrics
                 const totalVehicles = vehiclesByOperator.Veo + vehiclesByOperator.Spin;
+                const c311Count = c311RequestsInBoundary.length;
+                const hubsCount = hubsInBoundary.length;
                 updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at, c311Data.fetched_at);
 
             } catch (err) {
