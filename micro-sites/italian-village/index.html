@@ -280,6 +280,12 @@
             <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 1rem;">Predictions based on current trends and historical patterns</p>
         </div>
 
+        <div class="movement-section" id="movementSection" style="display: none;">
+            <h2>⚙️ Operator Activity</h2>
+            <div class="movement-grid" id="movementContainer"></div>
+            <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 1rem;">Vehicle movement and rebalancing intensity based on density and time patterns</p>
+        </div>
+
         <div class="info-section">
             <h2>Data Sources</h2>
             <p><strong>311 Data:</strong> Columbus 311 Service Request public map (City of Columbus system only; Dublin and Grandview have separate 311 systems not yet integrated) (updated <span id="lastUpdated311">—</span>)</p>
@@ -419,20 +425,20 @@
             const metricsContainer = document.getElementById('metricsContainer');
             const { area, density } = calculateDensity(boundaryGeoJSON, totalVehicles);
             metricsContainer.innerHTML = `
-                <div class="metric-card">
+                <div class="metric-card tooltip-trigger" data-tooltip="City complaints and service requests related to micromobility in this neighborhood (parking, safety, accessibility)">
                     <div class="metric-label">311 Requests</div>
                     <div class="metric-value">${c311Count}</div>
                 </div>
-                <div class="metric-card">
+                <div class="metric-card tooltip-trigger" data-tooltip="Live count of scooters from Veo and Spin operators currently in this neighborhood">
                     <div class="metric-label">Active Vehicles</div>
                     <div class="metric-value">${totalVehicles}</div>
                 </div>
-                <div class="metric-card">
+                <div class="metric-card tooltip-trigger" data-tooltip="Number of vehicles per square mile in this neighborhood - higher density indicates more concentrated scooter supply">
                     <div class="metric-label">Vehicle Density</div>
                     <div class="metric-value">${density}</div>
                     <div class="metric-loading">per sq mi</div>
                 </div>
-                <div class="metric-card">
+                <div class="metric-card tooltip-trigger" data-tooltip="CBUS Ride bike-share stations where residents can rent/return bicycles within this neighborhood boundary">
                     <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
                     <div class="metric-value">${hubsCount}</div>
                 </div>
@@ -473,7 +479,9 @@
             document.getElementById('interventionsSection').style.display = 'block';
             generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
             document.getElementById('forecastSection').style.display = 'block';
+            document.getElementById('movementSection').style.display = 'block';
             generateForecast(c311Count, totalVehicles, hubsCount);
+            generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
 }
 
 
@@ -609,7 +617,7 @@
 
             // Render interventions
             interventionsContainer.innerHTML = interventions.map(int => `
-                <div class="intervention-item">
+                <div class="intervention-item tooltip-trigger" data-tooltip="Recommended action: ${int.desc}">
                     <strong>${int.title}</strong>
                     <p>${int.desc}</p>
                 </div>
@@ -663,6 +671,66 @@
                     <div class="forecast-note">Confidence: ${f.confidence}<br>${f.trend}</div>
                 </div>
             `).join('');
+        }
+
+
+        function analyzeMovement(c311Count, totalVehicles, hubsCount, area) {
+            // Movement analysis based on density patterns and time of day
+            const now = new Date();
+            const hours = now.getHours();
+            const dayOfWeek = now.getDay();
+
+            // Peak hours: 8-10am, 12-1pm, 5-7pm (commute and lunch)
+            const isPeakHour = (hours >= 8 && hours <= 10) || (hours >= 12 && hours <= 13) || (hours >= 17 && hours <= 19);
+
+            // Estimate vehicle turnover/movement
+            let movementIntensity = 'Low';
+            let movementColor = 'trend-down';
+            let movementArrow = '→';
+            let movementDesc = 'Minimal rebalancing activity';
+
+            if (totalVehicles > 0) {
+                // Higher density + peak hours = high movement
+                const density = area > 0 ? totalVehicles / area : totalVehicles;
+
+                if (isPeakHour && density > 5) {
+                    movementIntensity = 'High';
+                    movementColor = 'trend-up';
+                    movementArrow = '↑';
+                    movementDesc = 'Active rebalancing during peak demand';
+                } else if (isPeakHour || density > 3) {
+                    movementIntensity = 'Medium';
+                    movementColor = 'trend-stable';
+                    movementArrow = '→';
+                    movementDesc = 'Moderate operator activity';
+                } else if (hours >= 22 || hours <= 6) {
+                    movementIntensity = 'Maintenance';
+                    movementColor = 'trend-stable';
+                    movementArrow = '🔧';
+                    movementDesc = 'Off-peak maintenance and repositioning';
+                }
+            }
+
+            return {
+                intensity: movementIntensity,
+                color: movementColor,
+                arrow: movementArrow,
+                description: movementDesc
+            };
+        }
+
+        function generateMovementInsights(c311Count, totalVehicles, hubsCount, area) {
+            const movementContainer = document.getElementById('movementContainer');
+            const movement = analyzeMovement(c311Count, totalVehicles, hubsCount, area);
+
+            movementContainer.innerHTML = `
+                <div class="movement-card">
+                    <div class="movement-intensity ${movement.color}">${movement.arrow}</div>
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">Activity Level</div>
+                    <div style="font-size: 1.5rem; font-weight: 600; color: var(--color-accent-amber); margin-bottom: 0.5rem;">${movement.intensity}</div>
+                    <div class="movement-desc">${movement.description}</div>
+                </div>
+            `;
         }
 
         // Initialize map
