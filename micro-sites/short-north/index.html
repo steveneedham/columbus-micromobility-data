@@ -232,7 +232,7 @@
                 <div class="metric-value metric-loading">—</div>
             </div>
             <div class="metric-card">
-                <div class="metric-label">Ride Hubs</div>
+                <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
                 <div class="metric-value metric-loading">—</div>
             </div>
         </div>
@@ -256,8 +256,8 @@
                     Live counts from GBFS feeds (Veo and Spin operators)
                 </div>
                 <div class="location-detail">
-                    <strong>Ride Hubs</strong><br>
-                    CoGo Bikeshare stations within this neighborhood boundary
+                    <strong>CBUS Ride Hubs</strong><br>
+                    CBUS Ride bike-share stations within this neighborhood boundary
                 </div>
             </div>
         </div>
@@ -266,7 +266,7 @@
             <h2>Data Sources</h2>
             <p><strong>311 Data:</strong> Columbus 311 Service Request public map (updated <span id="lastUpdated311">—</span>)</p>
             <p><strong>Vehicle Data:</strong> GBFS feeds from Veo and Spin (updated <span id="lastUpdatedGBFS">—</span>)</p>
-            <p><strong>Ride Hubs:</strong> City of Columbus CoGo Bikeshare locations</p>
+            <p><strong>CBUS Ride Hubs:</strong> City of Columbus CBUS Ride bike-share locations</p>
             <p><strong>Geography:</strong> OpenStreetMap municipality and neighborhood boundaries</p>
         </div>
 
@@ -312,9 +312,9 @@
 
             try {
                 const [gbfsResponse, c311Response, hubsResponse] = await Promise.all([
-                    fetch('../../data-gbfs.json'),
-                    fetch('../../data-311.json'),
-                    fetch('../../data-ride-hubs.json')
+                    fetch('/columbus-micromobility-data/data-gbfs.json'),
+                    fetch('/columbus-micromobility-data/data-311.json'),
+                    fetch('/columbus-micromobility-data/data-ride-hubs.json')
                 ]);
 
                 const gbfsData = await gbfsResponse.json();
@@ -363,14 +363,14 @@
                     <div class="metric-value">${totalVehicles}</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-label">Ride Hubs</div>
+                    <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
                     <div class="metric-value">${hubsCount}</div>
                 </div>
             `;
 
             // Update data section
             const dataSummary = document.getElementById('dataSummary');
-            dataSummary.innerHTML = `This neighborhood has <strong>${c311Count} 311 service request${c311Count !== 1 ? 's' : ''}</strong>, <strong>${totalVehicles} active vehicle${totalVehicles !== 1 ? 's' : ''}</strong> from Veo and Spin, and <strong>${hubsCount} Ride Hub${hubsCount !== 1 ? 's' : ''}</strong> inside this boundary.`;
+            dataSummary.innerHTML = `This neighborhood has <strong>${c311Count} 311 service request${c311Count !== 1 ? 's' : ''}</strong>, <strong>${totalVehicles} active vehicle${totalVehicles !== 1 ? 's' : ''}</strong> from Veo and Spin, and <strong>${hubsCount} CBUS Ride Hub${hubsCount !== 1 ? 's' : ''}</strong> inside this boundary.`;
 
             // Update vehicle breakdown
             const vehicleBreakdown = document.getElementById('vehicleBreakdown');
