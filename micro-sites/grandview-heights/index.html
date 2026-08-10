@@ -622,7 +622,7 @@
 
             // Render interventions
             interventionsContainer.innerHTML = interventions.map(int => `
-                <div class="intervention-item">
+                <div class="intervention-item tooltip-trigger" data-tooltip="Recommended action: ${int.desc}">
                     <strong>${int.title}</strong>
                     <p>${int.desc}</p>
                 </div>
