@@ -504,7 +504,6 @@
             dataSummary.innerHTML = `This neighborhood has <strong>${c311Count} 311 service request${c311Count !== 1 ? 's' : ''}</strong>, <strong>${totalVehicles} active vehicle${totalVehicles !== 1 ? 's' : ''}</strong> from Veo and Spin, and <strong>${hubsCount} CBUS Ride Hub${hubsCount !== 1 ? 's' : ''}</strong> inside this boundary.`;
 
             // Update vehicle breakdown with density
-            const { area, density } = calculateDensity(boundaryGeoJSON, totalVehicles);
             const vehicleBreakdown = document.getElementById('vehicleBreakdown');
             
             // Calculate density per operator
