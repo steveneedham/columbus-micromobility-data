@@ -59,8 +59,10 @@
             { slug: "downtown", name: "Downtown", description: "Business district", icon: "downtown" }
         ];
 
-        function pointInPolygon(point, polygon) {
+        function pointInPolygon(point, boundaryGeoJSON) {
             try {
+                if (!boundaryGeoJSON || !boundaryGeoJSON.features) return false;
+                const polygon = boundaryGeoJSON.features[0];
                 return turf.booleanPointInPolygon(point, polygon);
             } catch (e) {
                 return false;
