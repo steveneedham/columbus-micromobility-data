@@ -312,14 +312,55 @@
             return date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
+        function raycastingPointInPolygon(lng, lat, polygonCoords) {
+            // Fallback ray-casting algorithm if Turf.js unavailable
+            let inside = false;
+            for (let i = 0, j = polygonCoords.length - 1; i < polygonCoords.length; j = i++) {
+                const xi = polygonCoords[i][0], yi = polygonCoords[i][1];
+                const xj = polygonCoords[j][0], yj = polygonCoords[j][1];
+                const intersect = ((yi > lat) !== (yj > lat))
+                    && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+                if (intersect) inside = !inside;
+            }
+            return inside;
+        }
+
         function pointInPolygon(point, boundaryGeoJSON) {
             try {
                 if (!boundaryGeoJSON || !boundaryGeoJSON.features || boundaryGeoJSON.features.length === 0) {
                     return false;
                 }
                 const feature = boundaryGeoJSON.features[0];
-                return turf.booleanPointInPolygon(point, feature.geometry || feature);
+
+                // Try turf.js first, fallback to ray-casting
+                if (typeof turf !== 'undefined' && turf.booleanPointInPolygon) {
+                    return turf.booleanPointInPolygon(point, feature.geometry || feature);
+                }
+
+                // Fallback: use ray-casting algorithm
+                const [lng, lat] = point.coordinates;
+                const geometry = feature.geometry || feature;
+                if (geometry.type === 'Polygon') {
+                    return raycastingPointInPolygon(lng, lat, geometry.coordinates[0]);
+                } else if (geometry.type === 'MultiPolygon') {
+                    // Check if point is in any of the polygons
+                    return geometry.coordinates.some(polygon =>
+                        raycastingPointInPolygon(lng, lat, polygon[0])
+                    );
+                }
+                return false;
             } catch (e) {
+                // Last resort: if everything fails, use the fallback
+                try {
+                    const [lng, lat] = point.coordinates;
+                    const feature = boundaryGeoJSON.features[0];
+                    const geometry = feature.geometry || feature;
+                    if (geometry.type === 'Polygon') {
+                        return raycastingPointInPolygon(lng, lat, geometry.coordinates[0]);
+                    }
+                } catch (e2) {
+                    console.error('Point in polygon error:', e2);
+                }
                 return false;
             }
         }
