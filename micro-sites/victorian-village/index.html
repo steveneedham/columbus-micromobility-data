@@ -390,7 +390,7 @@
             }
 
             try {
-                const [gbfsResponse, c311Response, hubsResponse] = await Promise.all([
+                const [gbfsResponse, c311Response, hubsResponse, vendorHubsResponse] = await Promise.all([
                     fetch('/columbus-micromobility-data/data-gbfs.json'),
                     fetch('/columbus-micromobility-data/data-311.json'),
                     fetch('/columbus-micromobility-data/data-ride-hubs.json'),
@@ -400,6 +400,7 @@
                 const gbfsData = await gbfsResponse.json();
                 const c311Data = await c311Response.json();
                 const hubsData = await hubsResponse.json();
+                const vendorHubsData = await vendorHubsResponse.json();
 
                 // Filter and display vehicles by boundary
                 const vehiclesByOperator = { Veo: 0, Spin: 0 };
