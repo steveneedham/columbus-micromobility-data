@@ -235,6 +235,10 @@
                 <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
                 <div class="metric-value metric-loading">—</div>
             </div>
+        
+        <div id="debugMessages" style="display: none; background: #fee; padding: 1rem; border: 1px solid #f00; border-radius: 4px; margin: 1rem 0; font-size: 0.875rem; color: #333;">
+            <strong style="color: #c00;">Debug Info:</strong>
+            <div id="debugText"></div>
         </div>
 
         <div class="map-section">
@@ -377,12 +381,18 @@
                 return boundaryGeoJSON;
             } catch (err) {
                 console.error('Failed to load boundary:', err);
+                document.getElementById('debugMessages').style.display = 'block';
+                document.getElementById('debugText').innerHTML = 'ERROR loading boundary: ' + err.message;
                 return null;
             }
         }
 
         async function loadAndFilterData() {
-            if (!boundaryGeoJSON) return;
+            if (!boundaryGeoJSON) {
+                document.getElementById('debugMessages').style.display = 'block';
+                document.getElementById('debugText').innerHTML = 'ERROR: Boundary not loaded';
+                return;
+            }
 
             try {
                 const [gbfsResponse, c311Response, hubsResponse] = await Promise.all([
@@ -464,6 +474,8 @@
 
             } catch (err) {
                 console.error('Error loading data:', err);
+                document.getElementById('debugMessages').style.display = 'block';
+                document.getElementById('debugText').innerHTML = 'ERROR loading data: ' + err.message;
             }
         }
 
@@ -786,9 +798,21 @@
             maxZoom: 19
         }).addTo(map);
 
+
+        // Debug logging
+        function addDebugMessage(msg) {
+            const debugDiv = document.getElementById('debugMessages');
+            const debugText = document.getElementById('debugText');
+            debugDiv.style.display = 'block';
+            debugText.innerHTML += msg + '<br>';
+            console.log(msg);
+        }
+
         // Load boundary and data
+        addDebugMessage('Page initialized, loading boundary...');
         loadBoundary().then(() => {
             if (boundaryGeoJSON) {
+                addDebugMessage('Boundary loaded, loading and filtering data...');
                 L.geoJSON(boundaryGeoJSON, {
                     style: {
                         color: '#00bfa5',
