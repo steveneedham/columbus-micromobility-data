@@ -786,41 +786,116 @@
             `;
         }
 
-        // Initialize map
-        const map = L.map('neighborhood-map').setView([39.98, -83.01], 14);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 19
-        }).addTo(map);
 
-
-        // Debug logging
-        function addDebugMessage(msg) {
-            const debugDiv = document.getElementById('debugMessages');
-            const debugText = document.getElementById('debugText');
-            debugDiv.style.display = 'block';
-            debugText.innerHTML += msg + '<br>';
-            console.log(msg);
-        }
-
-        // Load boundary and data
-        addDebugMessage('Page initialized, loading boundary...');
-        loadBoundary().then(() => {
-            if (boundaryGeoJSON) {
-                addDebugMessage('Boundary loaded, loading and filtering data...');
-                L.geoJSON(boundaryGeoJSON, {
-                    style: {
-                        color: '#00bfa5',
-                        weight: 3,
-                        opacity: 0.7,
-                        fillColor: '#00bfa5',
-                        fillOpacity: 0.1
+        // Initialize
+        window.addEventListener('DOMContentLoaded', async function() {
+            try {
+                console.log('Page loaded, starting initialization...');
+                
+                // Try to load boundary
+                let boundaryGeoJSON = null;
+                try {
+                    const boundaryResp = await fetch('./boundary.geojson');
+                    if (!boundaryResp.ok) throw new Error('Boundary fetch failed: ' + boundaryResp.status);
+                    boundaryGeoJSON = await boundaryResp.json();
+                    console.log('Boundary loaded:', boundaryGeoJSON);
+                } catch (e) {
+                    console.error('Error loading boundary:', e);
+                    document.getElementById('debugMessages').style.display = 'block';
+                    document.getElementById('debugText').textContent = 'ERROR: Could not load boundary.geojson - ' + e.message;
+                    return;
+                }
+                
+                // Try to load data files
+                let gbfsData = null, c311Data = null, hubsData = null;
+                try {
+                    const [gbfsResp, c311Resp, hubsResp] = await Promise.all([
+                        fetch('/columbus-micromobility-data/data-gbfs.json'),
+                        fetch('/columbus-micromobility-data/data-311.json'),
+                        fetch('/columbus-micromobility-data/data-ride-hubs.json')
+                    ]);
+                    
+                    if (!gbfsResp.ok) throw new Error('GBFS fetch failed: ' + gbfsResp.status);
+                    if (!c311Resp.ok) throw new Error('311 fetch failed: ' + c311Resp.status);
+                    if (!hubsResp.ok) throw new Error('Hubs fetch failed: ' + hubsResp.status);
+                    
+                    gbfsData = await gbfsResp.json();
+                    c311Data = await c311Resp.json();
+                    hubsData = await hubsResp.json();
+                    
+                    console.log('Data loaded successfully');
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                    document.getElementById('debugMessages').style.display = 'block';
+                    document.getElementById('debugText').textContent = 'ERROR: Could not load data files - ' + e.message;
+                    return;
+                }
+                
+                // Simple ray-casting point-in-polygon
+                function pointInPolygon(lng, lat, polygon) {
+                    let inside = false;
+                    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+                        const xi = polygon[i][0], yi = polygon[i][1];
+                        const xj = polygon[j][0], yj = polygon[j][1];
+                        const intersect = ((yi > lat) !== (yj > lat))
+                            && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+                        if (intersect) inside = !inside;
                     }
-                }).addTo(map);
-                map.fitBounds(L.geoJSON(boundaryGeoJSON).getBounds());
-                loadAndFilterData();
+                    return inside;
+                }
+                
+                // Filter data
+                const polygon = boundaryGeoJSON.features[0].geometry.coordinates[0];
+                let vehicleCount = 0;
+                let c311Count = 0;
+                let hubsCount = 0;
+                
+                if (gbfsData.vehicles) {
+                    gbfsData.vehicles.forEach(v => {
+                        if (pointInPolygon(v.lng, v.lat, polygon)) vehicleCount++;
+                    });
+                }
+                
+                if (c311Data.records) {
+                    c311Data.records.forEach(r => {
+                        if (pointInPolygon(r.longitude, r.latitude, polygon)) c311Count++;
+                    });
+                }
+                
+                if (hubsData.features) {
+                    hubsData.features.forEach(h => {
+                        const [lng, lat] = h.geometry.coordinates;
+                        if (pointInPolygon(lng, lat, polygon)) hubsCount++;
+                    });
+                }
+                
+                // Update metrics
+                const metricsContainer = document.getElementById('metricsContainer');
+                metricsContainer.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-label">311 Requests</div>
+                        <div class="metric-value">${c311Count}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Active Vehicles</div>
+                        <div class="metric-value">${vehicleCount}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
+                        <div class="metric-value">${hubsCount}</div>
+                    </div>
+                `;
+                
+                console.log('Metrics updated:', {vehicleCount, c311Count, hubsCount});
+                
+            } catch (e) {
+                console.error('Initialization error:', e);
+                document.getElementById('debugMessages').style.display = 'block';
+                document.getElementById('debugText').textContent = 'ERROR: ' + e.message;
             }
         });
+
+
     </script>
 
 </body>
