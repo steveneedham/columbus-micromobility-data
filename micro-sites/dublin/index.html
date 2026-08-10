@@ -267,6 +267,17 @@
             </div>
         </div>
 
+        
+        <div class="trend-section" id="trendsSection" style="display: none;">
+            <h2>Trends & Insights</h2>
+            <div class="insights-grid" id="insightsContainer"></div>
+        </div>
+
+        <div class="interventions-section" id="interventionsSection" style="display: none;">
+            <h2>Suggested Interventions</h2>
+            <div class="interventions-list" id="interventionsContainer"></div>
+        </div>
+
         <div class="info-section">
             <h2>Data Sources</h2>
             <p><strong>311 Data:</strong> Columbus 311 Service Request public map (City of Columbus system only; Dublin and Grandview have separate 311 systems not yet integrated) (updated <span id="lastUpdated311">—</span>)</p>
@@ -439,6 +450,128 @@
             document.getElementById('dataSection').style.display = 'block';
             document.getElementById('lastUpdatedGBFS').textContent = formatDate(gbfsFetchedAt);
             document.getElementById('lastUpdated311').textContent = formatDate(c311FetchedAt);
+        
+            document.getElementById('trendsSection').style.display = 'block';
+            document.getElementById('interventionsSection').style.display = 'block';
+            generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
+}
+
+        function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount) {
+            const insightsContainer = document.getElementById('insightsContainer');
+            const interventionsContainer = document.getElementById('interventionsContainer');
+
+            const insights = [];
+            const interventions = [];
+
+            // Thresholds for trends
+            const highThreshold311 = 30;
+            const mediumThreshold311 = 15;
+            const lowThresholdVehicles = 10;
+            const mediumThresholdVehicles = 30;
+
+            // 311 Requests Trend
+            let trend311 = 'stable';
+            let color311 = 'trend-stable';
+            let arrow311 = '→';
+            if (c311Count > highThreshold311) {
+                trend311 = 'high';
+                color311 = 'trend-up';
+                arrow311 = '↑';
+                interventions.push({
+                    title: 'High 311 Requests',
+                    desc: 'Consider targeted enforcement or infrastructure improvements to address common complaints'
+                });
+            } else if (c311Count < mediumThreshold311 && c311Count > 0) {
+                trend311 = 'low';
+                color311 = 'trend-down';
+                arrow311 = '↓';
+            }
+
+            insights.push({
+                metric: '311 Requests',
+                trend: `${arrow311} ${trend311.charAt(0).toUpperCase() + trend311.slice(1)}`,
+                color: color311,
+                insight: c311Count > 0 ? `${c311Count} active service requests need attention` : 'No active requests'
+            });
+
+            // Vehicle Availability Trend
+            let trendVehicles = 'stable';
+            let colorVehicles = 'trend-stable';
+            let arrowVehicles = '→';
+            if (totalVehicles < lowThresholdVehicles && totalVehicles > 0) {
+                trendVehicles = 'low';
+                colorVehicles = 'trend-down';
+                arrowVehicles = '↓';
+                interventions.push({
+                    title: 'Low Vehicle Availability',
+                    desc: 'Work with operators to increase fleet size or rebalancing frequency'
+                });
+            } else if (totalVehicles > mediumThresholdVehicles) {
+                trendVehicles = 'high';
+                colorVehicles = 'trend-up';
+                arrowVehicles = '↑';
+                interventions.push({
+                    title: 'High Vehicle Concentration',
+                    desc: 'Monitor for parking violations and ensure adequate parking infrastructure'
+                });
+            }
+
+            insights.push({
+                metric: 'Active Vehicles',
+                trend: `${arrowVehicles} ${trendVehicles.charAt(0).toUpperCase() + trendVehicles.slice(1)}`,
+                color: colorVehicles,
+                insight: totalVehicles > 0 ? `${totalVehicles} vehicles available for riders` : 'No available vehicles'
+            });
+
+            // Ride Hubs Trend
+            let trendHubs = 'stable';
+            let colorHubs = 'trend-stable';
+            let arrowHubs = '→';
+            if (hubsCount === 0) {
+                trendHubs = 'absent';
+                colorHubs = 'trend-down';
+                arrowHubs = '✗';
+                interventions.push({
+                    title: 'No CBUS Ride Hubs',
+                    desc: 'Work with CBUS to establish bike-share stations in this neighborhood'
+                });
+            } else if (hubsCount > 2) {
+                trendHubs = 'strong';
+                colorHubs = 'trend-up';
+                arrowHubs = '↑';
+            }
+
+            insights.push({
+                metric: 'CBUS Ride Hubs',
+                trend: `${arrowHubs} ${trendHubs.charAt(0).toUpperCase() + trendHubs.slice(1)}`,
+                color: colorHubs,
+                insight: hubsCount > 0 ? `${hubsCount} bike-share station${hubsCount !== 1 ? 's' : ''} available` : 'None available'
+            });
+
+            // Add default interventions if none exist
+            if (interventions.length === 0) {
+                interventions.push({
+                    title: 'Monitor & Maintain',
+                    desc: 'Continue monitoring micromobility trends and maintain current infrastructure'
+                });
+            }
+
+            // Render insights
+            insightsContainer.innerHTML = insights.map(i => `
+                <div class="insight-card">
+                    <div class="insight-trend ${i.color}">${i.trend}</div>
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">${i.metric}</div>
+                    <div class="insight-text">${i.insight}</div>
+                </div>
+            `).join('');
+
+            // Render interventions
+            interventionsContainer.innerHTML = interventions.map(int => `
+                <div class="intervention-item">
+                    <strong>${int.title}</strong>
+                    <p>${int.desc}</p>
+                </div>
+            `).join('');
         }
 
         // Initialize map
