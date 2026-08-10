@@ -430,20 +430,20 @@
             const metricsContainer = document.getElementById('metricsContainer');
             const { area, density } = calculateDensity(boundaryGeoJSON, totalVehicles);
             metricsContainer.innerHTML = `
-                <div class="metric-card">
+                <div class="metric-card tooltip-trigger" data-tooltip="City complaints and service requests related to micromobility in this neighborhood (parking, safety, accessibility)">
                     <div class="metric-label">311 Requests</div>
                     <div class="metric-value">${c311Count}</div>
                 </div>
-                <div class="metric-card">
+                <div class="metric-card tooltip-trigger" data-tooltip="Live count of scooters from Veo and Spin operators currently in this neighborhood">
                     <div class="metric-label">Active Vehicles</div>
                     <div class="metric-value">${totalVehicles}</div>
                 </div>
-                <div class="metric-card">
+                <div class="metric-card tooltip-trigger" data-tooltip="Number of vehicles per square mile in this neighborhood - higher density indicates more concentrated scooter supply">
                     <div class="metric-label">Vehicle Density</div>
                     <div class="metric-value">${density}</div>
                     <div class="metric-loading">per sq mi</div>
                 </div>
-                <div class="metric-card">
+                <div class="metric-card tooltip-trigger" data-tooltip="CBUS Ride bike-share stations where residents can rent/return bicycles within this neighborhood boundary">
                     <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
                     <div class="metric-value">${hubsCount}</div>
                 </div>
@@ -622,7 +622,7 @@
 
             // Render interventions
             interventionsContainer.innerHTML = interventions.map(int => `
-                <div class="intervention-item">
+                <div class="intervention-item tooltip-trigger" data-tooltip="Recommended action: ${int.desc}">
                     <strong>${int.title}</strong>
                     <p>${int.desc}</p>
                 </div>
