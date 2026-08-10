@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marble Cliff — Columbus Micromobility Data</title>
-    <meta name="description" content="Neighborhood data: Upscale residential suburb north of downtown.">
+    <meta name="description" content="Live neighborhood data: Upscale residential suburb north of downtown.">
     <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/marble-cliff/">
     <link rel="icon" type="image/svg+xml" href="../../assets/field-ledger-mark.svg">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -45,12 +45,12 @@
         }
 
         header {
-            display: flex;
-            align-items: flex-start;
-            gap: 2rem;
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--color-border);
             padding-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
         }
 
         .header-icon {
@@ -109,6 +109,11 @@
             font-family: 'IBM Plex Mono', monospace;
         }
 
+        .metric-loading {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
         .info-section {
             margin: 2rem 0;
             padding: 1.5rem;
@@ -141,6 +146,36 @@
             background: rgba(250, 167, 26, 0.1);
             border-left: 3px solid var(--color-accent-amber);
             border-radius: 4px;
+        }
+
+        .vehicle-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .vehicle-operator {
+            padding: 1rem;
+            background: rgba(0, 191, 165, 0.05);
+            border-left: 3px solid var(--color-accent-teal);
+            border-radius: 4px;
+        }
+
+        .operator-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--color-accent-teal);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .operator-count {
+            font-size: 1.875rem;
+            font-weight: 600;
+            color: var(--color-accent-teal);
+            font-family: 'IBM Plex Mono', monospace;
         }
 
         footer {
@@ -177,34 +212,40 @@
     </style>
 </head>
 <body>
+    <div class="container">
         <header>
             <img src="../../assets/neighborhood-icons/marble-cliff.svg" alt="Marble Cliff icon" class="header-icon">
             <div>
                 <a href="../">← All neighborhoods</a>
                 <h1>Marble Cliff</h1>
-            <h1>Marble Cliff</h1>
-            <p class="description">Upscale residential suburb north of downtown.</p>
+                <p class="description">Upscale residential suburb north of downtown.</p>
+            </div>
         </header>
 
-        <div class="metrics">
+        <div class="metrics" id="metricsContainer">
             <div class="metric-card">
                 <div class="metric-label">311 Requests</div>
-                <div class="metric-value">0</div>
+                <div class="metric-value metric-loading">—</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Active Vehicles</div>
-                <div class="metric-value">0</div>
+                <div class="metric-value metric-loading">—</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Ride Hubs</div>
+                <div class="metric-value metric-loading">—</div>
             </div>
         </div>
 
-            <div class="map-section">
-        <h2>Neighborhood Boundary</h2>
-        <div id="neighborhood-map"></div>
-    </div>
+        <div class="map-section">
+            <h2>Neighborhood Boundary</h2>
+            <div id="neighborhood-map"></div>
+        </div>
 
-<div class="info-section">
+        <div class="info-section" id="dataSection" style="display: none;">
             <h2>Neighborhood Data Summary</h2>
-            <p>This neighborhood has <strong>0 311 service requests</strong> related to shared electric bikes and scooters, and <strong>0 active vehicles</strong> currently tracked in the system.</p>
+            <p id="dataSummary"></p>
+            <div class="vehicle-breakdown" id="vehicleBreakdown"></div>
             <div class="location-info">
                 <div class="location-detail">
                     <strong>311 Service Requests</strong><br>
@@ -212,43 +253,154 @@
                 </div>
                 <div class="location-detail">
                     <strong>Active Vehicles</strong><br>
-                    Real-time or recent scooters and bikes from operators like Veo and Spin
+                    Live counts from GBFS feeds (Veo and Spin operators)
+                </div>
+                <div class="location-detail">
+                    <strong>Ride Hubs</strong><br>
+                    CoGo Bikeshare stations within this neighborhood boundary
                 </div>
             </div>
         </div>
 
-            <div class="map-section">
-        <h2>Neighborhood Boundary</h2>
-        <div id="neighborhood-map"></div>
-    </div>
-
-<div class="info-section">
+        <div class="info-section">
             <h2>Data Sources</h2>
-            <p><strong>311 Data:</strong> Columbus 311 Service Request public map</p>
-            <p><strong>Vehicle Data:</strong> GBFS feeds from Veo and Spin (public bike/scooter sharing feeds)</p>
+            <p><strong>311 Data:</strong> Columbus 311 Service Request public map (updated <span id="lastUpdated311">—</span>)</p>
+            <p><strong>Vehicle Data:</strong> GBFS feeds from Veo and Spin (updated <span id="lastUpdatedGBFS">—</span>)</p>
+            <p><strong>Ride Hubs:</strong> City of Columbus CoGo Bikeshare locations</p>
             <p><strong>Geography:</strong> OpenStreetMap municipality and neighborhood boundaries</p>
         </div>
 
         <footer>
-            <p>Last updated: 2026-08-09 19:14 UTC</p>
             <p><a href="../">Browse all neighborhoods →</a></p>
         </footer>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script>
-        // Initialize neighborhood boundary map
+        const NEIGHBORHOOD_NAME = 'Marble Cliff';
+        const NEIGHBORHOOD_SLUG = 'marble-cliff';
+        let boundaryGeoJSON = null;
+
+        function formatDate(isoString) {
+            if (!isoString) return 'unknown';
+            const date = new Date(isoString);
+            return date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function pointInPolygon(point, polygon) {
+            try {
+                return turf.booleanPointInPolygon(point, polygon);
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function loadBoundary() {
+            try {
+                const response = await fetch('./boundary.geojson');
+                boundaryGeoJSON = await response.json();
+                return boundaryGeoJSON;
+            } catch (err) {
+                console.error('Failed to load boundary:', err);
+                return null;
+            }
+        }
+
+        async function loadAndFilterData() {
+            if (!boundaryGeoJSON) return;
+
+            try {
+                const [gbfsResponse, c311Response, hubsResponse] = await Promise.all([
+                    fetch('../../data-gbfs.json'),
+                    fetch('../../data-311.json'),
+                    fetch('../../data-ride-hubs.json')
+                ]);
+
+                const gbfsData = await gbfsResponse.json();
+                const c311Data = await c311Response.json();
+                const hubsData = await hubsResponse.json();
+
+                // Filter vehicles by boundary
+                const vehiclesByOperator = { Veo: 0, Spin: 0 };
+                gbfsData.vehicles.forEach(vehicle => {
+                    const point = turf.point([vehicle.lng, vehicle.lat]);
+                    if (pointInPolygon(point, boundaryGeoJSON)) {
+                        vehiclesByOperator[vehicle.company] = (vehiclesByOperator[vehicle.company] || 0) + 1;
+                    }
+                });
+
+                // Filter 311 requests by boundary
+                const c311Count = c311Data.records.filter(record => {
+                    const point = turf.point([record.longitude, record.latitude]);
+                    return pointInPolygon(point, boundaryGeoJSON);
+                }).length;
+
+                // Filter ride hubs by boundary
+                const hubsCount = hubsData.features.filter(hub => {
+                    const point = turf.point([hub.geometry.coordinates[0], hub.geometry.coordinates[1]]);
+                    return pointInPolygon(point, boundaryGeoJSON);
+                }).length;
+
+                // Update metrics
+                const totalVehicles = vehiclesByOperator.Veo + vehiclesByOperator.Spin;
+                updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at, c311Data.fetched_at);
+
+            } catch (err) {
+                console.error('Error loading data:', err);
+            }
+        }
+
+        function updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsFetchedAt, c311FetchedAt) {
+            const metricsContainer = document.getElementById('metricsContainer');
+            metricsContainer.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-label">311 Requests</div>
+                    <div class="metric-value">${c311Count}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Active Vehicles</div>
+                    <div class="metric-value">${totalVehicles}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Ride Hubs</div>
+                    <div class="metric-value">${hubsCount}</div>
+                </div>
+            `;
+
+            // Update data section
+            const dataSummary = document.getElementById('dataSummary');
+            dataSummary.innerHTML = `This neighborhood has <strong>${c311Count} 311 service request${c311Count !== 1 ? 's' : ''}</strong>, <strong>${totalVehicles} active vehicle${totalVehicles !== 1 ? 's' : ''}</strong> from Veo and Spin, and <strong>${hubsCount} Ride Hub${hubsCount !== 1 ? 's' : ''}</strong> inside this boundary.`;
+
+            // Update vehicle breakdown
+            const vehicleBreakdown = document.getElementById('vehicleBreakdown');
+            vehicleBreakdown.innerHTML = `
+                <div class="vehicle-operator">
+                    <div class="operator-name">Veo</div>
+                    <div class="operator-count">${vehiclesByOperator.Veo || 0}</div>
+                </div>
+                <div class="vehicle-operator">
+                    <div class="operator-name">Spin</div>
+                    <div class="operator-count">${vehiclesByOperator.Spin || 0}</div>
+                </div>
+            `;
+
+            document.getElementById('dataSection').style.display = 'block';
+            document.getElementById('lastUpdatedGBFS').textContent = formatDate(gbfsFetchedAt);
+            document.getElementById('lastUpdated311').textContent = formatDate(c311FetchedAt);
+        }
+
+        // Initialize map
         const map = L.map('neighborhood-map').setView([39.96, -82.99], 14);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
         }).addTo(map);
 
-        // Load and display neighborhood boundary
-        fetch('./boundary.geojson')
-            .then(res => res.json())
-            .then(data => {
-                L.geoJSON(data, {
+        // Load boundary and data
+        loadBoundary().then(() => {
+            if (boundaryGeoJSON) {
+                L.geoJSON(boundaryGeoJSON, {
                     style: {
                         color: '#00bfa5',
                         weight: 3,
@@ -257,9 +409,10 @@
                         fillOpacity: 0.1
                     }
                 }).addTo(map);
-                map.fitBounds(L.geoJSON(data).getBounds());
-            })
-            .catch(err => console.error('Failed to load boundary:', err));
+                map.fitBounds(L.geoJSON(boundaryGeoJSON).getBounds());
+                loadAndFilterData();
+            }
+        });
     </script>
 
 </body>
