@@ -514,8 +514,8 @@
             // Calculate density per operator
             const veoCount = vehiclesByOperator.Veo || 0;
             const spinCount = vehiclesByOperator.Spin || 0;
-            const veoDensity = area > 0 ? (veoCount / area).toFixed(2) : 0;
-            const spinDensity = area > 0 ? (spinCount / area).toFixed(2) : 0;
+            const veoDensity = area && area > 0 ? (veoCount / area).toFixed(2) : 0;
+            const spinDensity = area && area > 0 ? (spinCount / area).toFixed(2) : 0;
             
             vehicleBreakdown.innerHTML = `
                 <div class="vehicle-operator">
