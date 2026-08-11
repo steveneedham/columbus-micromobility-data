@@ -273,6 +273,66 @@
             font-family: 'Newsreader', serif;
         }
 
+        .events-lede {
+            color: var(--color-text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .drivers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .driver-card {
+            padding: 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+        }
+
+        .driver-category {
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .driver-count {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-accent-amber);
+        }
+
+        .driver-meta {
+            font-size: 0.8125rem;
+            color: var(--color-text-secondary);
+            margin-top: 0.35rem;
+        }
+
+        .driver-share {
+            display: inline-block;
+            height: 4px;
+            margin-top: 0.6rem;
+            border-radius: 2px;
+            background: var(--color-accent-teal);
+            min-width: 2px;
+        }
+
+        .events-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .events-column-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
         .event-row {
             display: flex;
             flex-wrap: wrap;
@@ -314,6 +374,10 @@
         .event-status.status-scheduled { color: #1b7f3b; }
         .event-status.status-projected { color: #a17408; }
         .event-status.status-unconfirmed { color: #b3271b; }
+        /* Already happened: present but visibly settled, not competing with
+           the statuses that still carry uncertainty. */
+        .event-status.status-played { color: var(--color-text-secondary); }
+        .event-status.status-estimated { color: var(--color-text-secondary); }
 
         .events-note {
             font-size: 0.875rem;
@@ -612,7 +676,18 @@
 
         <div class="events-section" id="eventsSection" style="display: none;">
             <h2 id="eventsHeading">Events That Tend to Impact This Neighborhood</h2>
-            <div id="eventsList"></div>
+            <p class="events-lede" id="eventsLede"></p>
+            <div class="drivers-grid" id="eventsDrivers"></div>
+            <div class="events-columns">
+                <div>
+                    <h3 class="events-column-title">Recently</h3>
+                    <div id="eventsRecent"></div>
+                </div>
+                <div>
+                    <h3 class="events-column-title">Coming up</h3>
+                    <div id="eventsUpcoming"></div>
+                </div>
+            </div>
             <p class="events-note" id="eventsNote"></p>
         </div>
 
@@ -626,7 +701,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
-            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v14</p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v15</p>
         </footer>
     </div>
 
@@ -661,7 +736,7 @@
             interventionsSection: 'Actions raised automatically when a figure crosses a threshold, or when a ride hub has no vehicle within 100 m or more vehicles nearby than it has docks. Suggestions from the current snapshot, not instructions from the city.',
             forecastSection: `Straight-line projection. The requests recorded here in the last ${C311_WINDOW_DAYS} days give a per-day rate, carried forward over each horizon. The range is a 90% interval for a count arriving at that rate. Vehicles are a single live snapshot with no per-neighborhood history, so they are not projected.`,
             movementSection: 'Estimated rebalancing intensity, inferred from vehicle density and the time of day — peak hours are 8-10am, noon-1pm and 5-7pm. An estimate from one snapshot, not measured vehicle movement.',
-            eventsSection: 'Events at venues in or beside this neighborhood, which tend to drive trips through it. Cross-referenced by the venue area recorded in the source workbook, not by coordinate, so a venue just outside the boundary still counts. Status labels come from that workbook: scheduled entries are confirmed, projected and unconfirmed ones are not.',
+            eventsSection: 'The kinds of event that recur at venues in or beside this neighborhood and tend to drive trips through it, with what has just happened and what is coming. Counts, seasons and typical crowds come from events recorded since 2024. Cross-referenced by venue area rather than by coordinate, so a venue just outside the boundary still counts. Status labels come from the source workbook: scheduled entries are confirmed, projected and unconfirmed ones are not.',
             mapSection: 'Vehicles are circles coloured by operator, 311 requests are diamonds coloured by priority, red rings mark cross-vendor pile-ups, and ride hubs carry a badge counting the vehicles within 100 m.'
         };
 
@@ -862,38 +937,78 @@
                 if (!info || !info.recorded_total) return;
 
                 // The data file splits past from upcoming when it is generated, so
-                // re-filter here: the list stays correct as time passes even if the
+                // re-filter here: the lists stay correct as time passes even if the
                 // file has not been regenerated.
                 const todayISO = new Date().toISOString().slice(0, 10);
-                const upcoming = (info.upcoming || []).filter(event => event.date >= todayISO);
-                const list = document.getElementById('eventsList');
+                const upcoming = (info.upcoming || []).filter(e => e.date >= todayISO);
+                const recent = (info.recent || []).filter(e => e.date < todayISO);
+                const drivers = info.drivers || [];
 
-                if (upcoming.length) {
-                    list.innerHTML = upcoming.slice(0, 12).map(event => {
-                        const when = new Date(event.date + 'T12:00:00Z').toLocaleDateString('en-US',
-                            { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-                        const status = String(event.status || '').toLowerCase();
-                        const crowd = event.attendance
-                            ? ` &middot; ~${Number(event.attendance).toLocaleString()} attending`
+                const fmt = (iso, opts) => new Date(iso + 'T12:00:00Z')
+                    .toLocaleDateString('en-US', Object.assign({ timeZone: 'UTC' }, opts));
+
+                // What recurs here, ahead of any individual date.
+                const topShare = drivers.length ? drivers[0].share_pct : 0;
+                document.getElementById('eventsDrivers').innerHTML = drivers
+                    .filter(d => d.count > 1)
+                    .slice(0, 6)
+                    .map(d => {
+                        const num = n => Number(n).toLocaleString();
+                        // Attendance is only recorded for some rows, so say how many
+                        // it is based on rather than implying it covers all of them.
+                        const crowd = d.median_attendance
+                            ? `~${num(d.median_attendance)} typical &middot; ${num(d.total_attendance)} total attendees`
+                            : 'attendance not recorded';
+                        const basis = d.median_attendance && d.attendance_known < d.count
+                            ? ` (from ${d.attendance_known} of ${d.count})`
                             : '';
+                        const width = topShare ? Math.max(4, Math.round(100 * d.share_pct / topShare)) : 0;
                         return `
-                            <div class="event-row">
-                                <span class="event-date">${when}</span>
-                                <span class="event-name">${event.event}</span>
-                                <span class="event-meta">${event.venue}${crowd}</span>
-                                <span class="event-status status-${status}">${event.status}</span>
+                            <div class="driver-card">
+                                <div class="driver-category">${d.category}</div>
+                                <div class="driver-count">${d.event_dates}<span style="font-size:0.8125rem;font-weight:400;color:var(--color-text-secondary);"> event days</span></div>
+                                <div class="driver-meta">${d.dates_per_year}/yr &middot; ${d.share_pct}% of events here</div>
+                                <div class="driver-meta"><strong>${d.venues.join(', ')}</strong></div>
+                                <div class="driver-meta">${d.season}</div>
+                                <div class="driver-meta">${crowd}${basis}</div>
+                                <span class="driver-share" style="width:${width}%"></span>
                             </div>`;
                     }).join('');
-                } else {
-                    list.innerHTML = '<p class="event-meta">No upcoming events are listed for this neighborhood.</p>';
-                }
 
-                const categories = (info.top_categories || [])
-                    .map(pair => `${pair[0]} (${pair[1]})`).join(', ');
-                const more = upcoming.length > 12 ? ` Showing the next 12 of ${upcoming.length} upcoming.` : '';
+                const named = drivers.slice(0, 2).map(d => d.category).join(' and ');
+                const from = info.recorded_from ? fmt(info.recorded_from, { month: 'short', year: 'numeric' }) : '';
+                const to = info.recorded_to ? fmt(info.recorded_to, { month: 'short', year: 'numeric' }) : '';
+                document.getElementById('eventsLede').textContent = named
+                    ? `Demand here is driven mainly by ${named}. ${info.recorded_total} events recorded at ${(info.venues || []).length} venues between ${from} and ${to}.`
+                    : `${info.recorded_total} events recorded between ${from} and ${to}.`;
+
+                const eventRow = event => {
+                    const when = fmt(event.date, { month: 'short', day: 'numeric', year: 'numeric' });
+                    const status = String(event.status || '').toLowerCase();
+                    const crowd = event.attendance
+                        ? ` &middot; ~${Number(event.attendance).toLocaleString()} attended`
+                        : '';
+                    return `
+                        <div class="event-row">
+                            <span class="event-date">${when}</span>
+                            <span class="event-name">${event.event}</span>
+                            <span class="event-meta">${event.venue}${crowd}</span>
+                            <span class="event-status status-${status}">${event.status}</span>
+                        </div>`;
+                };
+
+                document.getElementById('eventsRecent').innerHTML = recent.length
+                    ? recent.slice(0, 6).map(eventRow).join('')
+                    : '<p class="event-meta">Nothing recorded in the last few months.</p>';
+
+                document.getElementById('eventsUpcoming').innerHTML = upcoming.length
+                    ? upcoming.slice(0, 6).map(eventRow).join('')
+                    : '<p class="event-meta">Nothing scheduled yet.</p>';
+
+                const more = upcoming.length > 6 ? ` ${upcoming.length - 6} further events are scheduled beyond these.` : '';
                 document.getElementById('eventsNote').textContent =
-                    `${info.recorded_total} events recorded at these venues since 2024${categories ? ' — mostly ' + categories : ''}.${more} ` +
-                    `Cross-referenced by venue area, so a venue just outside the boundary still counts. Source: ${payload.source_workbook}.`;
+                    `Cross-referenced by venue area, so a venue just outside the boundary still counts.${more} ` +
+                    `Status labels come from the source workbook: scheduled entries are confirmed, projected and unconfirmed ones are not. Source: ${payload.source_workbook}.`;
 
                 section.style.display = 'block';
 
@@ -908,19 +1023,6 @@
                 const nextWeek = upcoming.filter(e =>
                     eventTime(e) > now + 7 * dayMs && eventTime(e) <= now + 14 * dayMs);
 
-                const eventRow = event => {
-                    const when = new Date(event.date + 'T12:00:00Z').toLocaleDateString('en-US',
-                        { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
-                    const status = String(event.status || '').toLowerCase();
-                    return `
-                        <div class="event-row">
-                            <span class="event-date">${when}</span>
-                            <span class="event-name">${event.event}</span>
-                            <span class="event-meta">${event.venue}</span>
-                            <span class="event-status status-${status}">${event.status}</span>
-                        </div>`;
-                };
-
                 const highlight = document.getElementById('eventsHighlight');
                 if (highlight && (thisWeek.length || nextWeek.length)) {
                     const groups = [
@@ -930,7 +1032,17 @@
                     highlight.innerHTML = groups.map(group => `
                         <div class="events-highlight-group">
                             <div class="events-highlight-title">${group[0]} &middot; ${group[1].length} event${group[1].length !== 1 ? 's' : ''} likely to lift demand here</div>
-                            ${group[1].map(eventRow).join('')}
+                            ${group[1].map(event => {
+                                const when = fmt(event.date, { weekday: 'short', month: 'short', day: 'numeric' });
+                                const status = String(event.status || '').toLowerCase();
+                                return `
+                                    <div class="event-row">
+                                        <span class="event-date">${when}</span>
+                                        <span class="event-name">${event.event}</span>
+                                        <span class="event-meta">${event.venue}</span>
+                                        <span class="event-status status-${status}">${event.status}</span>
+                                    </div>`;
+                            }).join('')}
                         </div>`).join('');
                     highlight.style.display = 'block';
                 }

@@ -46,6 +46,41 @@ UNMAPPED = {
 }
 
 
+MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+# How far back the "recent" list reaches.
+RECENT_DAYS = 120
+
+
+def format_season(months):
+    """Render the months a category occurs in, e.g. 'Oct-Apr' or 'Feb-Oct'.
+
+    Runs are merged around the year boundary so a winter sport reads as one
+    season rather than two fragments at either end of the calendar.
+    """
+    if not months:
+        return ""
+    if len(months) == 12:
+        return "Year-round"
+    present = set(months)
+    runs = []
+    for month in sorted(present):
+        if runs and month == runs[-1][1] + 1:
+            runs[-1][1] = month
+        else:
+            runs.append([month, month])
+    # A season crossing New Year shows up as a run ending in December and
+    # another starting in January; join them.
+    if len(runs) > 1 and runs[0][0] == 1 and runs[-1][1] == 12:
+        runs[0][0] = runs[-1][0]
+        runs.pop()
+    return ", ".join(
+        MONTH_NAMES[a - 1] if a == b else f"{MONTH_NAMES[a - 1]}-{MONTH_NAMES[b - 1]}"
+        for a, b in runs
+    )
+
+
 def cell(row, idx, name):
     value = row[idx[name]]
     return value if value is not None else ""
@@ -99,15 +134,55 @@ def main():
     for slug, bucket in by_slug.items():
         upcoming = sorted(bucket["upcoming"], key=lambda e: e["date"])
         past = sorted(bucket["past"], key=lambda e: e["date"])
-        categories = {}
-        for entry in past + upcoming:
-            categories[entry["category"]] = categories.get(entry["category"], 0) + 1
+        every = past + upcoming
+
+        # Profile the kinds of event that recur here, rather than only listing
+        # individual dates. This is what makes the section describe a pattern of
+        # demand instead of a schedule.
+        grouped = {}
+        for entry in every:
+            grouped.setdefault(entry["category"], []).append(entry)
+
+        span_days = (dt.date.fromisoformat(every[-1]["date"])
+                     - dt.date.fromisoformat(every[0]["date"])).days or 1
+        span_years = span_days / 365.25
+
+        drivers = []
+        for category, entries in grouped.items():
+            crowds = sorted(e["attendance"] for e in entries if e["attendance"])
+            months = sorted({int(e["date"][5:7]) for e in entries})
+            # Each row is one recorded date. A MiLB row stands for a multi-game
+            # homestand, so these are dates on the calendar rather than a claim
+            # about how many days of activity each one produces.
+            dates = len({e["date"] for e in entries})
+            drivers.append({
+                "category": category,
+                "count": len(entries),
+                "event_dates": dates,
+                "dates_per_year": round(dates / span_years, 1) if span_years else None,
+                "share_pct": round(100 * len(entries) / len(every)),
+                "median_attendance": crowds[len(crowds) // 2] if crowds else None,
+                "total_attendance": sum(crowds) if crowds else None,
+                "attendance_known": len(crowds),
+                "season": format_season(months),
+                "venues": sorted({e["venue"] for e in entries})[:3],
+                "first": entries[0]["date"],
+                "last": entries[-1]["date"],
+            })
+        drivers.sort(key=lambda d: -d["count"])
+
+        recent_cutoff = (today - dt.timedelta(days=RECENT_DAYS)).date().isoformat()
         neighborhoods[slug] = {
+            "drivers": drivers,
+            "recent": [e for e in past if e["date"] >= recent_cutoff][-6:][::-1],
             "upcoming": upcoming,
-            "recorded_total": len(past) + len(upcoming),
+            "recorded_total": len(every),
             "recorded_past": len(past),
-            "top_categories": [list(pair) for pair in sorted(categories.items(), key=lambda kv: -kv[1])[:4]],
-            "areas": sorted({e["area"] for e in past + upcoming}),
+            "recorded_from": every[0]["date"] if every else None,
+            "recorded_to": every[-1]["date"] if every else None,
+            "top_categories": [[d["category"], d["count"]] for d in drivers[:4]],
+            "areas": sorted({e["area"] for e in every}),
+            "venues": sorted({e["venue"] for e in every}),
         }
 
     payload = {
