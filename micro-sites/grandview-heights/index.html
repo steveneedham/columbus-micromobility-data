@@ -550,7 +550,8 @@
                 </div>
             `;
 
-            document.getElementById('dataSection').style.display = 'block';
+            // Data section hidden to prevent layout issues
+            // document.getElementById('dataSection').style.display = 'block';
             document.getElementById('lastUpdatedGBFS').textContent = formatDate(gbfsFetchedAt);
             document.getElementById('lastUpdated311').textContent = formatDate(c311FetchedAt);
         
