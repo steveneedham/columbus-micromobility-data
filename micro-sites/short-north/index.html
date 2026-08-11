@@ -242,6 +242,11 @@
 
         </div>
 
+        <div class="map-section">
+            <h2>Neighborhood Boundary</h2>
+            <canvas id="neighborhood-map" style="border: 1px solid var(--color-border); border-radius: 8px; width: 100%; height: 400px; display: block; margin: 2rem 0;"></canvas>
+        </div>
+
         <div class="info-section" id="dataSection" style="display: none;">
             <h2>Neighborhood Data Summary</h2>
             <p id="dataSummary"></p>
@@ -296,6 +301,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v2</p>
         </footer>
     </div>
 
@@ -405,20 +411,6 @@
                 const hubsData = await hubsResponse.json();
                 const vendorHubsData = await vendorHubsResponse.json();
 
-                // Initialize map if Leaflet available
-                let map = null;
-                try {
-                    if (typeof L !== 'undefined' && document.getElementById('neighborhood-map')) {
-                        map = L.map('neighborhood-map').setView([40, -83], 13);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '© OpenStreetMap contributors',
-                            maxZoom: 19
-                        }).addTo(map);
-                    }
-                } catch (mapErr) {
-                    console.warn('Map initialization failed, continuing without map:', mapErr);
-                }
-
                 // Filter and display vehicles by boundary
                 const vehiclesByOperator = { Veo: 0, Spin: 0 };
                 const vehiclesInBoundary = [];
@@ -429,23 +421,6 @@
                             if (pointInPolygon(point, boundaryGeoJSON)) {
                                 vehiclesByOperator[vehicle.company] = (vehiclesByOperator[vehicle.company] || 0) + 1;
                                 vehiclesInBoundary.push(vehicle);
-
-                                // Add marker to map
-                                if (map) {
-                                    try {
-                                        const color = vehicle.company === 'Veo' ? '#00bfa5' : '#ff8c42';
-                                        L.circleMarker([vehicle.lat, vehicle.lng], {
-                                            radius: 6,
-                                            fillColor: color,
-                                            color: color,
-                                            weight: 2,
-                                            opacity: 0.8,
-                                            fillOpacity: 0.7
-                                        }).bindPopup(`<strong>${vehicle.company}</strong><br>ID: ${vehicle.vehicle_id}<br>Type: ${vehicle.vehicle_type || 'unknown'}`).addTo(map);
-                                    } catch (markerErr) {
-                                        console.warn('Failed to add vehicle marker:', markerErr);
-                                    }
-                                }
                             }
                         });
                     }
@@ -461,23 +436,6 @@
                             const point = turf.point([record.longitude, record.latitude]);
                             if (pointInPolygon(point, boundaryGeoJSON)) {
                                 c311RequestsInBoundary.push(record);
-
-                                // Add marker to map
-                                if (map) {
-                                    try {
-                                        const priorityColor = record.priority === 'High' ? '#d32f2f' : record.priority === 'Medium' ? '#f57c00' : '#fbc02d';
-                                        L.circleMarker([record.latitude, record.longitude], {
-                                            radius: 5,
-                                            fillColor: priorityColor,
-                                            color: priorityColor,
-                                            weight: 1,
-                                            opacity: 0.6,
-                                            fillOpacity: 0.5
-                                        }).bindPopup(`<strong>311 Request</strong><br>Priority: ${record.priority || 'unknown'}<br>Type: ${record.complaint_type || 'unknown'}<br>Status: ${record.status || 'unknown'}`).addTo(map);
-                                    } catch (markerErr) {
-                                        console.warn('Failed to add 311 marker:', markerErr);
-                                    }
-                                }
                             }
                         });
                     }

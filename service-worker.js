@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "columbus-mobility-observer-";
-const CACHE_NAME = `${CACHE_PREFIX}v1`;
+const CACHE_NAME = `${CACHE_PREFIX}v2`;
 
 const CORE_ASSETS = [
   "./index.html",
@@ -23,8 +23,6 @@ const CORE_ASSETS = [
 ];
 
 const OPTIONAL_ASSETS = [
-  "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
-  "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
   "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap"
 ];
 
@@ -61,7 +59,8 @@ async function networkFirst(request, fallbackUrl) {
     ? `${requestUrl.origin}${requestUrl.pathname}`
     : request;
   try {
-    const response = await fetch(request);
+    // Bypass the HTTP cache so a stale GitHub Pages copy can't be revalidated into the SW cache.
+    const response = await fetch(request, { cache: "no-store" });
     if (response && response.ok) await cache.put(normalizedKey, response.clone());
     return response;
   } catch {
