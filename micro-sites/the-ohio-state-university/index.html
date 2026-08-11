@@ -396,6 +396,10 @@
                     fetch('/columbus-micromobility-data/data-ride-hubs.json'),
                         fetch('/columbus-micromobility-data/data-vendor-hubs.json')
                 ]);
+                if (!gbfsResponse.ok) throw new Error('GBFS data fetch failed: ' + gbfsResponse.status);
+                if (!c311Response.ok) throw new Error('311 data fetch failed: ' + c311Response.status);
+                if (!hubsResponse.ok) throw new Error('Ride hubs fetch failed: ' + hubsResponse.status);
+                if (!vendorHubsResponse.ok) throw new Error('Vendor hubs fetch failed: ' + vendorHubsResponse.status);
 
                 const gbfsData = await gbfsResponse.json();
                 const c311Data = await c311Response.json();
