@@ -411,7 +411,7 @@
             <h2>No-parking zone — park only at municipal bike racks</h2>
             <p>Upper Arlington has an operating agreement with <strong>Veo</strong>. There is no equivalent agreement with <strong>Spin</strong>, though the city generally treats Spin the same way.</p>
             <p>The whole city is a <strong>no-parking zone</strong>, with one exception: vehicles may be parked at <strong>municipal bike racks</strong>.</p>
-            <p>If a parked vehicle causes a problem, the city notifies the operator and may impound it. Impounded vehicles are left outside the local police station, believed to be near Tremont and Kenny. There is no charge to collect them.</p>
+            <p>If a parked vehicle causes a problem, the city notifies the operator and may impound it. Impounded vehicles are left outside the <strong>police station at Upper Arlington City Hall</strong>. There is no charge to collect them.</p>
         </div>
 
         <div class="metrics" id="metricsContainer">
@@ -437,7 +437,7 @@
         <div class="map-section">
             <h2>Neighborhood Boundary</h2>
             <canvas id="neighborhood-map" style="border: 1px solid var(--color-border); border-radius: 8px; width: 100%; height: 400px; display: block; margin: 2rem 0;"></canvas>
-            <p class="map-note">Ride hub markers fill in proportion to the vehicles within 100&nbsp;m of the hub. A red outline means no vehicle is nearby; amber means more vehicles are nearby than the hub has docks. Red rings mark cross-vendor pile-ups — four or more vehicles from more than one operator within 20&nbsp;m. Proximity is an estimate; it does not prove a vehicle is parked at a hub.</p>
+            <p class="map-note">Ride hub markers carry a badge counting the vehicles within 100&nbsp;m of the hub, and fill in proportion to the hub's docks. A red outline means no vehicle is nearby; amber means more vehicles are nearby than the hub has docks. Red rings mark cross-vendor pile-ups — four or more vehicles from more than one operator within 20&nbsp;m. Proximity is an estimate; it does not prove a vehicle is parked at a hub.</p>
         </div>
 
         <div class="info-section" id="dataSection" style="display: none;">
@@ -494,7 +494,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
-            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v10</p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v11</p>
         </footer>
     </div>
 
@@ -1069,6 +1069,27 @@
                 ctx.beginPath();
                 ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
                 ctx.stroke();
+
+                // Count badge, as on the main site's hub pins. The wedge shows the
+                // proportion; the number gives the figure behind it.
+                const badgeX = point.x + 9;
+                const badgeY = point.y - 9;
+                ctx.fillStyle = empty ? '#b3271b' : over ? '#a17408' : '#5b3f8c';
+                ctx.beginPath();
+                ctx.arc(badgeX, badgeY, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(String(nearby), badgeX, badgeY);
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'alphabetic';
+                ctx.font = '11px sans-serif';
             });
 
             // Draw legend: two columns, three rows

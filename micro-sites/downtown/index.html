@@ -193,6 +193,32 @@
             margin: 2rem 0;
         }
 
+        /* Positive/wayfinding notice, distinct from the red enforcement notices. */
+        .feature-notice {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 191, 165, 0.08);
+            border: 1px solid rgba(0, 128, 111, 0.3);
+            border-left: 5px solid var(--color-accent-teal);
+            border-radius: 8px;
+        }
+
+        .feature-notice h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-family: 'Newsreader', serif;
+            color: #00695c;
+        }
+
+        .feature-notice p {
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-notice p:last-child {
+            margin-bottom: 0;
+        }
+
         .map-note {
             font-size: 0.875rem;
             color: var(--color-text-secondary);
@@ -381,6 +407,12 @@
             </div>
         </header>
 
+        <div class="feature-notice" role="note">
+            <h2>The Scioto Mile Loop</h2>
+            <p>The ride hubs clustered along the river downtown are known as the <strong>Scioto Mile Loop</strong> — favourable riding for leisurely and tourist cyclists, particularly through the summer.</p>
+            <p>These were among the <strong>most profitable hubs under the CoGo model</strong>, and nothing is currently carrying that forward.</p>
+        </div>
+
         <div class="metrics" id="metricsContainer">
             <div class="metric-card">
                 <div class="metric-label">311 Requests</div>
@@ -404,7 +436,7 @@
         <div class="map-section">
             <h2>Neighborhood Boundary</h2>
             <canvas id="neighborhood-map" style="border: 1px solid var(--color-border); border-radius: 8px; width: 100%; height: 400px; display: block; margin: 2rem 0;"></canvas>
-            <p class="map-note">Ride hub markers fill in proportion to the vehicles within 100&nbsp;m of the hub. A red outline means no vehicle is nearby; amber means more vehicles are nearby than the hub has docks. Red rings mark cross-vendor pile-ups — four or more vehicles from more than one operator within 20&nbsp;m. Proximity is an estimate; it does not prove a vehicle is parked at a hub.</p>
+            <p class="map-note">Ride hub markers carry a badge counting the vehicles within 100&nbsp;m of the hub, and fill in proportion to the hub's docks. A red outline means no vehicle is nearby; amber means more vehicles are nearby than the hub has docks. Red rings mark cross-vendor pile-ups — four or more vehicles from more than one operator within 20&nbsp;m. Proximity is an estimate; it does not prove a vehicle is parked at a hub.</p>
         </div>
 
         <div class="info-section" id="dataSection" style="display: none;">
@@ -461,7 +493,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
-            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v10</p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v11</p>
         </footer>
     </div>
 
@@ -1034,6 +1066,27 @@
                 ctx.beginPath();
                 ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
                 ctx.stroke();
+
+                // Count badge, as on the main site's hub pins. The wedge shows the
+                // proportion; the number gives the figure behind it.
+                const badgeX = point.x + 9;
+                const badgeY = point.y - 9;
+                ctx.fillStyle = empty ? '#b3271b' : over ? '#a17408' : '#5b3f8c';
+                ctx.beginPath();
+                ctx.arc(badgeX, badgeY, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(String(nearby), badgeX, badgeY);
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'alphabetic';
+                ctx.font = '11px sans-serif';
             });
 
             // Draw legend: two columns, three rows
