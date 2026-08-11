@@ -130,7 +130,20 @@
                 footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-border); font-size: 0.875rem; color: var(--color-text-secondary); }
         @media (max-width: 768px) { .neighborhoods-grid { grid-template-columns: 1fr; } h1 { font-size: 2rem; } }
     </style>
-</head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-76JHMZJ82N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-76JHMZJ82N');
+    </script>
+    <!-- PostHog Analytics -->
+    <script>
+      !function(t,e){var o,n,p,r,a=e.location,c=[],s=[];function u(e){try{s.push(e)}catch(t){}}function h(e){console.error('PostHog error:',e)}t.PostHog=t.PostHog||function(){if(o)return o;o={_queue:[],push:u};var e=['capture','identify','reset','feature_flags','on_feature_flags','reloadFeatureFlags','getFeatureFlag','getFeatureFlagPayload','isFeatureEnabled'];return e.forEach(function(e){o[e]=function(){o._queue.push({method:e,args:Array.prototype.slice.call(arguments)})}}),o},window.posthog=new t.PostHog;var m='https://us.posthog.com';window.posthog.init=function(e,t){var o=t||{};o.hook_server_url=o.hook_server_url||m,window.posthog_config=o,window.posthog.config=o.posthog_config||{},window.posthog.isFeatureEnabled=function(e){return!0},window.posthog.reloadFeatureFlags=function(){},fetch(m+'/decide/?v=2',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:e,distinct_id:window.posthog_distinct_id||'',groups:o.groups||{},v:'1.0'})}).then(function(t){t.json().then(function(e){window.posthog.featureFlags=e.featureFlags||{}}).catch(h)}).catch(h)},window.posthog.init('phc_tYXqzrjNDJBTRNqVGpC3hTb1YpqCqXCWzqEpMZcf8kZ',{api_host:m})};
+    </script>
+    </head>
 <body>
     <div class="container">
         <header>
