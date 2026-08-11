@@ -218,6 +218,14 @@ def write_plot(df, timestamp):
     return path
 
 
+def snapshot_id_to_iso(timestamp):
+    """Convert a compact snapshot id (20260810T203225Z) to ISO-8601."""
+    try:
+        return datetime.strptime(timestamp, "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc).isoformat()
+    except (ValueError, TypeError):
+        return None
+
+
 def build_dashboard_payload(df, timestamp, previous_snapshot_id=None, previous_veo_positions=None):
     previous_veo_positions = previous_veo_positions or {}
     vehicles = []
@@ -247,6 +255,7 @@ def build_dashboard_payload(df, timestamp, previous_snapshot_id=None, previous_v
         vehicles.append(vehicle)
     return {
         "snapshot_id": timestamp,
+        "fetched_at": snapshot_id_to_iso(timestamp),
         "source_file": f"columbus_scooters_{timestamp}.csv",
         "position_count": len(vehicles),
         "invalid_row_count": 0,

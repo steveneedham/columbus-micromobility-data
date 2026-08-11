@@ -199,6 +199,135 @@
             margin-bottom: 1rem;
             font-family: 'Newsreader', serif;
         }
+
+        /* Insight sections: trends, interventions, forecast, operator activity */
+        .trend-section,
+        .interventions-section,
+        .forecast-section,
+        .movement-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        .trend-section h2,
+        .interventions-section h2,
+        .forecast-section h2,
+        .movement-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-family: 'Newsreader', serif;
+        }
+
+        .insights-grid,
+        .forecast-grid,
+        .movement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .insight-card,
+        .forecast-card,
+        .movement-card {
+            padding: 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+        }
+
+        .insight-trend,
+        .movement-intensity {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Direction, not judgement: these mark high vs low, not good vs bad. */
+        .trend-up { color: #b8730f; }
+        .trend-down { color: #00806f; }
+        .trend-stable { color: var(--color-text-secondary); }
+
+        .insight-text,
+        .movement-desc,
+        .forecast-note {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        .interventions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .intervention-item {
+            padding: 1rem;
+            background: rgba(250, 167, 26, 0.1);
+            border-left: 3px solid var(--color-accent-amber);
+            border-radius: 4px;
+        }
+
+        .forecast-period {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .forecast-metric {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .forecast-value {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--color-accent-amber);
+        }
+
+        .forecast-note {
+            margin-top: 0.75rem;
+        }
+
+        /* Metric cards carry data-tooltip; surface it on hover/focus. */
+        .tooltip-trigger {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip-trigger::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 0;
+            top: 100%;
+            z-index: 10;
+            width: max-content;
+            max-width: 260px;
+            padding: 0.5rem 0.75rem;
+            background: var(--color-text);
+            color: var(--color-surface);
+            font-size: 0.75rem;
+            line-height: 1.4;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.15s ease;
+        }
+
+        .tooltip-trigger:hover::after,
+        .tooltip-trigger:focus-within::after {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body>
@@ -225,12 +354,11 @@
                 <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
                 <div class="metric-value metric-loading">—</div>
             </div>
-        
+        </div>
+
         <div id="debugMessages" style="display: none; background: #fee; padding: 1rem; border: 1px solid #f00; border-radius: 4px; margin: 1rem 0; font-size: 0.875rem; color: #333;">
             <strong style="color: #c00;">Debug Info:</strong>
             <div id="debugText"></div>
-        </div>
-
         </div>
 
         <div class="map-section">
@@ -292,7 +420,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
-            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v3</p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v4</p>
         </footer>
     </div>
 
@@ -302,9 +430,15 @@
         const NEIGHBORHOOD_SLUG = 'harrison-west';
         let boundaryGeoJSON = null;
 
-        function formatDate(isoString) {
-            if (!isoString) return 'unknown';
-            const date = new Date(isoString);
+        function formatDate(value) {
+            if (!value) return 'unknown';
+            // data-gbfs.json carries a compact snapshot id (20260810T203225Z);
+            // data-311.json carries ISO-8601. Accept either.
+            const compact = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/.exec(value);
+            const date = compact
+                ? new Date(Date.UTC(+compact[1], +compact[2] - 1, +compact[3], +compact[4], +compact[5], +compact[6]))
+                : new Date(value);
+            if (isNaN(date.getTime())) return 'unknown';
             return date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
@@ -454,7 +588,7 @@
                     const totalVehicles = vehiclesByOperator.Veo + vehiclesByOperator.Spin;
                     const c311Count = c311RequestsInBoundary.length;
                     const hubsCount = hubsInBoundary.length;
-                    updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at, c311Data.fetched_at);
+                    updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at || gbfsData.snapshot_id, c311Data.fetched_at);
 
                     // Render canvas map after data is loaded
                     try {
@@ -476,6 +610,9 @@
         }
 
         function updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsFetchedAt, c311FetchedAt) {
+            const debugBox = document.getElementById('debugMessages');
+            if (debugBox) debugBox.style.display = 'none';
+
             const metricsContainer = document.getElementById('metricsContainer');
             const { area, density } = calculateDensity(boundaryGeoJSON, totalVehicles);
             metricsContainer.innerHTML = `
@@ -524,35 +661,34 @@
                 </div>
             `;
 
-            // Data section hidden to prevent layout issues
-            // document.getElementById('dataSection').style.display = 'block';
+            document.getElementById('dataSection').style.display = 'block';
             document.getElementById('lastUpdatedGBFS').textContent = formatDate(gbfsFetchedAt);
             document.getElementById('lastUpdated311').textContent = formatDate(c311FetchedAt);
-        
-            // document.getElementById('trendsSection').style.display = 'block';
-            // document.getElementById('interventionsSection').style.display = 'block';
+
+            // Reveal each section only once its generator succeeds, so a failure
+            // leaves the section hidden rather than showing an empty box.
             try {
-
-                // generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
-
+                generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
+                document.getElementById('trendsSection').style.display = 'block';
+                document.getElementById('interventionsSection').style.display = 'block';
             } catch (e) {
-
                 console.error('Error generating trends:', e);
-
             }
-            // document.getElementById('forecastSection').style.display = 'block';
-            // document.getElementById('movementSection').style.display = 'block';
+
             try {
-
-                // generateForecast(c311Count, totalVehicles, hubsCount);
-
+                generateForecast(c311Count, totalVehicles, hubsCount);
+                document.getElementById('forecastSection').style.display = 'block';
             } catch (e) {
-
                 console.error('Error generating forecast:', e);
-
             }
-            // generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
-}
+
+            try {
+                generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
+                document.getElementById('movementSection').style.display = 'block';
+            } catch (e) {
+                console.error('Error generating movement insights:', e);
+            }
+        }
 
 
         function calculateDensity(boundaryGeoJSON, vehicles) {
