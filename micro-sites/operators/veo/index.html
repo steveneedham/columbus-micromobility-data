@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veo Operator View — Columbus Micromobility Data</title>
+    <meta name="description" content="Veo market analysis, competitive positioning, and strategic insights for Columbus.">
+    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/operators/veo/">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/field-ledger-mark.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
+
+        :root {
+            --color-surface: #f3f0e8;
+            --color-text: #1a1714;
+            --color-text-secondary: #5a5550;
+            --color-border: #ccc8bf;
+            --color-accent-amber: #faa71a;
+            --color-accent-teal: #00bfa5;
+            --color-veo: #2ecc71;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-surface: #1a1714;
+                --color-text: #f3f0e8;
+                --color-text-secondary: #a89f95;
+                --color-border: #3a3530;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .header-icon {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            opacity: 0.9;
+            background: var(--color-veo);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        header a {
+            color: var(--color-accent-amber);
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            font-family: 'Newsreader', serif;
+        }
+
+        .description {
+            color: var(--color-text-secondary);
+            font-size: 1.125rem;
+        }
+
+        .operator-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--color-veo);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        section h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-family: 'Newsreader', serif;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--color-veo);
+            color: white;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--color-veo);
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-veo);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin: 1.5rem 0;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .comparison-table th {
+            background: rgba(46, 204, 113, 0.05);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(46, 204, 113, 0.02);
+        }
+
+        .insight-box {
+            padding: 1.5rem;
+            background: rgba(46, 204, 113, 0.05);
+            border-left: 3px solid var(--color-veo);
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .insight-box strong {
+            color: var(--color-veo);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .intervention-item {
+            padding: 1.5rem;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .intervention-priority {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-radius: 3px;
+            margin-bottom: 0.5rem;
+        }
+
+        .priority-high {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .priority-medium {
+            background: var(--color-accent-amber);
+            color: #1a1714;
+        }
+
+        .priority-low {
+            background: var(--color-text-secondary);
+            color: white;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        .copyright-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.8125rem;
+            color: var(--color-text-secondary);
+        }
+
+        .copyright-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ohio-icon {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            vertical-align: -0.125em;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.75rem; }
+            section h2 { font-size: 1.25rem; }
+            .overview-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-76JHMZJ82N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-76JHMZJ82N');
+    </script>
+    <!-- PostHog Analytics -->
+    <script>
+      !function(t,e){var o,n,p,r,a=e.location,c=[],s=[];function u(e){try{s.push(e)}catch(t){}}function h(e){console.error('PostHog error:',e)}t.PostHog=t.PostHog||function(){if(o)return o;o={_queue:[],push:u};var e=['capture','identify','reset','feature_flags','on_feature_flags','reloadFeatureFlags','getFeatureFlag','getFeatureFlagPayload','isFeatureEnabled'];return e.forEach(function(e){o[e]=function(){o._queue.push({method:e,args:Array.prototype.slice.call(arguments)})}}),o},window.posthog=new t.PostHog;var m='https://us.posthog.com';window.posthog.init=function(e,t){var o=t||{};o.hook_server_url=o.hook_server_url||m,window.posthog_config=o,window.posthog.config=o.posthog_config||{},window.posthog.isFeatureEnabled=function(e){return!0},window.posthog.reloadFeatureFlags=function(){},fetch(m+'/decide/?v=2',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:e,distinct_id:window.posthog_distinct_id||'',groups:o.groups||{},v:'1.0'})}).then(function(t){t.json().then(function(e){window.posthog.featureFlags=e.featureFlags||{}}).catch(h)}).catch(h)},window.posthog.init('phc_tYXqzrjNDJBTRNqVGpC3hTb1YpqCqXCWzqEpMZcf8kZ',{api_host:m})};
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-icon">Veo</div>
+            <div>
+                <a href="../../">← Back to neighborhoods</a>
+                <h1>Veo Operator View</h1>
+                <p class="description">Market positioning, competitive analysis, and strategic insights for Columbus.</p>
+                <span class="operator-badge">🔋 Active Operator</span>
+            </div>
+        </header>
+
+        <section id="overview">
+            <h2><span class="section-number">1</span>Overview — Market Setup & Positioning</h2>
+
+            <div class="insight-box">
+                <strong>How is Veo set up in Columbus?</strong>
+                <p>Veo operates scooter-only service across 11 neighborhoods in Columbus. Currently deployed in core urban areas with focus on downtown, Short North, Harrison West, and Victorian Village. Fleet composition and staffing model reflects regional investment strategy.</p>
+            </div>
+
+            <div class="overview-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Active Vehicles</div>
+                    <div class="stat-value" id="veoVehicles">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Service Areas</div>
+                    <div class="stat-value">11</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">311 Incidents (30d)</div>
+                    <div class="stat-value" id="veoIncidents">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Deployment Status</div>
+                    <div class="stat-value" style="font-size: 1rem; color: #2ecc71;">Stable</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; font-size: 1.25rem;">What Veo Does Well</h3>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li>Consistent fleet availability across deployment zones</li>
+                <li>Strong presence in high-demand urban core neighborhoods</li>
+                <li>Responsive maintenance and rebalancing operations</li>
+                <li>Established relationships with city regulatory bodies</li>
+            </ul>
+        </section>
+
+        <section id="competitor">
+            <h2><span class="section-number">2</span>Competitor Analysis — Spin</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Veo</th>
+                        <th>Spin</th>
+                        <th>Assessment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Vehicle Type</td>
+                        <td>Scooters</td>
+                        <td>Bikes + Scooters</td>
+                        <td>Spin diversified; Veo focused</td>
+                    </tr>
+                    <tr>
+                        <td>Service Areas</td>
+                        <td>11 neighborhoods</td>
+                        <td>9 neighborhoods</td>
+                        <td>Veo wider geographic reach</td>
+                    </tr>
+                    <tr>
+                        <td>Market Position</td>
+                        <td>Scooter specialist</td>
+                        <td>Multi-modal operator</td>
+                        <td>Different market strategies</td>
+                    </tr>
+                    <tr>
+                        <td>311 Complaint Rate</td>
+                        <td id="veoComplaintRate">—</td>
+                        <td id="spinComplaintRate">—</td>
+                        <td id="complaintComparison">—</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box" id="competitorInsights">
+                <strong>Spin's Strengths</strong>
+                <p>• Multi-modal offering (bikes attract different user segments)<br>
+                • Strong presence in suburban neighborhoods (Upper Arlington, Bexley)<br>
+                • Bike-specific infrastructure partnerships<br>
+                • Diversified revenue streams</p>
+            </div>
+        </section>
+
+        <section id="insights">
+            <h2><span class="section-number">3</span>Current Insights — This Week's Situation</h2>
+
+            <div class="insight-box">
+                <strong>🔴 What's Happening Right Now</strong>
+                <p id="weeklyInsight">Loading current data...</p>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1.125rem;">Key Observations</h3>
+            <ul id="keyObservations" style="margin: 1rem 0; padding-left: 2rem;">
+                <li>Placeholder: Will be populated with real-time analysis</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1.125rem;">Actions Underway</h3>
+            <ul id="actionsUnderway" style="margin: 1rem 0; padding-left: 2rem;">
+                <li>Placeholder: Will be populated with current operational responses</li>
+            </ul>
+        </section>
+
+        <section id="forecast">
+            <h2><span class="section-number">4</span>Forecast — Next Week's Strategy Horizon</h2>
+
+            <div class="insight-box">
+                <strong>Strategy Window: Next 7 Days</strong>
+                <p id="strategyForecast">Loading forecast data...</p>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1.125rem;">Anticipated Events & Pressures</h3>
+            <ul id="anticipatedEvents" style="margin: 1rem 0; padding-left: 2rem;">
+                <li>Major events or demand drivers expected next week</li>
+                <li>Competitive pressure points to monitor</li>
+                <li>Regulatory or policy shifts on horizon</li>
+            </ul>
+        </section>
+
+        <section id="interventions">
+            <h2><span class="section-number">5</span>Interventions — Strategic Recommendations</h2>
+
+            <p style="margin-bottom: 1.5rem; color: var(--color-text-secondary);">Based on current market position and competitive landscape, the following actions are recommended:</p>
+
+            <div class="intervention-item">
+                <span class="intervention-priority priority-high">High Priority</span>
+                <h3 style="margin: 0.5rem 0;">Expand Service in Under-Penetrated Neighborhoods</h3>
+                <p>Increase fleet density in Dublin, Grandview Heights, and Marble Cliff where Spin has limited presence. These are growth opportunities.</p>
+            </div>
+
+            <div class="intervention-item">
+                <span class="intervention-priority priority-high">High Priority</span>
+                <h3 style="margin: 0.5rem 0;">Strengthen Community Relations</h3>
+                <p>Address 311 complaint patterns (parking, accessibility). Proactive community engagement reduces regulatory friction and improves brand perception.</p>
+            </div>
+
+            <div class="intervention-item">
+                <span class="intervention-priority priority-medium">Medium Priority</span>
+                <h3 style="margin: 0.5rem 0;">Monitor Spin's Multi-Modal Strategy</h3>
+                <p>Consider whether bike addition makes strategic sense for Veo or if scooter-focus remains competitive advantage. Watch Spin's bike performance metrics.</p>
+            </div>
+
+            <div class="intervention-item">
+                <span class="intervention-priority priority-medium">Medium Priority</span>
+                <h3 style="margin: 0.5rem 0;">Optimize Rebalancing Operations</h3>
+                <p>Use real-time demand data to predict high-traffic periods. Predictive rebalancing reduces availability gaps and improves revenue capture.</p>
+            </div>
+
+            <div class="intervention-item">
+                <span class="intervention-priority priority-low">Lower Priority</span>
+                <h3 style="margin: 0.5rem 0;">Pilot Premium Service Tier</h3>
+                <p>Consider loyalty program or subscription option to increase customer lifetime value and create predictable revenue stream.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p><strong>Data sources:</strong> Columbus 311 (City system), GBFS feeds (Veo, Spin), Real-time vehicle telemetry</p>
+            <p><strong>Updated:</strong> <span id="lastUpdated">—</span></p>
+        </footer>
+
+        <div class="copyright-section">
+            <div class="copyright-text">&copy; 2026 <a href="https://steveneedham.com" style="color: inherit; text-decoration: none; border-bottom: 1px dotted var(--color-text-secondary);" onmouseover="this.style.borderBottomColor='var(--color-accent-amber)'" onmouseout="this.style.borderBottomColor='var(--color-text-secondary)'">Steven Needham</a></div>
+            <div class="copyright-text">
+                <svg class="ohio-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                    <path d="M50,10 Q70,15 75,35 Q80,55 70,70 Q60,80 50,85 Q40,80 30,70 Q20,55 25,35 Q30,15 50,10 Z" opacity="0.7"/>
+                    <circle cx="50" cy="45" r="8" fill="currentColor" opacity="0.9"/>
+                </svg>
+                Made in Columbus, OH
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+    <script>
+        async function loadOperatorData() {
+            try {
+                const [gbfsResponse, c311Response] = await Promise.all([
+                    fetch('/columbus-micromobility-data/data-gbfs.json'),
+                    fetch('/columbus-micromobility-data/data-311.json')
+                ]);
+
+                const gbfsData = await gbfsResponse.json();
+                const c311Data = await c311Response.json();
+
+                // Count Veo vehicles
+                const veoVehicles = gbfsData.vehicles.filter(v => v.provider === 'Veo').length;
+                document.getElementById('veoVehicles').textContent = veoVehicles;
+
+                // Count Veo 311 incidents (last 30 days)
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                const veoIncidents = c311Data.records.filter(r => {
+                    const date = new Date(r.created_date);
+                    return date >= thirtyDaysAgo && r.description.toLowerCase().includes('scooter');
+                }).length;
+                document.getElementById('veoIncidents').textContent = veoIncidents;
+
+                // Calculate complaint rate
+                const spinVehicles = gbfsData.vehicles.filter(v => v.provider === 'Spin').length;
+                const spinIncidents = c311Data.records.filter(r => {
+                    const date = new Date(r.created_date);
+                    return date >= thirtyDaysAgo && (r.description.toLowerCase().includes('bike') || r.description.toLowerCase().includes('bicycle'));
+                }).length;
+
+                const veoRate = ((veoIncidents / Math.max(veoVehicles, 1)) * 100).toFixed(1);
+                const spinRate = ((spinIncidents / Math.max(spinVehicles, 1)) * 100).toFixed(1);
+
+                document.getElementById('veoComplaintRate').textContent = veoRate + '%';
+                document.getElementById('spinComplaintRate').textContent = spinRate + '%';
+
+                if (parseFloat(veoRate) < parseFloat(spinRate)) {
+                    document.getElementById('complaintComparison').textContent = 'Veo lower complaint rate';
+                } else if (parseFloat(veoRate) > parseFloat(spinRate)) {
+                    document.getElementById('complaintComparison').textContent = 'Spin lower complaint rate';
+                } else {
+                    document.getElementById('complaintComparison').textContent = 'Comparable rates';
+                }
+
+                // Update timestamp
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+
+            } catch (err) {
+                console.error('Error loading operator data:', err);
+            }
+        }
+
+        loadOperatorData();
+    </script>
+</body>
+</html>
