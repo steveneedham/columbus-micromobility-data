@@ -106,7 +106,7 @@ def main():
             "upcoming": upcoming,
             "recorded_total": len(past) + len(upcoming),
             "recorded_past": len(past),
-            "top_categories": sorted(categories.items(), key=lambda kv: -kv[1])[:4],
+            "top_categories": [list(pair) for pair in sorted(categories.items(), key=lambda kv: -kv[1])[:4]],
             "areas": sorted({e["area"] for e in past + upcoming}),
         }
 
@@ -127,6 +127,28 @@ def main():
         "unmapped_areas": {a: UNMAPPED.get(a, "no micro-site") for a in sorted(unmapped_areas)},
         "neighborhoods": neighborhoods,
     }
+
+    # This runs hourly alongside the 311 pull. Writing unconditionally would
+    # change generated_at every hour and push a timestamp-only commit even when
+    # nothing about the events actually moved, so only write on a real change.
+    def comparable(doc):
+        # Serialize before comparing: a tuple in the payload and the list it
+        # becomes after a JSON round-trip are not equal as Python objects.
+        return json.dumps(
+            {k: v for k, v in doc.items() if k != "generated_at"},
+            sort_keys=True,
+        )
+
+    changed = True
+    if OUTPUT.exists():
+        try:
+            changed = comparable(json.loads(OUTPUT.read_text())) != comparable(payload)
+        except (json.JSONDecodeError, OSError, AttributeError):
+            changed = True
+
+    if not changed:
+        print(f"{OUTPUT.name} unchanged, leaving it alone")
+        return
 
     OUTPUT.write_text(json.dumps(payload, indent=2) + "\n")
 

@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests
+          pip install requests openpyxl
 
       - name: Fetch 311 data
         run: |
@@ -33,11 +33,17 @@ jobs:
         run: |
           python scripts/build_311_data.py
 
+      # Cheap to rerun and it keeps the past/upcoming split rolling forward with
+      # the calendar, rather than freezing at whenever it was last generated.
+      - name: Rebuild neighborhood events layer
+        run: |
+          python scripts/build_events_data.py
+
       - name: Commit and push 311 data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add snapshots/311_requests_*.json data-311.json index.html 2>/dev/null || true
+          git add snapshots/311_requests_*.json data-311.json data-events.json index.html 2>/dev/null || true
 
           if git diff --cached --exit-code > /dev/null; then
             echo "No new 311 data to commit"
