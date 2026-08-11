@@ -523,10 +523,16 @@
                 }
 
                 // Update metrics
-                const totalVehicles = vehiclesByOperator.Veo + vehiclesByOperator.Spin;
-                const c311Count = c311RequestsInBoundary.length;
-                const hubsCount = hubsInBoundary.length;
-                updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at, c311Data.fetched_at);
+                try {
+                    const totalVehicles = vehiclesByOperator.Veo + vehiclesByOperator.Spin;
+                    const c311Count = c311RequestsInBoundary.length;
+                    const hubsCount = hubsInBoundary.length;
+                    updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at, c311Data.fetched_at);
+                } catch (metricsErr) {
+                    console.error('Error updating metrics:', metricsErr);
+                    document.getElementById('debugMessages').style.display = 'block';
+                    document.getElementById('debugText').innerHTML = 'ERROR updating metrics: ' + metricsErr.message;
+                }
 
             } catch (err) {
                 console.error('Error loading data:', err);
