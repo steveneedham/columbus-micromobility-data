@@ -544,13 +544,13 @@
             document.getElementById('lastUpdatedGBFS').textContent = formatDate(gbfsFetchedAt);
             document.getElementById('lastUpdated311').textContent = formatDate(c311FetchedAt);
         
-            document.getElementById('trendsSection').style.display = 'none';
-            document.getElementById('interventionsSection').style.display = 'none';
-//             generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
-            document.getElementById('forecastSection').style.display = 'none';
-            document.getElementById('movementSection').style.display = 'none';
-//             generateForecast(c311Count, totalVehicles, hubsCount);
-//             generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
+            document.getElementById('trendsSection').style.display = 'block';
+            document.getElementById('interventionsSection').style.display = 'block';
+            generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
+            document.getElementById('forecastSection').style.display = 'block';
+            document.getElementById('movementSection').style.display = 'block';
+            generateForecast(c311Count, totalVehicles, hubsCount);
+            generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
 }
 
 
@@ -575,7 +575,7 @@
             };
         }
 
-//                 function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount) {
+                function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount) {
             const insightsContainer = document.getElementById('insightsContainer');
             const interventionsContainer = document.getElementById('interventionsContainer');
 
@@ -693,7 +693,7 @@
             `).join('');
         }
 
-//         function generateForecast(c311Count, totalVehicles, hubsCount) {
+        function generateForecast(c311Count, totalVehicles, hubsCount) {
             const forecastContainer = document.getElementById('forecastContainer');
 
             const now = new Date();
@@ -788,7 +788,7 @@
             };
         }
 
-//         function generateMovementInsights(c311Count, totalVehicles, hubsCount, area) {
+        function generateMovementInsights(c311Count, totalVehicles, hubsCount, area) {
             const movementContainer = document.getElementById('movementContainer');
             const movement = analyzeMovement(c311Count, totalVehicles, hubsCount, area);
 
