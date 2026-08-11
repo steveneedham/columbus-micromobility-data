@@ -227,6 +227,34 @@
         }
 
 
+        
+        .copyright-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.8125rem;
+            color: var(--color-text-secondary);
+        }
+
+        .copyright-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ohio-icon {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            vertical-align: -0.125em;
+        }
+
+
                 footer {
             margin-top: 3rem;
             padding-top: 2rem;
@@ -925,6 +953,17 @@
                 <a href="https://cash.app/$steveneedham" class="donation-link">💲 Cash App</a>
             </div>
         </section>
+
+        <div class="copyright-section">
+            <div class="copyright-text">&copy; 2026 Steven Needham</div>
+            <div class="copyright-text">
+                <svg class="ohio-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                    <path d="M50,10 Q70,15 75,35 Q80,55 70,70 Q60,80 50,85 Q40,80 30,70 Q20,55 25,35 Q30,15 50,10 Z" opacity="0.7"/>
+                    <circle cx="50" cy="45" r="8" fill="currentColor" opacity="0.9"/>
+                </svg>
+                Made in Columbus, OH
+            </div>
+        </div>
 
         </footer>
     </div>
