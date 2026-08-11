@@ -151,6 +151,22 @@
             <h1>Neighborhood Micro-Sites</h1>
             <p class="description">Explore neighborhood-specific data for Columbus micromobility.</p>
         </header>
+
+        <section style="margin: 2rem 0; padding: 2rem; background: rgba(250, 167, 26, 0.05); border: 1px solid var(--color-border); border-radius: 8px;">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; font-family: 'Newsreader', serif;">Operator Analysis</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Compare market positioning, competitive dynamics, and strategic insights for individual operators.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <a href="operators/veo/" style="display: block; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#2ecc71'; this.style.boxShadow='0 4px 12px rgba(46, 204, 113, 0.1)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #2ecc71;">🔋 Veo</div>
+                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Scooter specialist with urban core focus and 11 service areas</div>
+                </a>
+                <a href="operators/spin/" style="display: block; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#00bfa5'; this.style.boxShadow='0 4px 12px rgba(0, 191, 165, 0.1)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #00bfa5;">🚴 Spin</div>
+                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Multi-modal (bikes + scooters) with suburban market leadership</div>
+                </a>
+            </div>
+        </section>
+
         <div class="neighborhoods-grid" id="neighborhoods"></div>
         <section class="donation-section">
             <h3>🍔 Buy Me Lunch</h3>
