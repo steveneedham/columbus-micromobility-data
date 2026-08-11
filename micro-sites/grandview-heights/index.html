@@ -588,7 +588,7 @@
                 area: area.toFixed(2),
                 density: area > 0 ? (vehicles / area).toFixed(2) : 0
             };
-       
+        }
 
         function renderCanvasMap(vehicles, c311Requests, boundaryGeoJSON) {
             const canvas = document.getElementById('neighborhood-map');
@@ -599,13 +599,16 @@
             canvas.height = 400;
 
             // Get boundary coordinates
-            let boundaryCoords = [];
+            let rings = [];
             if (boundaryGeoJSON && boundaryGeoJSON.features && boundaryGeoJSON.features.length > 0) {
                 const geometry = boundaryGeoJSON.features[0].geometry;
                 if (geometry.type === 'Polygon') {
-                    boundaryCoords = geometry.coordinates[0];
+                    rings = [geometry.coordinates[0]];
+                } else if (geometry.type === 'MultiPolygon') {
+                    rings = geometry.coordinates.map(polygon => polygon[0]);
                 }
             }
+            const boundaryCoords = rings.flat();
 
             if (boundaryCoords.length === 0) {
                 ctx.fillStyle = '#f5f5f5';
@@ -649,16 +652,19 @@
             ctx.strokeStyle = '#999';
             ctx.lineWidth = 2;
             ctx.fillStyle = 'rgba(200, 200, 200, 0.1)';
-            ctx.beginPath();
-            const firstPoint = project(boundaryCoords[0][0], boundaryCoords[0][1]);
-            ctx.moveTo(firstPoint.x, firstPoint.y);
-            for (let i = 1; i < boundaryCoords.length; i++) {
-                const point = project(boundaryCoords[i][0], boundaryCoords[i][1]);
-                ctx.lineTo(point.x, point.y);
-            }
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
+            rings.forEach(ring => {
+                if (!ring || ring.length === 0) return;
+                ctx.beginPath();
+                const firstPoint = project(ring[0][0], ring[0][1]);
+                ctx.moveTo(firstPoint.x, firstPoint.y);
+                for (let i = 1; i < ring.length; i++) {
+                    const point = project(ring[i][0], ring[i][1]);
+                    ctx.lineTo(point.x, point.y);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            });
 
             // Draw 311 request markers (red circles)
             c311Requests.forEach(record => {
@@ -721,7 +727,7 @@
             ctx.fill();
             ctx.fillStyle = '#333';
             ctx.fillText('311 Request', legendX + 85, legendY + 36);
-        } }
+        }
 
                 function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount) {
             const insightsContainer = document.getElementById('insightsContainer');
