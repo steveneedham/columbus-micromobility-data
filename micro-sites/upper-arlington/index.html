@@ -473,9 +473,9 @@
 
 
         <div class="forecast-section" id="forecastSection" style="display: none;">
-            <h2>🔬 Micromobility Forecast</h2>
+            <h2>311 Outlook</h2>
             <div class="forecast-grid" id="forecastContainer"></div>
-            <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 1rem;">Predictions based on current trends and historical patterns</p>
+            <p id="forecastMethod" style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 1rem;"></p>
         </div>
 
         <div class="movement-section" id="movementSection" style="display: none;">
@@ -494,7 +494,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
-            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v9</p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v10</p>
         </footer>
     </div>
 
@@ -1284,53 +1284,42 @@
             `).join('');
         }
 
+        // Straight-line projection from the rate actually observed in the 311
+        // window. Vehicles are deliberately not projected: data-gbfs.json is a
+        // single live snapshot, and data-gbfs-observations.json only carries
+        // citywide fleet totals, so there is no per-neighborhood series to
+        // project from and any vehicle figure here would be invented.
         function generateForecast(c311Count, totalVehicles, hubsCount) {
             const forecastContainer = document.getElementById('forecastContainer');
+            const perDay = c311Count / C311_WINDOW_DAYS;
 
-            const now = new Date();
-            const hours = now.getHours();
-            const isDayTime = hours >= 7 && hours < 22;
-            const isWeekend = now.getDay() === 0 || now.getDay() === 6;
-
-            // Calculate forecast multipliers based on time patterns
-            const timeMultiplier = isDayTime ? 1.2 : 0.8;
-            const weekendMultiplier = isWeekend ? 1.15 : 1.0;
-
-            // Generate forecasts for next 3 periods
-            const forecasts = [
-                {
-                    period: 'Next 12 hours',
-                    vehicles: Math.round(totalVehicles * timeMultiplier * weekendMultiplier),
-                    requests: Math.round(c311Count * timeMultiplier * weekendMultiplier),
-                    confidence: '85%',
-                    trend: isDayTime ? '↑ Peak hours' : '↓ Off-peak'
-                },
-                {
-                    period: 'Next 24-48 hours',
-                    vehicles: Math.round(totalVehicles * 0.95),
-                    requests: Math.round(c311Count * 1.1),
-                    confidence: '72%',
-                    trend: isWeekend ? '↑ Weekend demand' : '→ Stable'
-                },
-                {
-                    period: 'Next week',
-                    vehicles: Math.round(totalVehicles * 1.05),
-                    requests: Math.round(c311Count * 1.15),
-                    confidence: '58%',
-                    trend: '↑ Growth trend'
-                }
-            ];
+            const forecasts = [7, 14, 30].map(days => {
+                const expected = perDay * days;
+                // Normal approximation to a Poisson count, clamped at zero.
+                const spread = 1.645 * Math.sqrt(expected);
+                return {
+                    period: `Next ${days} days`,
+                    expected: Math.round(expected),
+                    low: Math.max(0, Math.round(expected - spread)),
+                    high: Math.round(expected + spread)
+                };
+            });
 
             forecastContainer.innerHTML = forecasts.map(f => `
                 <div class="forecast-card">
                     <div class="forecast-period">${f.period}</div>
-                    <div class="forecast-metric">Vehicles</div>
-                    <div class="forecast-value">${f.vehicles}</div>
-                    <div class="forecast-metric" style="margin-top: 0.75rem;">311 Requests</div>
-                    <div class="forecast-value">${f.requests}</div>
-                    <div class="forecast-note">Confidence: ${f.confidence}<br>${f.trend}</div>
+                    <div class="forecast-metric">New 311 requests</div>
+                    <div class="forecast-value">${f.expected}</div>
+                    <div class="forecast-note">${c311Count > 0 ? `Likely ${f.low}\u2013${f.high}` : 'No requests to project from'}</div>
                 </div>
             `).join('');
+
+            const method = document.getElementById('forecastMethod');
+            if (method) {
+                method.textContent = c311Count > 0
+                    ? `Projected from the ${c311Count} request${c311Count !== 1 ? 's' : ''} recorded here in the last ${C311_WINDOW_DAYS} days — a rate of ${perDay.toFixed(2)} per day, carried forward. The range is a 90% interval for a count at that rate. Vehicle counts are a single live snapshot and are not projected.`
+                    : `No 311 requests were recorded here in the last ${C311_WINDOW_DAYS} days, so there is no rate to project from.`;
+            }
         }
 
 
