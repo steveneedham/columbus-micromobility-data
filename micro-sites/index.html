@@ -28,6 +28,64 @@
         .stat { display: flex; flex-direction: column; gap: 0.25rem; }
         .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); }
         .stat-value { font-size: 1.5rem; font-weight: 600; color: var(--color-accent-amber); font-family: 'IBM Plex Mono', monospace; }
+        
+        .donation-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(250, 167, 26, 0.08);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .donation-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-family: 'Newsreader', serif;
+        }
+
+        .donation-section p {
+            color: var(--color-text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9375rem;
+        }
+
+        .donation-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .donation-link {
+            display: inline-block;
+            padding: 0.6rem 1rem;
+            background: var(--color-accent-amber);
+            color: #1a1714;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .donation-link:hover {
+            background: #f89d00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(250, 167, 26, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .donation-section {
+                margin-left: -1rem;
+                margin-right: -1rem;
+                border-left: none;
+                border-right: none;
+                border-radius: 0;
+            }
+        }
+
         footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-border); font-size: 0.875rem; color: var(--color-text-secondary); }
         @media (max-width: 768px) { .neighborhoods-grid { grid-template-columns: 1fr; } h1 { font-size: 2rem; } }
     </style>
@@ -40,6 +98,17 @@
             <p class="description">Explore neighborhood-specific data for Columbus micromobility.</p>
         </header>
         <div class="neighborhoods-grid" id="neighborhoods"></div>
+        <section class="donation-section">
+            <h3>🍔 Buy Me Lunch</h3>
+            <p>If you find this data useful, consider supporting the work.</p>
+            <div class="donation-links">
+                <a href="https://buymeacoffee.com/steveneedham" class="donation-link">☕ Coffee</a>
+                <a href="https://ko-fi.com/steveneedham" class="donation-link">💖 Ko-fi</a>
+                <a href="https://venmo.com/steveneedham" class="donation-link">💳 Venmo</a>
+                <a href="https://cash.app/$steveneedham" class="donation-link">💲 Cash App</a>
+            </div>
+        </section>
+
         <footer>
             <p><strong>Data sources:</strong> Columbus 311 (City of Columbus system only; Dublin and Grandview have separate 311 systems not yet integrated), GBFS operators (Veo, Spin), OpenStreetMap</p>
         </footer>
