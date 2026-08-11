@@ -232,6 +232,95 @@
             font-family: 'Newsreader', serif;
         }
 
+        /* Near-term events sit inside the outlook, because they are the main
+           reason a week departs from the baseline rate. */
+        .events-highlight {
+            margin-top: 1rem;
+            padding: 1rem 1.25rem;
+            background: rgba(250, 167, 26, 0.1);
+            border-left: 3px solid var(--color-accent-amber);
+            border-radius: 4px;
+        }
+
+        .events-highlight-group + .events-highlight-group {
+            margin-top: 0.9rem;
+            padding-top: 0.9rem;
+            border-top: 1px solid rgba(161, 116, 8, 0.25);
+        }
+
+        .events-highlight-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .events-highlight .event-row {
+            padding: 0.35rem 0;
+            border-bottom: 0;
+        }
+
+        .events-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        .events-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-family: 'Newsreader', serif;
+        }
+
+        .event-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .event-row:last-child { border-bottom: 0; }
+
+        .event-date {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-accent-amber);
+            min-width: 6.5rem;
+        }
+
+        .event-name { font-weight: 600; }
+
+        .event-meta {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* Not every listing is equally certain; the workbook's own status
+           column is surfaced rather than flattened away. */
+        .event-status {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.1rem 0.45rem;
+            border-radius: 3px;
+            border: 1px solid currentColor;
+        }
+
+        .event-status.status-scheduled { color: #1b7f3b; }
+        .event-status.status-projected { color: #a17408; }
+        .event-status.status-unconfirmed { color: #b3271b; }
+
+        .events-note {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            margin-top: 1rem;
+        }
+
         /* Insight sections: trends, interventions, forecast, operator activity */
         .trend-section,
         .interventions-section,
@@ -505,6 +594,7 @@
         <div class="forecast-section" id="forecastSection" style="display: none;">
             <h2 id="forecastHeading">311 Outlook</h2>
             <div class="forecast-grid" id="forecastContainer"></div>
+            <div class="events-highlight" id="eventsHighlight" style="display: none;"></div>
             <p id="forecastMethod" style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 1rem;"></p>
         </div>
 
@@ -512,6 +602,12 @@
             <h2 id="movementHeading">⚙️ Operator Activity</h2>
             <div class="movement-grid" id="movementContainer"></div>
             <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 1rem;">Vehicle movement and rebalancing intensity based on density and time patterns</p>
+        </div>
+
+        <div class="events-section" id="eventsSection" style="display: none;">
+            <h2 id="eventsHeading">Events That Tend to Impact This Neighborhood</h2>
+            <div id="eventsList"></div>
+            <p class="events-note" id="eventsNote"></p>
         </div>
 
         <div class="info-section">
@@ -524,7 +620,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
-            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v12</p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v14</p>
         </footer>
     </div>
 
@@ -559,6 +655,7 @@
             interventionsSection: 'Actions raised automatically when a figure crosses a threshold, or when a ride hub has no vehicle within 100 m or more vehicles nearby than it has docks. Suggestions from the current snapshot, not instructions from the city.',
             forecastSection: `Straight-line projection. The requests recorded here in the last ${C311_WINDOW_DAYS} days give a per-day rate, carried forward over each horizon. The range is a 90% interval for a count arriving at that rate. Vehicles are a single live snapshot with no per-neighborhood history, so they are not projected.`,
             movementSection: 'Estimated rebalancing intensity, inferred from vehicle density and the time of day — peak hours are 8-10am, noon-1pm and 5-7pm. An estimate from one snapshot, not measured vehicle movement.',
+            eventsSection: 'Events at venues in or beside this neighborhood, which tend to drive trips through it. Cross-referenced by the venue area recorded in the source workbook, not by coordinate, so a venue just outside the boundary still counts. Status labels come from that workbook: scheduled entries are confirmed, projected and unconfirmed ones are not.',
             mapSection: 'Vehicles are circles coloured by operator, 311 requests are diamonds coloured by priority, red rings mark cross-vendor pile-ups, and ride hubs carry a badge counting the vehicles within 100 m.'
         };
 
@@ -662,6 +759,7 @@
                 trendsHeading: TOOLTIPS.trendsSection,
                 interventionsHeading: TOOLTIPS.interventionsSection,
                 forecastHeading: TOOLTIPS.forecastSection,
+                eventsHeading: TOOLTIPS.eventsSection,
                 movementHeading: TOOLTIPS.movementSection
             };
             Object.keys(headings).forEach(id => {
@@ -742,6 +840,96 @@
                     console.error('Point in polygon error:', e2);
                 }
                 return false;
+            }
+        }
+
+        // Events are cross-referenced to neighborhoods in scripts/build_events_data.py
+        // and read here from the generated data file.
+        async function loadNeighborhoodEvents() {
+            const section = document.getElementById('eventsSection');
+            if (!section) return;
+            try {
+                const response = await fetch('/columbus-micromobility-data/data-events.json');
+                if (!response.ok) return;
+                const payload = await response.json();
+                const info = payload.neighborhoods && payload.neighborhoods[NEIGHBORHOOD_SLUG];
+                if (!info || !info.recorded_total) return;
+
+                // The data file splits past from upcoming when it is generated, so
+                // re-filter here: the list stays correct as time passes even if the
+                // file has not been regenerated.
+                const todayISO = new Date().toISOString().slice(0, 10);
+                const upcoming = (info.upcoming || []).filter(event => event.date >= todayISO);
+                const list = document.getElementById('eventsList');
+
+                if (upcoming.length) {
+                    list.innerHTML = upcoming.slice(0, 12).map(event => {
+                        const when = new Date(event.date + 'T12:00:00Z').toLocaleDateString('en-US',
+                            { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+                        const status = String(event.status || '').toLowerCase();
+                        const crowd = event.attendance
+                            ? ` &middot; ~${Number(event.attendance).toLocaleString()} attending`
+                            : '';
+                        return `
+                            <div class="event-row">
+                                <span class="event-date">${when}</span>
+                                <span class="event-name">${event.event}</span>
+                                <span class="event-meta">${event.venue}${crowd}</span>
+                                <span class="event-status status-${status}">${event.status}</span>
+                            </div>`;
+                    }).join('');
+                } else {
+                    list.innerHTML = '<p class="event-meta">No upcoming events are listed for this neighborhood.</p>';
+                }
+
+                const categories = (info.top_categories || [])
+                    .map(pair => `${pair[0]} (${pair[1]})`).join(', ');
+                const more = upcoming.length > 12 ? ` Showing the next 12 of ${upcoming.length} upcoming.` : '';
+                document.getElementById('eventsNote').textContent =
+                    `${info.recorded_total} events recorded at these venues since 2024${categories ? ' — mostly ' + categories : ''}.${more} ` +
+                    `Cross-referenced by venue area, so a venue just outside the boundary still counts. Source: ${payload.source_workbook}.`;
+
+                section.style.display = 'block';
+
+                // Near-term events are highlighted on the outlook: a ball game or a
+                // match is the usual reason a week runs above the baseline rate.
+                // Split into this week and next week so it lines up with how the
+                // outlook horizons read.
+                const dayMs = 24 * 60 * 60 * 1000;
+                const now = Date.now();
+                const eventTime = event => new Date(event.date + 'T12:00:00Z').getTime();
+                const thisWeek = upcoming.filter(e => eventTime(e) <= now + 7 * dayMs);
+                const nextWeek = upcoming.filter(e =>
+                    eventTime(e) > now + 7 * dayMs && eventTime(e) <= now + 14 * dayMs);
+
+                const eventRow = event => {
+                    const when = new Date(event.date + 'T12:00:00Z').toLocaleDateString('en-US',
+                        { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+                    const status = String(event.status || '').toLowerCase();
+                    return `
+                        <div class="event-row">
+                            <span class="event-date">${when}</span>
+                            <span class="event-name">${event.event}</span>
+                            <span class="event-meta">${event.venue}</span>
+                            <span class="event-status status-${status}">${event.status}</span>
+                        </div>`;
+                };
+
+                const highlight = document.getElementById('eventsHighlight');
+                if (highlight && (thisWeek.length || nextWeek.length)) {
+                    const groups = [
+                        ['This week', thisWeek],
+                        ['Next week', nextWeek]
+                    ].filter(group => group[1].length);
+                    highlight.innerHTML = groups.map(group => `
+                        <div class="events-highlight-group">
+                            <div class="events-highlight-title">${group[0]} &middot; ${group[1].length} event${group[1].length !== 1 ? 's' : ''} likely to lift demand here</div>
+                            ${group[1].map(eventRow).join('')}
+                        </div>`).join('');
+                    highlight.style.display = 'block';
+                }
+            } catch (err) {
+                console.warn('Could not load neighborhood events:', err);
             }
         }
 
@@ -1485,6 +1673,7 @@
 
         // Initialize
         applySectionTooltips();
+        loadNeighborhoodEvents();
         document.getElementById('debugMessages').style.display = 'block';
         document.getElementById('debugText').textContent = '⏳ Loading data...';
         (async function() {

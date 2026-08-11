@@ -1,0 +1,478 @@
+{
+  "generated_at": "2026-08-11T04:10:35.622488+00:00",
+  "source_workbook": "Claude Forecast 0 Columbus_Micromobility_Events_Historical_2024-2026.xlsx",
+  "method": "Events are cross-referenced to neighborhoods by the venue area recorded in the source workbook, not by coordinate. A listing means the event tends to drive trips through the neighborhood, not that the venue sits inside the boundary polygon.",
+  "caveat": "The workbook is an AI-compiled event list carrying its own status column and a Data Gaps sheet. Scheduled, Projected and Unconfirmed entries are not equally certain and are labelled as such.",
+  "unmapped_areas": {
+    "Cleveland (not Columbus)": "outside Columbus",
+    "Ohio Expo Center": "no micro-site covers the fairgrounds"
+  },
+  "neighborhoods": {
+    "downtown": {
+      "upcoming": [
+        {
+          "date": "2026-08-14",
+          "event": "Zac Brown Band - Love & Fear Tour",
+          "category": "Concert",
+          "venue": "Nationwide Arena",
+          "area": "Nationwide Arena",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "search summary"
+        },
+        {
+          "date": "2026-08-18",
+          "event": "Clippers homestand vs St. Paul (start of 6-game series)",
+          "category": "Sports - MiLB (homestand)",
+          "venue": "Huntington Park",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "milb.com/columbus/schedule"
+        },
+        {
+          "date": "2026-08-19",
+          "event": "Columbus Crew vs CF Montreal",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-08-29",
+          "event": "Columbus Crew vs New England Revolution",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-09-01",
+          "event": "Clippers homestand vs Iowa (start of 6-game series)",
+          "category": "Sports - MiLB (homestand)",
+          "venue": "Huntington Park",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "milb.com/columbus/schedule"
+        },
+        {
+          "date": "2026-09-05",
+          "event": "Columbus Crew vs Colorado Rapids",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-09-12",
+          "event": "Columbus Crew vs Red Bull New York",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-09-15",
+          "event": "Clippers homestand vs St. Paul (start of 6-game series)",
+          "category": "Sports - MiLB (homestand)",
+          "venue": "Huntington Park",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "milb.com/columbus/schedule"
+        },
+        {
+          "date": "2026-09-27",
+          "event": "Columbus Crew vs Inter Miami CF",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-10-13",
+          "event": "Blue Jackets vs New Jersey Devils (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-10-14",
+          "event": "Columbus Crew vs Charlotte FC",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-10-16",
+          "event": "Blue Jackets vs Colorado Avalanche (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-10-17",
+          "event": "Columbus Marathon / Half Marathon (provisional) (Oct 17-Oct 18)",
+          "category": "Race",
+          "venue": "Downtown Columbus",
+          "area": "Downtown Columbus",
+          "attendance": 15000,
+          "status": "Unconfirmed",
+          "source": "My Best Runs / ahotu"
+        },
+        {
+          "date": "2026-10-18",
+          "event": "Blue Jackets vs Tampa Bay Lightning (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-10-24",
+          "event": "Blue Jackets vs Washington Capitals (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-10-24",
+          "event": "Columbus Crew vs Toronto FC",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-10-29",
+          "event": "Blue Jackets vs Toronto Maple Leafs (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-10-31",
+          "event": "Columbus Crew vs D.C. United",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-11-01",
+          "event": "Blue Jackets vs St. Louis Blues (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-11-13",
+          "event": "Blue Jackets vs Edmonton Oilers (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-11-15",
+          "event": "Blue Jackets vs New York Rangers (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-11-17",
+          "event": "Blue Jackets vs Montreal Canadiens (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-11-26",
+          "event": "Blue Jackets vs Toronto Maple Leafs (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-11-28",
+          "event": "Blue Jackets vs Pittsburgh Penguins (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-12-04",
+          "event": "Blue Jackets vs Detroit Red Wings (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-12-04",
+          "event": "GalaxyCon Columbus (provisional) (Dec 04-Dec 06)",
+          "category": "Convention",
+          "venue": "Greater Columbus Convention Center",
+          "area": "Greater Columbus Convention Center",
+          "attendance": null,
+          "status": "Unconfirmed",
+          "source": "Eventeny/FanCons pattern"
+        },
+        {
+          "date": "2026-12-11",
+          "event": "Blue Jackets vs Ottawa Senators (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-12-13",
+          "event": "Blue Jackets vs Vegas Golden Knights (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-12-16",
+          "event": "Blue Jackets vs Anaheim Ducks (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-12-18",
+          "event": "Blue Jackets vs Minnesota Wild (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-12-28",
+          "event": "Blue Jackets vs New York Islanders (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
+          "date": "2026-12-31",
+          "event": "Blue Jackets vs New Jersey Devils (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        }
+      ],
+      "recorded_total": 206,
+      "recorded_past": 174,
+      "top_categories": [
+        [
+          "Sports - NHL",
+          99
+        ],
+        [
+          "Sports - MLS",
+          50
+        ],
+        [
+          "Sports - MiLB (homestand)",
+          26
+        ],
+        [
+          "Concert",
+          12
+        ]
+      ],
+      "areas": [
+        "Arena District",
+        "Downtown Columbus",
+        "Greater Columbus Convention Center",
+        "Greater Columbus Convention Center + downtown",
+        "Nationwide Arena"
+      ]
+    },
+    "short-north": {
+      "upcoming": [],
+      "recorded_total": 6,
+      "recorded_past": 6,
+      "top_categories": [
+        [
+          "Festival",
+          3
+        ],
+        [
+          "Festival/Parade",
+          3
+        ]
+      ],
+      "areas": [
+        "Goodale Park / Short North",
+        "Short North Arts District"
+      ]
+    },
+    "the-ohio-state-university": {
+      "upcoming": [
+        {
+          "date": "2026-09-05",
+          "event": "Ohio State Football vs Ball State",
+          "category": "Sports - College Football",
+          "venue": "Ohio Stadium",
+          "area": "University District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
+        },
+        {
+          "date": "2026-09-19",
+          "event": "Ohio State Football vs Kent State",
+          "category": "Sports - College Football",
+          "venue": "Ohio Stadium",
+          "area": "University District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
+        },
+        {
+          "date": "2026-09-26",
+          "event": "Ohio State Football vs Illinois",
+          "category": "Sports - College Football",
+          "venue": "Ohio Stadium",
+          "area": "University District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
+        },
+        {
+          "date": "2026-10-10",
+          "event": "Ohio State Football vs Maryland (Homecoming)",
+          "category": "Sports - College Football",
+          "venue": "Ohio Stadium",
+          "area": "University District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
+        },
+        {
+          "date": "2026-11-07",
+          "event": "Ohio State Football vs Oregon",
+          "category": "Sports - College Football",
+          "venue": "Ohio Stadium",
+          "area": "University District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
+        },
+        {
+          "date": "2026-11-14",
+          "event": "Ohio State Football vs Northwestern",
+          "category": "Sports - College Football",
+          "venue": "Ohio Stadium",
+          "area": "University District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
+        },
+        {
+          "date": "2026-11-28",
+          "event": "Ohio State Football vs Michigan",
+          "category": "Sports - College Football",
+          "venue": "Ohio Stadium",
+          "area": "University District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
+        }
+      ],
+      "recorded_total": 35,
+      "recorded_past": 28,
+      "top_categories": [
+        [
+          "Sports - College Football",
+          22
+        ],
+        [
+          "Concert",
+          12
+        ],
+        [
+          "Sports - NHL Special Event",
+          1
+        ]
+      ],
+      "areas": [
+        "Newport Music Hall",
+        "Ohio Stadium",
+        "Schottenstein Center",
+        "University District"
+      ]
+    }
+  }
+}
