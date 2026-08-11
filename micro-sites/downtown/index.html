@@ -548,13 +548,10 @@
             document.getElementById('lastUpdatedGBFS').textContent = formatDate(gbfsFetchedAt);
             document.getElementById('lastUpdated311').textContent = formatDate(c311FetchedAt);
         
-            document.getElementById('trendsSection').style.display = 'block';
-            document.getElementById('interventionsSection').style.display = 'block';
-            document.getElementById('forecastSection').style.display = 'block';
-            document.getElementById('movementSection').style.display = 'block';
-            generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
-            generateForecast(c311Count, totalVehicles, hubsCount);
-            generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
+            document.getElementById('trendsSection').style.display = 'none';
+            document.getElementById('interventionsSection').style.display = 'none';
+            document.getElementById('forecastSection').style.display = 'none';
+            document.getElementById('movementSection').style.display = 'none';
 }
 
 
