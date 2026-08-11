@@ -7,7 +7,6 @@
     <meta name="description" content="Live neighborhood data: A historic and artistic neighborhood with vibrant cultural attractions.">
     <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/victorian-village/">
     <link rel="icon" type="image/svg+xml" href="../../assets/field-ledger-mark.svg">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
 
@@ -300,7 +299,6 @@
         </footer>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script>
         const NEIGHBORHOOD_NAME = 'Victorian Village';
@@ -491,22 +489,6 @@
                             const point = turf.point([hub.geometry.coordinates[0], hub.geometry.coordinates[1]]);
                             if (pointInPolygon(point, boundaryGeoJSON)) {
                                 hubsInBoundary.push(hub);
-
-                                // Add marker to map
-                                if (map) {
-                                    try {
-                                        L.circleMarker([hub.geometry.coordinates[1], hub.geometry.coordinates[0]], {
-                                            radius: 8,
-                                            fillColor: '#9c27b0',
-                                            color: '#9c27b0',
-                                            weight: 2,
-                                            opacity: 0.8,
-                                            fillOpacity: 0.6
-                                        }).bindPopup(`<strong>CBUS Ride Hub</strong><br>Name: ${hub.properties.name || 'unknown'}<br>Capacity: ${hub.properties.capacity || 'unknown'}<br>Bikes: ${hub.properties.bikes || 'unknown'}`).addTo(map);
-                                    } catch (markerErr) {
-                                        console.warn('Failed to add ride hub marker:', markerErr);
-                                    }
-                                }
                             }
                         });
                     }
@@ -520,6 +502,13 @@
                     const c311Count = c311RequestsInBoundary.length;
                     const hubsCount = hubsInBoundary.length;
                     updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at, c311Data.fetched_at);
+
+                    // Render canvas map after data is loaded
+                    try {
+                        renderCanvasMap(vehiclesInBoundary, c311RequestsInBoundary, boundaryGeoJSON);
+                    } catch (canvasErr) {
+                        console.warn('Failed to render canvas map:', canvasErr);
+                    }
                 } catch (metricsErr) {
                     console.error('Error updating metrics:', metricsErr);
                     document.getElementById('debugMessages').style.display = 'block';
@@ -632,7 +621,140 @@
                 area: area.toFixed(2),
                 density: area > 0 ? (vehicles / area).toFixed(2) : 0
             };
-        }
+       
+
+        function renderCanvasMap(vehicles, c311Requests, boundaryGeoJSON) {
+            const canvas = document.getElementById('neighborhood-map');
+            if (!canvas || !canvas.getContext) return;
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = 400;
+
+            // Get boundary coordinates
+            let boundaryCoords = [];
+            if (boundaryGeoJSON && boundaryGeoJSON.features && boundaryGeoJSON.features.length > 0) {
+                const geometry = boundaryGeoJSON.features[0].geometry;
+                if (geometry.type === 'Polygon') {
+                    boundaryCoords = geometry.coordinates[0];
+                }
+            }
+
+            if (boundaryCoords.length === 0) {
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#999';
+                ctx.font = '14px sans-serif';
+                ctx.fillText('No boundary data available', 10, 30);
+                return;
+            }
+
+            // Calculate bounds from boundary coordinates
+            let minLng = Infinity, maxLng = -Infinity;
+            let minLat = Infinity, maxLat = -Infinity;
+            boundaryCoords.forEach(([lng, lat]) => {
+                minLng = Math.min(minLng, lng);
+                maxLng = Math.max(maxLng, lng);
+                minLat = Math.min(minLat, lat);
+                maxLat = Math.max(maxLat, lat);
+            });
+
+            // Add padding to bounds
+            const lngPadding = (maxLng - minLng) * 0.1;
+            const latPadding = (maxLat - minLat) * 0.1;
+            minLng -= lngPadding;
+            maxLng += lngPadding;
+            minLat -= latPadding;
+            maxLat += latPadding;
+
+            // Create projection function
+            const project = (lng, lat) => {
+                const x = ((lng - minLng) / (maxLng - minLng)) * canvas.width;
+                const y = canvas.height - ((lat - minLat) / (maxLat - minLat)) * canvas.height;
+                return { x, y };
+            };
+
+            // Draw background
+            ctx.fillStyle = '#fafaf8';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw boundary polygon
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.fillStyle = 'rgba(200, 200, 200, 0.1)';
+            ctx.beginPath();
+            const firstPoint = project(boundaryCoords[0][0], boundaryCoords[0][1]);
+            ctx.moveTo(firstPoint.x, firstPoint.y);
+            for (let i = 1; i < boundaryCoords.length; i++) {
+                const point = project(boundaryCoords[i][0], boundaryCoords[i][1]);
+                ctx.lineTo(point.x, point.y);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw 311 request markers (red circles)
+            c311Requests.forEach(record => {
+                const point = project(record.longitude, record.latitude);
+                ctx.fillStyle = '#e74c3c';
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw vehicle markers (colored by company)
+            vehicles.forEach(vehicle => {
+                const point = project(vehicle.lng, vehicle.lat);
+                const isVeo = vehicle.company === 'Veo';
+                ctx.fillStyle = isVeo ? '#00bfa5' : '#ff8a50';
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Add white outline
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // Draw legend
+            const legendX = 10;
+            const legendY = canvas.height - 70;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.fillRect(legendX, legendY, 180, 65);
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(legendX, legendY, 180, 65);
+
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.fillText('Legend', legendX + 8, legendY + 18);
+
+            // Veo marker
+            ctx.fillStyle = '#00bfa5';
+            ctx.beginPath();
+            ctx.arc(legendX + 15, legendY + 32, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#333';
+            ctx.font = '11px sans-serif';
+            ctx.fillText('Veo', legendX + 25, legendY + 36);
+
+            // Spin marker
+            ctx.fillStyle = '#ff8a50';
+            ctx.beginPath();
+            ctx.arc(legendX + 15, legendY + 47, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#333';
+            ctx.fillText('Spin', legendX + 25, legendY + 51);
+
+            // 311 marker
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.arc(legendX + 75, legendY + 32, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#333';
+            ctx.fillText('311 Request', legendX + 85, legendY + 36);
+        } }
 
                 function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount) {
             const insightsContainer = document.getElementById('insightsContainer');
