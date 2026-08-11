@@ -193,6 +193,12 @@
             margin: 2rem 0;
         }
 
+        .map-note {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            margin-top: -1rem;
+        }
+
         .map-section h2 {
             font-size: 1.25rem;
             font-weight: 600;
@@ -247,10 +253,44 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Direction, not judgement: these mark high vs low, not good vs bad. */
-        .trend-up { color: #b8730f; }
-        .trend-down { color: #00806f; }
-        .trend-stable { color: var(--color-text-secondary); }
+        /* Green good, red bad, amber holding steady or worth watching. */
+        .trend-good { color: #1b7f3b; }
+        .trend-bad { color: #b3271b; }
+        .trend-caution { color: #a17408; }
+
+        .trend-arrow {
+            font-weight: 700;
+            font-size: 1.35em;
+            line-height: 1;
+            vertical-align: -0.05em;
+        }
+
+        /* Operator identity, consistent with the map markers. */
+        .vehicle-operator.operator-veo {
+            background: rgba(0, 191, 165, 0.06);
+            border-left-color: var(--color-accent-teal);
+        }
+
+        .vehicle-operator.operator-veo .operator-name,
+        .vehicle-operator.operator-veo .operator-count {
+            color: var(--color-accent-teal);
+        }
+
+        .vehicle-operator.operator-spin {
+            background: rgba(250, 167, 26, 0.1);
+            border-left-color: var(--color-accent-amber);
+        }
+
+        .vehicle-operator.operator-spin .operator-name,
+        .vehicle-operator.operator-spin .operator-count {
+            color: var(--color-accent-amber);
+        }
+
+        .operator-density {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            margin-top: 0.25rem;
+        }
 
         .insight-text,
         .movement-desc,
@@ -364,6 +404,7 @@
         <div class="map-section">
             <h2>Neighborhood Boundary</h2>
             <canvas id="neighborhood-map" style="border: 1px solid var(--color-border); border-radius: 8px; width: 100%; height: 400px; display: block; margin: 2rem 0;"></canvas>
+            <p class="map-note">Ride hub markers fill in proportion to the vehicles within 100&nbsp;m of the hub. A red outline means no vehicle is nearby; amber means more vehicles are nearby than the hub has docks. Red rings mark cross-vendor pile-ups — four or more vehicles from more than one operator within 20&nbsp;m. Proximity is an estimate; it does not prove a vehicle is parked at a hub.</p>
         </div>
 
         <div class="info-section" id="dataSection" style="display: none;">
@@ -412,7 +453,7 @@
 
         <div class="info-section">
             <h2>Data Sources</h2>
-            <p><strong>311 Data:</strong> Columbus 311 Service Request public map (City of Columbus system only; Dublin and Grandview have separate 311 systems not yet integrated) (updated <span id="lastUpdated311">—</span>)</p>
+            <p><strong>311 Data:</strong> Columbus 311 Service Request public map, counted over a rolling 30-day window (City of Columbus system only; Dublin and Grandview have separate 311 systems not yet integrated) (updated <span id="lastUpdated311">—</span>)</p>
             <p><strong>Vehicle Data:</strong> GBFS feeds from Veo and Spin (updated <span id="lastUpdatedGBFS">—</span>)</p>
             <p><strong>CBUS Ride Hubs:</strong> City of Columbus CBUS Ride bike-share locations</p>
             <p><strong>Geography:</strong> OpenStreetMap municipality and neighborhood boundaries</p>
@@ -420,7 +461,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
-            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v4</p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v9</p>
         </footer>
     </div>
 
@@ -429,6 +470,106 @@
         const NEIGHBORHOOD_NAME = 'Italian Village';
         const NEIGHBORHOOD_SLUG = 'italian-village';
         let boundaryGeoJSON = null;
+
+        // Hub occupancy is estimated the same way as the main site: any published
+        // GBFS vehicle within this radius counts toward the hub. It is a proximity
+        // signal, not proof a vehicle is parked at or docked in the hub.
+        const HUB_VEHICLE_RADIUS_M = 100;
+
+        // 311 counts are scoped to a rolling window so the metric means the same
+        // thing from one snapshot to the next.
+        const C311_WINDOW_DAYS = 30;
+
+        // 311 priority and pile-up detection are ported from the main site so the
+        // neighborhood maps use the same symbols and thresholds as the city map.
+        function normalizedPriority(complaintType) {
+            const t = String(complaintType || '');
+            if (/ada_ramp|entrance/i.test(t)) return 'critical';
+            if (/ada_concern|pile|sidewalk/i.test(t)) return 'high';
+            return 'standard';
+        }
+
+        const PRIORITY_COLOR = { critical: '#dc2626', high: '#f97316', standard: '#64748b' };
+
+        // Cross-vendor pile-up: 4 or more vehicles from more than one operator
+        // clustered within 20 m of each other.
+        function detectPileups(vehicles) {
+            const radius = 20;
+            const cell = 0.00018;
+            const buckets = new Map();
+            const usable = (vehicles || []).filter(v =>
+                typeof v.lat === 'number' && typeof v.lng === 'number');
+            usable.forEach((vehicle, index) => {
+                const key = `${Math.floor(vehicle.lat / cell)}:${Math.floor(vehicle.lng / cell)}`;
+                if (!buckets.has(key)) buckets.set(key, []);
+                buckets.get(key).push(index);
+            });
+            const visited = new Set();
+            const clusters = [];
+            usable.forEach((vehicle, index) => {
+                if (visited.has(index)) return;
+                const queue = [index];
+                const members = [];
+                visited.add(index);
+                while (queue.length) {
+                    const currentIndex = queue.pop();
+                    const current = usable[currentIndex];
+                    members.push(current);
+                    const cellLat = Math.floor(current.lat / cell);
+                    const cellLng = Math.floor(current.lng / cell);
+                    for (let y = -1; y <= 1; y += 1) {
+                        for (let x = -1; x <= 1; x += 1) {
+                            const neighbors = buckets.get(`${cellLat + y}:${cellLng + x}`) || [];
+                            neighbors.forEach(neighborIndex => {
+                                if (!visited.has(neighborIndex) &&
+                                    distanceMeters(current, usable[neighborIndex]) <= radius) {
+                                    visited.add(neighborIndex);
+                                    queue.push(neighborIndex);
+                                }
+                            });
+                        }
+                    }
+                }
+                const companies = [...new Set(members.map(member => member.company))];
+                if (members.length >= 4 && companies.length > 1) {
+                    clusters.push({
+                        vehicles: members,
+                        companies,
+                        lat: members.reduce((sum, m) => sum + m.lat, 0) / members.length,
+                        lng: members.reduce((sum, m) => sum + m.lng, 0) / members.length
+                    });
+                }
+            });
+            return clusters;
+        }
+
+        function distanceMeters(a, b) {
+            const latScale = 111320;
+            const lngScale = 111320 * Math.cos(((a.lat + b.lat) / 2) * Math.PI / 180);
+            return Math.hypot((a.lat - b.lat) * latScale, (a.lng - b.lng) * lngScale);
+        }
+
+        function annotateHubOccupancy(hubs, vehicles) {
+            const published = (vehicles || []).filter(v =>
+                typeof v.lat === 'number' && typeof v.lng === 'number');
+            hubs.forEach(hub => {
+                const coords = hub.geometry && hub.geometry.coordinates;
+                if (!Array.isArray(coords) || coords.length < 2) {
+                    hub.capacity = 0;
+                    hub.nearbyVehicles = 0;
+                    return;
+                }
+                const hubPoint = { lat: coords[1], lng: coords[0] };
+                const nearby = published.filter(v =>
+                    distanceMeters(hubPoint, v) <= HUB_VEHICLE_RADIUS_M);
+                hub.name = (hub.properties && hub.properties.SITE_NAME) || 'Columbus Ride Hub';
+                hub.capacity = Number(hub.properties && hub.properties.DOCKS) || 0;
+                hub.nearbyVehicles = nearby.length;
+                hub.nearbyVeo = nearby.filter(v => v.company === 'Veo').length;
+                hub.nearbySpin = nearby.filter(v => v.company === 'Spin').length;
+            });
+            return hubs;
+        }
 
         function formatDate(value) {
             if (!value) return 'unknown';
@@ -555,9 +696,16 @@
 
                 // Filter and display 311 requests by boundary
                 const c311RequestsInBoundary = [];
+                // Rolling window. The upstream feed is not date-scoped, so without
+                // this the count would drift with whatever the city happens to
+                // publish. Records with an unreadable date are kept rather than
+                // silently dropped.
+                const windowStart = Date.now() - C311_WINDOW_DAYS * 24 * 60 * 60 * 1000;
                 try {
                     if (c311Data && c311Data.records) {
                         c311Data.records.forEach(record => {
+                            const reportedAt = Date.parse(record.reported_at);
+                            if (!Number.isNaN(reportedAt) && reportedAt < windowStart) return;
                             const point = turf.point([record.longitude, record.latitude]);
                             if (pointInPolygon(point, boundaryGeoJSON)) {
                                 c311RequestsInBoundary.push(record);
@@ -583,16 +731,35 @@
                     console.warn('Error processing ride hubs:', hubsErr);
                 }
 
+                // Counts use every vehicle in the snapshot, not just those inside
+                // the boundary, so a hub on the edge is not undercounted.
+                try {
+                    annotateHubOccupancy(hubsInBoundary, gbfsData && gbfsData.vehicles);
+                } catch (occErr) {
+                    console.warn('Error estimating hub occupancy:', occErr);
+                }
+
+                // Detect pile-ups across the whole snapshot, as the main site does,
+                // then keep the ones whose centre falls inside this neighborhood.
+                let pileupsInBoundary = [];
+                try {
+                    pileupsInBoundary = detectPileups((gbfsData && gbfsData.vehicles) || [])
+                        .filter(cluster => pointInPolygon(
+                            turf.point([cluster.lng, cluster.lat]), boundaryGeoJSON));
+                } catch (pileErr) {
+                    console.warn('Error detecting pile-ups:', pileErr);
+                }
+
                 // Update metrics
                 try {
                     const totalVehicles = vehiclesByOperator.Veo + vehiclesByOperator.Spin;
                     const c311Count = c311RequestsInBoundary.length;
                     const hubsCount = hubsInBoundary.length;
-                    updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at || gbfsData.snapshot_id, c311Data.fetched_at);
+                    updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsData.fetched_at || gbfsData.snapshot_id, c311Data.fetched_at, hubsInBoundary);
 
                     // Render canvas map after data is loaded
                     try {
-                        renderCanvasMap(vehiclesInBoundary, c311RequestsInBoundary, boundaryGeoJSON);
+                        renderCanvasMap(vehiclesInBoundary, c311RequestsInBoundary, hubsInBoundary, pileupsInBoundary, boundaryGeoJSON);
                     } catch (canvasErr) {
                         console.warn('Failed to render canvas map:', canvasErr);
                     }
@@ -609,16 +776,17 @@
             }
         }
 
-        function updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsFetchedAt, c311FetchedAt) {
+        function updateMetrics(c311Count, totalVehicles, hubsCount, vehiclesByOperator, gbfsFetchedAt, c311FetchedAt, hubs) {
             const debugBox = document.getElementById('debugMessages');
             if (debugBox) debugBox.style.display = 'none';
 
             const metricsContainer = document.getElementById('metricsContainer');
             const { area, density } = calculateDensity(boundaryGeoJSON, totalVehicles);
             metricsContainer.innerHTML = `
-                <div class="metric-card tooltip-trigger" data-tooltip="City complaints and service requests related to micromobility in this neighborhood (parking, safety, accessibility)">
+                <div class="metric-card tooltip-trigger" data-tooltip="Micromobility-related 311 complaints and service requests reported in this neighborhood over the last ${C311_WINDOW_DAYS} days (parking, safety, accessibility)">
                     <div class="metric-label">311 Requests</div>
                     <div class="metric-value">${c311Count}</div>
+                    <div class="metric-loading">last ${C311_WINDOW_DAYS} days</div>
                 </div>
                 <div class="metric-card tooltip-trigger" data-tooltip="Live count of scooters from Veo and Spin operators currently in this neighborhood">
                     <div class="metric-label">Active Vehicles</div>
@@ -637,7 +805,7 @@
 
             // Update data section
             const dataSummary = document.getElementById('dataSummary');
-            dataSummary.innerHTML = `This neighborhood has <strong>${c311Count} 311 service request${c311Count !== 1 ? 's' : ''}</strong>, <strong>${totalVehicles} active vehicle${totalVehicles !== 1 ? 's' : ''}</strong> from Veo and Spin, and <strong>${hubsCount} CBUS Ride Hub${hubsCount !== 1 ? 's' : ''}</strong> inside this boundary.`;
+            dataSummary.innerHTML = `This neighborhood has <strong>${c311Count} 311 service request${c311Count !== 1 ? 's' : ''}</strong> in the last ${C311_WINDOW_DAYS} days, <strong>${totalVehicles} active vehicle${totalVehicles !== 1 ? 's' : ''}</strong> from Veo and Spin, and <strong>${hubsCount} CBUS Ride Hub${hubsCount !== 1 ? 's' : ''}</strong> inside this boundary.`;
 
             // Update vehicle breakdown with density
             const vehicleBreakdown = document.getElementById('vehicleBreakdown');
@@ -649,15 +817,15 @@
             const spinDensity = area && area > 0 ? (spinCount / area).toFixed(2) : 0;
             
             vehicleBreakdown.innerHTML = `
-                <div class="vehicle-operator">
+                <div class="vehicle-operator operator-veo">
                     <div class="operator-name">Veo</div>
                     <div class="operator-count">${veoCount}</div>
-                    <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.25rem;">${veoDensity} per sq mi</div>
+                    <div class="operator-density">${veoDensity} per sq mi</div>
                 </div>
-                <div class="vehicle-operator">
+                <div class="vehicle-operator operator-spin">
                     <div class="operator-name">Spin</div>
                     <div class="operator-count">${spinCount}</div>
-                    <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.25rem;">${spinDensity} per sq mi</div>
+                    <div class="operator-density">${spinDensity} per sq mi</div>
                 </div>
             `;
 
@@ -668,7 +836,7 @@
             // Reveal each section only once its generator succeeds, so a failure
             // leaves the section hidden rather than showing an empty box.
             try {
-                generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
+                generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount, hubs || []);
                 document.getElementById('trendsSection').style.display = 'block';
                 document.getElementById('interventionsSection').style.display = 'block';
             } catch (e) {
@@ -712,7 +880,7 @@
             };
         }
 
-        function renderCanvasMap(vehicles, c311Requests, boundaryGeoJSON) {
+        function renderCanvasMap(vehicles, c311Requests, hubs, pileups, boundaryGeoJSON) {
             const canvas = document.getElementById('neighborhood-map');
             if (!canvas || !canvas.getContext) return;
 
@@ -766,6 +934,18 @@
                 return { x, y };
             };
 
+            const drawDiamond = (x, y, size, fill) => {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(Math.PI / 4);
+                ctx.fillStyle = fill;
+                ctx.fillRect(-size / 2, -size / 2, size, size);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(-size / 2, -size / 2, size, size);
+                ctx.restore();
+            };
+
             // Draw background
             ctx.fillStyle = '#fafaf8';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -788,20 +968,24 @@
                 ctx.stroke();
             });
 
-            // Draw 311 request markers (red circles)
-            c311Requests.forEach(record => {
-                const point = project(record.longitude, record.latitude);
-                ctx.fillStyle = '#e74c3c';
+            // Pile-up rings sit beneath the vehicle dots so the cluster reads as
+            // an area rather than another point.
+            (pileups || []).forEach(cluster => {
+                const point = project(cluster.lng, cluster.lat);
+                ctx.fillStyle = 'rgba(220, 38, 38, 0.08)';
                 ctx.beginPath();
-                ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+                ctx.arc(point.x, point.y, 14, 0, Math.PI * 2);
                 ctx.fill();
+                ctx.strokeStyle = '#dc2626';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
             });
 
             // Draw vehicle markers (colored by company)
             vehicles.forEach(vehicle => {
                 const point = project(vehicle.lng, vehicle.lat);
                 const isVeo = vehicle.company === 'Veo';
-                ctx.fillStyle = isVeo ? '#00bfa5' : '#ff8a50';
+                ctx.fillStyle = isVeo ? '#00bfa5' : '#faa71a';
                 ctx.beginPath();
                 ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
                 ctx.fill();
@@ -812,46 +996,118 @@
                 ctx.stroke();
             });
 
-            // Draw legend
+            // 311 requests: diamonds, larger than the vehicle dots, so the two
+            // never read as the same symbol. Colour follows request priority.
+            c311Requests.forEach(record => {
+                const point = project(record.longitude, record.latitude);
+                drawDiamond(point.x, point.y, 11,
+                    PRIORITY_COLOR[normalizedPriority(record.complaint_type)]);
+            });
+
+            // Ride hubs, drawn last so they sit above the vehicle dots. The
+            // wedge shows nearby vehicles against dock capacity.
+            (hubs || []).forEach(hub => {
+                const coords = hub.geometry && hub.geometry.coordinates;
+                if (!Array.isArray(coords) || coords.length < 2) return;
+                const point = project(coords[0], coords[1]);
+                const capacity = hub.capacity || 0;
+                const nearby = hub.nearbyVehicles || 0;
+                const over = capacity > 0 && nearby > capacity;
+                const empty = nearby === 0;
+                const ratio = capacity > 0 ? Math.min(nearby / capacity, 1) : 0;
+                const radius = 7;
+
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (ratio > 0) {
+                    ctx.fillStyle = over ? '#a17408' : '#7b4fa8';
+                    ctx.beginPath();
+                    ctx.moveTo(point.x, point.y);
+                    ctx.arc(point.x, point.y, radius, -Math.PI / 2, -Math.PI / 2 + ratio * Math.PI * 2);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+
+                ctx.strokeStyle = empty ? '#b3271b' : over ? '#a17408' : '#5b3f8c';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+                ctx.stroke();
+            });
+
+            // Draw legend: two columns, three rows
             const legendX = 10;
-            const legendY = canvas.height - 70;
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-            ctx.fillRect(legendX, legendY, 180, 65);
+            const legendY = canvas.height - 84;
+            const legendW = 210;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+            ctx.fillRect(legendX, legendY, legendW, 79);
             ctx.strokeStyle = '#999';
             ctx.lineWidth = 1;
-            ctx.strokeRect(legendX, legendY, 180, 65);
+            ctx.strokeRect(legendX, legendY, legendW, 79);
 
             ctx.fillStyle = '#333';
             ctx.font = 'bold 12px sans-serif';
-            ctx.fillText('Legend', legendX + 8, legendY + 18);
+            ctx.fillText('Legend', legendX + 8, legendY + 17);
+            ctx.font = '11px sans-serif';
 
-            // Veo marker
+            const rowY = [31, 47, 63];
+            const colDot = [legendX + 15, legendX + 96];
+            const colText = [legendX + 25, legendX + 106];
+
+            // Veo
             ctx.fillStyle = '#00bfa5';
             ctx.beginPath();
-            ctx.arc(legendX + 15, legendY + 32, 4, 0, Math.PI * 2);
+            ctx.arc(colDot[0], legendY + rowY[0], 4, 0, Math.PI * 2);
             ctx.fill();
             ctx.fillStyle = '#333';
-            ctx.font = '11px sans-serif';
-            ctx.fillText('Veo', legendX + 25, legendY + 36);
+            ctx.fillText('Veo', colText[0], legendY + rowY[0] + 4);
 
-            // Spin marker
-            ctx.fillStyle = '#ff8a50';
+            // Spin
+            ctx.fillStyle = '#faa71a';
             ctx.beginPath();
-            ctx.arc(legendX + 15, legendY + 47, 4, 0, Math.PI * 2);
+            ctx.arc(colDot[0], legendY + rowY[1], 4, 0, Math.PI * 2);
             ctx.fill();
             ctx.fillStyle = '#333';
-            ctx.fillText('Spin', legendX + 25, legendY + 51);
+            ctx.fillText('Spin', colText[0], legendY + rowY[1] + 4);
 
-            // 311 marker
-            ctx.fillStyle = '#e74c3c';
+            // Pile-up ring
+            ctx.strokeStyle = '#dc2626';
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.arc(legendX + 75, legendY + 32, 4, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.arc(colDot[0], legendY + rowY[2], 6, 0, Math.PI * 2);
+            ctx.stroke();
             ctx.fillStyle = '#333';
-            ctx.fillText('311 Request', legendX + 85, legendY + 36);
+            ctx.fillText('Pile-up', colText[0], legendY + rowY[2] + 4);
+
+            // 311 diamond
+            drawDiamond(colDot[1], legendY + rowY[0], 9, PRIORITY_COLOR.standard);
+            ctx.fillStyle = '#333';
+            ctx.fillText('311 Request', colText[1], legendY + rowY[0] + 4);
+
+            // Ride hub: half-filled wedge stands for partial occupancy
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(colDot[1], legendY + rowY[1], 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#7b4fa8';
+            ctx.beginPath();
+            ctx.moveTo(colDot[1], legendY + rowY[1]);
+            ctx.arc(colDot[1], legendY + rowY[1], 5, -Math.PI / 2, Math.PI / 2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#5b3f8c';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(colDot[1], legendY + rowY[1], 5, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = '#333';
+            ctx.fillText('Ride Hub', colText[1], legendY + rowY[1] + 4);
         }
 
-                function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount) {
+                function generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount, hubs) {
             const insightsContainer = document.getElementById('insightsContainer');
             const interventionsContainer = document.getElementById('interventionsContainer');
 
@@ -866,11 +1122,11 @@
 
             // 311 Requests Trend
             let trend311 = 'stable';
-            let color311 = 'trend-stable';
+            let color311 = c311Count === 0 ? 'trend-good' : 'trend-caution';
             let arrow311 = '→';
             if (c311Count > highThreshold311) {
                 trend311 = 'high';
-                color311 = 'trend-up';
+                color311 = 'trend-bad';
                 arrow311 = '↑';
                 interventions.push({
                     title: 'High 311 Requests',
@@ -878,24 +1134,26 @@
                 });
             } else if (c311Count < mediumThreshold311 && c311Count > 0) {
                 trend311 = 'low';
-                color311 = 'trend-down';
+                color311 = 'trend-good';
                 arrow311 = '↓';
             }
 
             insights.push({
                 metric: '311 Requests',
-                trend: `${arrow311} ${trend311.charAt(0).toUpperCase() + trend311.slice(1)}`,
+                trend: `<span class="trend-arrow">${arrow311}</span> ${trend311.charAt(0).toUpperCase() + trend311.slice(1)}`,
                 color: color311,
-                insight: c311Count > 0 ? `${c311Count} active service requests need attention` : 'No active requests'
+                insight: c311Count > 0
+                    ? `${c311Count} service request${c311Count !== 1 ? 's' : ''} in the last ${C311_WINDOW_DAYS} days`
+                    : `No requests in the last ${C311_WINDOW_DAYS} days`
             });
 
             // Vehicle Availability Trend
             let trendVehicles = 'stable';
-            let colorVehicles = 'trend-stable';
+            let colorVehicles = totalVehicles === 0 ? 'trend-bad' : 'trend-good';
             let arrowVehicles = '→';
             if (totalVehicles < lowThresholdVehicles && totalVehicles > 0) {
                 trendVehicles = 'low';
-                colorVehicles = 'trend-down';
+                colorVehicles = 'trend-bad';
                 arrowVehicles = '↓';
                 interventions.push({
                     title: 'Low Vehicle Availability',
@@ -903,7 +1161,7 @@
                 });
             } else if (totalVehicles > mediumThresholdVehicles) {
                 trendVehicles = 'high';
-                colorVehicles = 'trend-up';
+                colorVehicles = 'trend-caution';
                 arrowVehicles = '↑';
                 interventions.push({
                     title: 'High Vehicle Concentration',
@@ -913,18 +1171,18 @@
 
             insights.push({
                 metric: 'Active Vehicles',
-                trend: `${arrowVehicles} ${trendVehicles.charAt(0).toUpperCase() + trendVehicles.slice(1)}`,
+                trend: `<span class="trend-arrow">${arrowVehicles}</span> ${trendVehicles.charAt(0).toUpperCase() + trendVehicles.slice(1)}`,
                 color: colorVehicles,
                 insight: totalVehicles > 0 ? `${totalVehicles} vehicles available for riders` : 'No available vehicles'
             });
 
             // Ride Hubs Trend
             let trendHubs = 'stable';
-            let colorHubs = 'trend-stable';
+            let colorHubs = 'trend-caution';
             let arrowHubs = '→';
             if (hubsCount === 0) {
                 trendHubs = 'absent';
-                colorHubs = 'trend-down';
+                colorHubs = 'trend-bad';
                 arrowHubs = '✗';
                 interventions.push({
                     title: 'No CBUS Ride Hubs',
@@ -932,16 +1190,40 @@
                 });
             } else if (hubsCount > 2) {
                 trendHubs = 'strong';
-                colorHubs = 'trend-up';
+                colorHubs = 'trend-good';
                 arrowHubs = '↑';
             }
 
             insights.push({
                 metric: 'CBUS Ride Hubs',
-                trend: `${arrowHubs} ${trendHubs.charAt(0).toUpperCase() + trendHubs.slice(1)}`,
+                trend: `<span class="trend-arrow">${arrowHubs}</span> ${trendHubs.charAt(0).toUpperCase() + trendHubs.slice(1)}`,
                 color: colorHubs,
                 insight: hubsCount > 0 ? `${hubsCount} bike-share station${hubsCount !== 1 ? 's' : ''} available` : 'None available'
             });
+
+            // Rebalancing signals, using the same 100 m proximity rule as the
+            // main site's Ride Hub status dashboard.
+            const hubList = hubs || [];
+            const emptyHubs = hubList.filter(h => (h.nearbyVehicles || 0) === 0);
+            const overHubs = hubList.filter(h => (h.capacity || 0) > 0 && (h.nearbyVehicles || 0) > h.capacity);
+
+            if (emptyHubs.length > 0) {
+                const names = emptyHubs.slice(0, 3).map(h => h.name).join(', ');
+                const more = emptyHubs.length > 3 ? `, and ${emptyHubs.length - 3} more` : '';
+                interventions.push({
+                    title: `${emptyHubs.length} Ride Hub${emptyHubs.length !== 1 ? 's' : ''} With No Vehicles Nearby`,
+                    desc: `No published vehicle sits within ${HUB_VEHICLE_RADIUS_M} m of ${names}${more}. Ask operators to rebalance vehicles toward ${emptyHubs.length !== 1 ? 'these hubs' : 'this hub'}. Proximity signal only — it does not prove the hub is empty.`
+                });
+            }
+
+            if (overHubs.length > 0) {
+                const names = overHubs.slice(0, 3).map(h => `${h.name} (${h.nearbyVehicles}/${h.capacity})`).join(', ');
+                const more = overHubs.length > 3 ? `, and ${overHubs.length - 3} more` : '';
+                interventions.push({
+                    title: `${overHubs.length} Ride Hub${overHubs.length !== 1 ? 's' : ''} Over Capacity`,
+                    desc: `More published vehicles sit within ${HUB_VEHICLE_RADIUS_M} m than the hub has docks: ${names}${more}. Ask operators to redistribute vehicles to under-served hubs. Proximity signal only — nearby vehicles may not be docked.`
+                });
+            }
 
             // Add default interventions if none exist
             if (interventions.length === 0) {
@@ -1030,7 +1312,7 @@
 
             // Estimate vehicle turnover/movement
             let movementIntensity = 'Low';
-            let movementColor = 'trend-down';
+            let movementColor = 'trend-bad';
             let movementArrow = '→';
             let movementDesc = 'Minimal rebalancing activity';
 
@@ -1040,17 +1322,17 @@
 
                 if (isPeakHour && density > 5) {
                     movementIntensity = 'High';
-                    movementColor = 'trend-up';
+                    movementColor = 'trend-good';
                     movementArrow = '↑';
                     movementDesc = 'Active rebalancing during peak demand';
                 } else if (isPeakHour || density > 3) {
                     movementIntensity = 'Medium';
-                    movementColor = 'trend-stable';
+                    movementColor = 'trend-caution';
                     movementArrow = '→';
                     movementDesc = 'Moderate operator activity';
                 } else if (hours >= 22 || hours <= 6) {
                     movementIntensity = 'Maintenance';
-                    movementColor = 'trend-stable';
+                    movementColor = 'trend-caution';
                     movementArrow = '🔧';
                     movementDesc = 'Off-peak maintenance and repositioning';
                 }
@@ -1070,7 +1352,7 @@
 
             movementContainer.innerHTML = `
                 <div class="movement-card">
-                    <div class="movement-intensity ${movement.color}">${movement.arrow}</div>
+                    <div class="movement-intensity ${movement.color}"><span class="trend-arrow">${movement.arrow}</span></div>
                     <div style="font-weight: 600; margin-bottom: 0.5rem;">Activity Level</div>
                     <div style="font-size: 1.5rem; font-weight: 600; color: var(--color-accent-amber); margin-bottom: 0.5rem;">${movement.intensity}</div>
                     <div class="movement-desc">${movement.description}</div>
