@@ -548,28 +548,29 @@
             document.getElementById('lastUpdatedGBFS').textContent = formatDate(gbfsFetchedAt);
             document.getElementById('lastUpdated311').textContent = formatDate(c311FetchedAt);
         
-            document.getElementById('trendsSection').style.display = 'block';
-            document.getElementById('interventionsSection').style.display = 'block';
-            document.getElementById('forecastSection').style.display = 'block';
-            document.getElementById('movementSection').style.display = 'block';
+            // document.getElementById('trendsSection').style.display = 'block';
+            // document.getElementById('interventionsSection').style.display = 'block';
+            // document.getElementById('forecastSection').style.display = 'block';
+            // document.getElementById('movementSection').style.display = 'block';
 
-            try {
-                generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
-            } catch (e) {
-                console.error('Error generating trends:', e);
-            }
+            // Insight functions disabled - causing layout issues
+            // try {
+            //     // generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
+            // } catch (e) {
+            //     console.error('Error generating trends:', e);
+            // }
 
-            try {
-                generateForecast(c311Count, totalVehicles, hubsCount);
-            } catch (e) {
-                console.error('Error generating forecast:', e);
-            }
+            // try {
+            //     // generateForecast(c311Count, totalVehicles, hubsCount);
+            // } catch (e) {
+            //     console.error('Error generating forecast:', e);
+            // }
 
-            try {
-                generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
-            } catch (e) {
-                console.error('Error generating movement:', e);
-            }
+            // try {
+            //     // generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
+            // } catch (e) {
+            //     console.error('Error generating movement:', e);
+            // }
 }
 
 
