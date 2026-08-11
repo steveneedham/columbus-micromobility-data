@@ -361,10 +361,40 @@
             margin-top: 0.75rem;
         }
 
-        /* Metric cards carry data-tooltip; surface it on hover/focus. */
+        /* Any element carrying data-tooltip surfaces it on hover or keyboard focus. */
         .tooltip-trigger {
             position: relative;
             cursor: help;
+        }
+
+        .tip-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            margin-left: 0.4em;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            font-size: 0.625rem;
+            font-weight: 600;
+            line-height: 1;
+            opacity: 0.55;
+            vertical-align: 1px;
+        }
+
+        .tooltip-trigger:hover .tip-mark,
+        .tooltip-trigger:focus-within .tip-mark {
+            opacity: 1;
+        }
+
+        /* Cards at the right-hand edge open their tooltip leftwards so it stays
+           on screen instead of running off the page. */
+        .metrics > .metric-card:nth-last-child(-n+2)::after,
+        .insights-grid > .insight-card:last-child::after,
+        .forecast-grid > .forecast-card:last-child::after {
+            left: auto;
+            right: 0;
         }
 
         .tooltip-trigger::after {
@@ -372,7 +402,7 @@
             position: absolute;
             left: 0;
             top: 100%;
-            z-index: 10;
+            z-index: 30;
             width: max-content;
             max-width: 260px;
             padding: 0.5rem 0.75rem;
@@ -384,6 +414,7 @@
             text-transform: none;
             letter-spacing: normal;
             border-radius: 4px;
+            box-shadow: 0 6px 20px rgba(26, 23, 20, 0.28);
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.15s ease;
@@ -440,7 +471,7 @@
         </div>
 
         <div class="map-section">
-            <h2>Neighborhood Boundary</h2>
+            <h2 id="mapSectionHeading">Neighborhood Boundary</h2>
             <canvas id="neighborhood-map" style="border: 1px solid var(--color-border); border-radius: 8px; width: 100%; height: 400px; display: block; margin: 2rem 0;"></canvas>
             <p class="map-note">Ride hub markers carry a badge counting the vehicles within 100&nbsp;m of the hub, and fill in proportion to the hub's docks. A red outline means no vehicle is nearby; amber means more vehicles are nearby than the hub has docks. Red rings mark cross-vendor pile-ups — four or more vehicles from more than one operator within 20&nbsp;m. Proximity is an estimate; it does not prove a vehicle is parked at a hub.</p>
         </div>
@@ -467,24 +498,24 @@
 
         
         <div class="trend-section" id="trendsSection" style="display: none;">
-            <h2>Trends & Insights</h2>
+            <h2 id="trendsHeading">Trends &amp; Insights</h2>
             <div class="insights-grid" id="insightsContainer"></div>
         </div>
 
         <div class="interventions-section" id="interventionsSection" style="display: none;">
-            <h2>Suggested Interventions</h2>
+            <h2 id="interventionsHeading">Suggested Interventions</h2>
             <div class="interventions-list" id="interventionsContainer"></div>
         </div>
 
 
         <div class="forecast-section" id="forecastSection" style="display: none;">
-            <h2>311 Outlook</h2>
+            <h2 id="forecastHeading">311 Outlook</h2>
             <div class="forecast-grid" id="forecastContainer"></div>
             <p id="forecastMethod" style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 1rem;"></p>
         </div>
 
         <div class="movement-section" id="movementSection" style="display: none;">
-            <h2>⚙️ Operator Activity</h2>
+            <h2 id="movementHeading">⚙️ Operator Activity</h2>
             <div class="movement-grid" id="movementContainer"></div>
             <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 1rem;">Vehicle movement and rebalancing intensity based on density and time patterns</p>
         </div>
@@ -499,7 +530,7 @@
 
         <footer>
             <p><a href="../">Browse all neighborhoods →</a></p>
-            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v11</p>
+            <p class="build-stamp" style="font-size:0.75rem;opacity:0.6;font-family:'IBM Plex Mono',monospace;">build: canvas-map-v12</p>
         </footer>
     </div>
 
@@ -517,6 +548,26 @@
         // 311 counts are scoped to a rolling window so the metric means the same
         // thing from one snapshot to the next.
         const C311_WINDOW_DAYS = 30;
+
+        // Metric definitions, surfaced as hover/focus tooltips. Kept in one place so
+        // the wording stays consistent everywhere a figure is shown.
+        const TOOLTIPS = {
+            requests311: `Micromobility-related 311 complaints and service requests reported inside this boundary in the last ${C311_WINDOW_DAYS} days — parking, safety and accessibility. Source: the City of Columbus 311 public map. That feed is not date-scoped, so the count is filtered here by report date.`,
+            activeVehicles: 'Veo and Spin vehicles in the current GBFS snapshot whose published position falls inside this boundary. A live snapshot, not a daily average.',
+            density: 'Active vehicles divided by the area of this neighborhood in square miles, measured from the boundary polygon. Higher means a more concentrated supply.',
+            rideHubs: 'CBUS Ride bike-share stations inside this boundary, from the City-published Ride Hub layer.',
+            veo: 'Veo vehicles inside this boundary in the current snapshot, with the same figure per square mile. Veo reads teal across the site.',
+            spin: 'Spin vehicles inside this boundary in the current snapshot, with the same figure per square mile. Spin reads amber across the site.',
+            trendsSection: `How each headline figure compares against fixed thresholds. Green reads good, red bad, amber steady or worth watching. The arrow shows direction, the colour shows whether that direction is welcome.`,
+            trend311: `High above 30 requests in ${C311_WINDOW_DAYS} days, low below 15, steady in between. Fewer requests is read as good.`,
+            trendVehicles: 'Low below 10 vehicles, high above 30. High shows amber rather than red — plenty of vehicles serves riders well but can crowd the curb.',
+            trendHubs: 'Absent at zero stations, strong above two.',
+            interventionsSection: 'Actions raised automatically when a figure crosses a threshold, or when a ride hub has no vehicle within 100 m or more vehicles nearby than it has docks. Suggestions from the current snapshot, not instructions from the city.',
+            forecastSection: `Straight-line projection. The requests recorded here in the last ${C311_WINDOW_DAYS} days give a per-day rate, carried forward over each horizon. The range is a 90% interval for a count arriving at that rate. Vehicles are a single live snapshot with no per-neighborhood history, so they are not projected.`,
+            movementSection: 'Estimated rebalancing intensity, inferred from vehicle density and the time of day — peak hours are 8-10am, noon-1pm and 5-7pm. An estimate from one snapshot, not measured vehicle movement.',
+            mapSection: 'Vehicles are circles coloured by operator, 311 requests are diamonds coloured by priority, red rings mark cross-vendor pile-ups, and ride hubs carry a badge counting the vehicles within 100 m.'
+        };
+
 
         // 311 priority and pile-up detection are ported from the main site so the
         // neighborhood maps use the same symbols and thresholds as the city map.
@@ -607,6 +658,32 @@
                 hub.nearbySpin = nearby.filter(v => v.company === 'Spin').length;
             });
             return hubs;
+        }
+
+        // The section headings are static markup, so their tooltips are attached
+        // here rather than duplicated as literal text in every page.
+        function applySectionTooltips() {
+            const headings = {
+                mapSectionHeading: TOOLTIPS.mapSection,
+                trendsHeading: TOOLTIPS.trendsSection,
+                interventionsHeading: TOOLTIPS.interventionsSection,
+                forecastHeading: TOOLTIPS.forecastSection,
+                movementHeading: TOOLTIPS.movementSection
+            };
+            Object.keys(headings).forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.classList.add('tooltip-trigger');
+                el.setAttribute('tabindex', '0');
+                el.setAttribute('data-tooltip', headings[id]);
+                if (!el.querySelector('.tip-mark')) {
+                    const mark = document.createElement('span');
+                    mark.className = 'tip-mark';
+                    mark.setAttribute('aria-hidden', 'true');
+                    mark.textContent = '?';
+                    el.appendChild(mark);
+                }
+            });
         }
 
         function formatDate(value) {
@@ -821,21 +898,21 @@
             const metricsContainer = document.getElementById('metricsContainer');
             const { area, density } = calculateDensity(boundaryGeoJSON, totalVehicles);
             metricsContainer.innerHTML = `
-                <div class="metric-card tooltip-trigger" data-tooltip="Micromobility-related 311 complaints and service requests reported in this neighborhood over the last ${C311_WINDOW_DAYS} days (parking, safety, accessibility)">
-                    <div class="metric-label">311 Requests</div>
+                <div class="metric-card tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.requests311}">
+                    <div class="metric-label">311 Requests<span class="tip-mark" aria-hidden="true">?</span></div>
                     <div class="metric-value">${c311Count}</div>
                     <div class="metric-loading">last ${C311_WINDOW_DAYS} days</div>
                 </div>
-                <div class="metric-card tooltip-trigger" data-tooltip="Live count of scooters from Veo and Spin operators currently in this neighborhood">
-                    <div class="metric-label">Active Vehicles</div>
+                <div class="metric-card tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.activeVehicles}">
+                    <div class="metric-label">Active Vehicles<span class="tip-mark" aria-hidden="true">?</span></div>
                     <div class="metric-value">${totalVehicles}</div>
                 </div>
-                <div class="metric-card tooltip-trigger" data-tooltip="Number of vehicles per square mile in this neighborhood - higher density indicates more concentrated scooter supply">
-                    <div class="metric-label">Vehicle Density</div>
+                <div class="metric-card tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.density}">
+                    <div class="metric-label">Vehicle Density<span class="tip-mark" aria-hidden="true">?</span></div>
                     <div class="metric-value">${density}</div>
                     <div class="metric-loading">per sq mi</div>
                 </div>
-                <div class="metric-card tooltip-trigger" data-tooltip="CBUS Ride bike-share stations where residents can rent/return bicycles within this neighborhood boundary">
+                <div class="metric-card tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.rideHubs}">
                     <div class="metric-label"><img src="../../assets/columbus-ride-hub-marker.svg" alt="" style="width:16px;height:24px;display:inline;margin-right:0.5rem;vertical-align:-3px;"/>CBUS Ride Hubs</div>
                     <div class="metric-value">${hubsCount}</div>
                 </div>
@@ -855,13 +932,13 @@
             const spinDensity = area && area > 0 ? (spinCount / area).toFixed(2) : 0;
             
             vehicleBreakdown.innerHTML = `
-                <div class="vehicle-operator operator-veo">
-                    <div class="operator-name">Veo</div>
+                <div class="vehicle-operator operator-veo tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.veo}">
+                    <div class="operator-name">Veo<span class="tip-mark" aria-hidden="true">?</span></div>
                     <div class="operator-count">${veoCount}</div>
                     <div class="operator-density">${veoDensity} per sq mi</div>
                 </div>
-                <div class="vehicle-operator operator-spin">
-                    <div class="operator-name">Spin</div>
+                <div class="vehicle-operator operator-spin tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.spin}">
+                    <div class="operator-name">Spin<span class="tip-mark" aria-hidden="true">?</span></div>
                     <div class="operator-count">${spinCount}</div>
                     <div class="operator-density">${spinDensity} per sq mi</div>
                 </div>
@@ -1199,6 +1276,7 @@
 
             insights.push({
                 metric: '311 Requests',
+                tip: TOOLTIPS.trend311,
                 trend: `<span class="trend-arrow">${arrow311}</span> ${trend311.charAt(0).toUpperCase() + trend311.slice(1)}`,
                 color: color311,
                 insight: c311Count > 0
@@ -1230,6 +1308,7 @@
 
             insights.push({
                 metric: 'Active Vehicles',
+                tip: TOOLTIPS.trendVehicles,
                 trend: `<span class="trend-arrow">${arrowVehicles}</span> ${trendVehicles.charAt(0).toUpperCase() + trendVehicles.slice(1)}`,
                 color: colorVehicles,
                 insight: totalVehicles > 0 ? `${totalVehicles} vehicles available for riders` : 'No available vehicles'
@@ -1255,6 +1334,7 @@
 
             insights.push({
                 metric: 'CBUS Ride Hubs',
+                tip: TOOLTIPS.trendHubs,
                 trend: `<span class="trend-arrow">${arrowHubs}</span> ${trendHubs.charAt(0).toUpperCase() + trendHubs.slice(1)}`,
                 color: colorHubs,
                 insight: hubsCount > 0 ? `${hubsCount} bike-share station${hubsCount !== 1 ? 's' : ''} available` : 'None available'
@@ -1294,16 +1374,16 @@
 
             // Render insights
             insightsContainer.innerHTML = insights.map(i => `
-                <div class="insight-card">
+                <div class="insight-card tooltip-trigger" tabindex="0" data-tooltip="${i.tip}">
                     <div class="insight-trend ${i.color}">${i.trend}</div>
-                    <div style="font-weight: 600; margin-bottom: 0.5rem;">${i.metric}</div>
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">${i.metric}<span class="tip-mark" aria-hidden="true">?</span></div>
                     <div class="insight-text">${i.insight}</div>
                 </div>
             `).join('');
 
             // Render interventions
             interventionsContainer.innerHTML = interventions.map(int => `
-                <div class="intervention-item tooltip-trigger" data-tooltip="Recommended action: ${int.desc}">
+                <div class="intervention-item tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.interventionsSection}">
                     <strong>${int.title}</strong>
                     <p>${int.desc}</p>
                 </div>
@@ -1332,8 +1412,8 @@
             });
 
             forecastContainer.innerHTML = forecasts.map(f => `
-                <div class="forecast-card">
-                    <div class="forecast-period">${f.period}</div>
+                <div class="forecast-card tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.forecastSection}">
+                    <div class="forecast-period">${f.period}<span class="tip-mark" aria-hidden="true">?</span></div>
                     <div class="forecast-metric">New 311 requests</div>
                     <div class="forecast-value">${f.expected}</div>
                     <div class="forecast-note">${c311Count > 0 ? `Likely ${f.low}\u2013${f.high}` : 'No requests to project from'}</div>
@@ -1399,9 +1479,9 @@
             const movement = analyzeMovement(c311Count, totalVehicles, hubsCount, area);
 
             movementContainer.innerHTML = `
-                <div class="movement-card">
+                <div class="movement-card tooltip-trigger" tabindex="0" data-tooltip="${TOOLTIPS.movementSection}">
                     <div class="movement-intensity ${movement.color}"><span class="trend-arrow">${movement.arrow}</span></div>
-                    <div style="font-weight: 600; margin-bottom: 0.5rem;">Activity Level</div>
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">Activity Level<span class="tip-mark" aria-hidden="true">?</span></div>
                     <div style="font-size: 1.5rem; font-weight: 600; color: var(--color-accent-amber); margin-bottom: 0.5rem;">${movement.intensity}</div>
                     <div class="movement-desc">${movement.description}</div>
                 </div>
@@ -1410,6 +1490,7 @@
 
 
         // Initialize
+        applySectionTooltips();
         document.getElementById('debugMessages').style.display = 'block';
         document.getElementById('debugText').textContent = '⏳ Loading data...';
         (async function() {
