@@ -27,7 +27,22 @@
         .stat { display: flex; flex-direction: column; gap: 0.25rem; }
         .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); }
         .stat-value { font-size: 1.5rem; font-weight: 600; color: var(--color-accent-amber); font-family: 'IBM Plex Mono', monospace; }
-        
+
+        .card-hero {
+            width: calc(100% + 3rem);
+            height: 120px;
+            object-fit: cover;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            border-radius: 8px 8px 0 0;
+            filter: grayscale(75%) contrast(110%) brightness(115%) blur(1.5px);
+            opacity: 0.85;
+            background: var(--color-border);
+        }
+
+        .card-hero.missing {
+            display: none;
+        }
+
         .donation-section {
             margin-top: 3rem;
             padding: 2rem;
@@ -218,11 +233,24 @@
                         });
                     }
 
-                    // Create card
+                    // Create card with hero image
                     const card = document.createElement('a');
                     card.href = n.slug + '/';
                     card.className = 'neighborhood-card';
-                    card.innerHTML = `<img src="../assets/neighborhood-icons/${n.icon}.svg" alt="" class="card-icon"><div class="card-title">${n.name}</div><div class="card-description">${n.description}</div><div class="card-stats"><div class="stat"><div class="stat-label">311</div><div class="stat-value">${c311Count}</div></div><div class="stat"><div class="stat-label">Vehicles</div><div class="stat-value">${gbfsCount}</div></div></div>`;
+                    const heroImg = document.createElement('img');
+                    heroImg.className = 'card-hero missing';
+                    heroImg.alt = `${n.name} neighborhood`;
+                    heroImg.onerror = () => heroImg.classList.add('missing');
+
+                    // Determine hero image asset name
+                    let heroAsset = n.slug;
+                    if (n.slug === 'the-ohio-state-university') heroAsset = 'osu';
+                    heroImg.src = `../assets/hero/${heroAsset}.jpg`;
+                    heroImg.onload = () => heroImg.classList.remove('missing');
+
+                    card.innerHTML = `<div class="card-icon"><img src="../assets/neighborhood-icons/${n.icon}.svg" alt=""></div><div class="card-title">${n.name}</div><div class="card-description">${n.description}</div><div class="card-stats"><div class="stat"><div class="stat-label">311</div><div class="stat-value">${c311Count}</div></div><div class="stat"><div class="stat-label">Vehicles</div><div class="stat-value">${gbfsCount}</div></div></div>`;
+
+                    card.insertBefore(heroImg, card.firstChild);
                     container.appendChild(card);
                 });
             } catch (err) {
