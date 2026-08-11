@@ -552,10 +552,26 @@
         
             document.getElementById('trendsSection').style.display = 'block';
             document.getElementById('interventionsSection').style.display = 'block';
-            generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
+            try {
+
+                generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
+
+            } catch (e) {
+
+                console.error(\'Error generating trends:\', e);
+
+            }
             document.getElementById('forecastSection').style.display = 'block';
             document.getElementById('movementSection').style.display = 'block';
-            generateForecast(c311Count, totalVehicles, hubsCount);
+            try {
+
+                generateForecast(c311Count, totalVehicles, hubsCount);
+
+            } catch (e) {
+
+                console.error(\'Error generating forecast:\', e);
+
+            }
             generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
 }
 

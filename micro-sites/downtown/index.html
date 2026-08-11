@@ -552,9 +552,24 @@
             document.getElementById('interventionsSection').style.display = 'block';
             document.getElementById('forecastSection').style.display = 'block';
             document.getElementById('movementSection').style.display = 'block';
-            generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
-            generateForecast(c311Count, totalVehicles, hubsCount);
-            generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
+
+            try {
+                generateTrendsAndInterventions(c311Count, totalVehicles, hubsCount);
+            } catch (e) {
+                console.error('Error generating trends:', e);
+            }
+
+            try {
+                generateForecast(c311Count, totalVehicles, hubsCount);
+            } catch (e) {
+                console.error('Error generating forecast:', e);
+            }
+
+            try {
+                generateMovementInsights(c311Count, totalVehicles, hubsCount, parseFloat(area));
+            } catch (e) {
+                console.error('Error generating movement:', e);
+            }
 }
 
 
