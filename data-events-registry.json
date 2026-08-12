@@ -1,0 +1,66 @@
+{
+  "events": [
+    {
+      "id": "sonic-temple-2026",
+      "name": "Sonic Temple",
+      "date_start": "2026-09-12",
+      "date_end": "2026-09-14",
+      "monitoring_start": "2026-08-17",
+      "monitoring_end": "2026-09-21",
+      "status": "scheduled",
+      "location": "Historic Crew Stadium, Columbus OH",
+      "geofence": {
+        "center": [39.9612, -82.9988],
+        "radius_meters": 1500
+      },
+      "npz_zones": [
+        {
+          "name": "Stadium Perimeter",
+          "bounds": [[39.9612, -82.9988], [39.9612, -82.9888], [39.9712, -82.9888], [39.9712, -82.9988]],
+          "enforcement": true
+        }
+      ],
+      "nrz_zones": [
+        {
+          "name": "Event Footprint",
+          "bounds": [[39.9612, -82.9988], [39.9612, -82.9888], [39.9712, -82.9888], [39.9712, -82.9988]],
+          "enforcement": true
+        }
+      ],
+      "operators": ["Veo", "Spin"],
+      "expected_attendees": 50000,
+      "microsite_url": "/columbus-micromobility-data/micro-sites/events/sonic-temple-2026/"
+    },
+    {
+      "id": "breakaway-festival-2026",
+      "name": "Breakaway Festival",
+      "date_start": "2026-06-13",
+      "date_end": "2026-06-14",
+      "monitoring_start": "2026-05-17",
+      "monitoring_end": "2026-06-21",
+      "status": "scheduled",
+      "location": "Historic Crew Stadium, Columbus OH",
+      "geofence": {
+        "center": [39.9612, -82.9988],
+        "radius_meters": 1500
+      },
+      "npz_zones": [
+        {
+          "name": "Stadium Perimeter",
+          "bounds": [[39.9612, -82.9988], [39.9612, -82.9888], [39.9712, -82.9888], [39.9712, -82.9988]],
+          "enforcement": true
+        }
+      ],
+      "nrz_zones": [
+        {
+          "name": "Event Footprint",
+          "bounds": [[39.9612, -82.9988], [39.9612, -82.9888], [39.9712, -82.9888], [39.9712, -82.9988]],
+          "enforcement": true
+        }
+      ],
+      "operators": ["Veo", "Spin"],
+      "expected_attendees": 40000,
+      "microsite_url": "/columbus-micromobility-data/micro-sites/events/breakaway-festival-2026/"
+    }
+  ]
+}

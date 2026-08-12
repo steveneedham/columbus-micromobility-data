@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{EVENT_NAME}} — Micromobility Intelligence</title>
+    <meta name="description" content="Real-time micromobility monitoring for {{EVENT_NAME}} in Columbus.">
+    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/events/{{EVENT_SLUG}}/">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/field-ledger-mark.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
+
+        :root {
+            --color-surface: #f3f0e8;
+            --color-text: #1a1714;
+            --color-text-secondary: #5a5550;
+            --color-border: #ccc8bf;
+            --color-accent-amber: #faa71a;
+            --color-event: #e74c3c;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-surface: #1a1714;
+                --color-text: #f3f0e8;
+                --color-text-secondary: #a89f95;
+                --color-border: #3a3530;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 2rem;
+        }
+
+        header a {
+            color: var(--color-accent-amber);
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            font-family: 'Newsreader', serif;
+        }
+
+        .event-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--color-event);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .event-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(231, 76, 60, 0.05);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        .info-card {
+            padding: 1rem;
+            background: var(--color-surface);
+            border-radius: 4px;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-event);
+        }
+
+        section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        section h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-family: 'Newsreader', serif;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            padding: 1.5rem;
+            background: rgba(231, 76, 60, 0.05);
+            border: 1px solid var(--color-event);
+            border-radius: 8px;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-event);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .zone-list {
+            margin: 1.5rem 0;
+        }
+
+        .zone-item {
+            padding: 1rem;
+            background: rgba(231, 76, 60, 0.02);
+            border-left: 3px solid var(--color-event);
+            margin-bottom: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .zone-name {
+            font-weight: 600;
+            color: var(--color-event);
+            margin-bottom: 0.25rem;
+        }
+
+        .zone-status {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        .copyright-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.8125rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.75rem; }
+            section h2 { font-size: 1.25rem; }
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-76JHMZJ82N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-76JHMZJ82N');
+    </script>
+    <!-- PostHog Analytics -->
+    <script>
+      !function(t,e){var o,n,p,r,a=e.location,c=[],s=[];function u(e){try{s.push(e)}catch(t){}}function h(e){console.error('PostHog error:',e)}t.PostHog=t.PostHog||function(){if(o)return o;o={_queue:[],push:u};var e=['capture','identify','reset','feature_flags','on_feature_flags','reloadFeatureFlags','getFeatureFlag','getFeatureFlagPayload','isFeatureEnabled'];return e.forEach(function(e){o[e]=function(){o._queue.push({method:e,args:Array.prototype.slice.call(arguments)})}}),o},window.posthog=new t.PostHog;var m='https://us.posthog.com';window.posthog.init=function(e,t){var o=t||{};o.hook_server_url=o.hook_server_url||m,window.posthog_config=o,window.posthog.config=o.posthog_config||{},window.posthog.isFeatureEnabled=function(e){return!0},window.posthog.reloadFeatureFlags=function(){},fetch(m+'/decide/?v=2',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:e,distinct_id:window.posthog_distinct_id||'',groups:o.groups||{},v:'1.0'})}).then(function(t){t.json().then(function(e){window.posthog.featureFlags=e.featureFlags||{}}).catch(h)}).catch(h)},window.posthog.init('phc_tYXqzrjNDJBTRNqVGpC3hTb1YpqCqXCWzqEpMZcf8kZ',{api_host:m})};
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../../">← Back to neighborhoods</a>
+            <h1>{{EVENT_NAME}}</h1>
+            <p style="color: var(--color-text-secondary); font-size: 1.125rem;">Real-time micromobility monitoring & zone enforcement</p>
+            <span class="event-badge">🎪 ACTIVE EVENT</span>
+        </header>
+
+        <div class="event-info">
+            <div class="info-card">
+                <div class="info-label">Event Dates</div>
+                <div class="info-value">{{EVENT_DATES}}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Location</div>
+                <div class="info-value" style="font-size: 1rem;">{{EVENT_LOCATION}}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Expected Attendance</div>
+                <div class="info-value">{{EVENT_ATTENDANCE}}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Monitoring Window</div>
+                <div class="info-value" style="font-size: 1rem;">{{MONITORING_WINDOW}}</div>
+            </div>
+        </div>
+
+        <section id="overview">
+            <h2>📊 Live Event Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Active Vehicles (Geofence)</div>
+                    <div class="metric-value" id="vehicleCount">—</div>
+                    <div class="metric-label" style="margin-top: 0.75rem;">Veo / Spin breakdown</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">311 Complaints (Event Area)</div>
+                    <div class="metric-value" id="complaintCount">—</div>
+                    <div class="metric-label" style="margin-top: 0.75rem;">Last 24 hours</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">NPZ Violations</div>
+                    <div class="metric-value" id="npzViolations">—</div>
+                    <div class="metric-label" style="margin-top: 0.75rem;">Vehicles in no-park zones</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">NRZ Violations</div>
+                    <div class="metric-value" id="nrzViolations">—</div>
+                    <div class="metric-label" style="margin-top: 0.75rem;">Vehicles in no-ride zones</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="zones">
+            <h2>🚫 Enforcement Zones</h2>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1.125rem; color: var(--color-event);">No Parking Zones (NPZ)</h3>
+            <div class="zone-list" id="npzList">
+                <div class="zone-item">
+                    <div class="zone-name">Loading zones...</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1.125rem; color: var(--color-event);">No Ride Zones (NRZ)</h3>
+            <div class="zone-list" id="nrzList">
+                <div class="zone-item">
+                    <div class="zone-name">Loading zones...</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="operators">
+            <h2>🚲 Operator Coordination</h2>
+            <p style="margin-bottom: 1rem; color: var(--color-text-secondary);">Active operators coordinating with event management:</p>
+            <div class="zone-list" id="operatorList">
+                <div class="zone-item">
+                    <div class="zone-name">Loading operator data...</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p><strong>Data sources:</strong> Columbus 311 (City system), GBFS feeds (Veo, Spin), Real-time vehicle telemetry</p>
+            <p><strong>Last updated:</strong> <span id="lastUpdated">—</span></p>
+        </footer>
+
+        <div class="copyright-section">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                &copy; 2026 <a href="https://steveneedham.com" style="color: inherit; text-decoration: none; border-bottom: 1px dotted var(--color-text-secondary);">Steven Needham</a>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                Made in Columbus, OH
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+    <script>
+        const EVENT_DATA = {{EVENT_JSON}};
+
+        async function loadEventData() {
+            try {
+                const [gbfsResponse, c311Response] = await Promise.all([
+                    fetch('/columbus-micromobility-data/data-gbfs.json'),
+                    fetch('/columbus-micromobility-data/data-311.json')
+                ]);
+
+                const gbfsData = await gbfsResponse.json();
+                const c311Data = await c311Response.json();
+
+                // Count vehicles within geofence
+                const geofence = EVENT_DATA.geofence;
+                let veoCount = 0, spinCount = 0;
+
+                gbfsData.vehicles.forEach(vehicle => {
+                    const distance = turf.distance(
+                        [vehicle.lng, vehicle.lat],
+                        geofence.center,
+                        { units: 'meters' }
+                    );
+
+                    if (distance <= geofence.radius_meters) {
+                        if (vehicle.provider === 'Veo') veoCount++;
+                        else if (vehicle.provider === 'Spin') spinCount++;
+                    }
+                });
+
+                document.getElementById('vehicleCount').textContent = (veoCount + spinCount) + ` (${veoCount}v / ${spinCount}s)`;
+
+                // Count complaints within geofence
+                const oneDayAgo = new Date();
+                oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+
+                let complaintCount = 0;
+                c311Data.records.forEach(record => {
+                    const date = new Date(record.created_date);
+                    const distance = turf.distance(
+                        [record.longitude, record.latitude],
+                        geofence.center,
+                        { units: 'meters' }
+                    );
+
+                    if (date >= oneDayAgo && distance <= geofence.radius_meters) {
+                        complaintCount++;
+                    }
+                });
+
+                document.getElementById('complaintCount').textContent = complaintCount;
+
+                // Render NPZ zones
+                const npzList = document.getElementById('npzList');
+                npzList.innerHTML = '';
+                EVENT_DATA.npz_zones.forEach(zone => {
+                    const item = document.createElement('div');
+                    item.className = 'zone-item';
+                    item.innerHTML = `
+                        <div class="zone-name">${zone.name}</div>
+                        <div class="zone-status">Enforcement: ${zone.enforcement ? 'Active' : 'Monitoring'}</div>
+                    `;
+                    npzList.appendChild(item);
+                });
+
+                // Render NRZ zones
+                const nrzList = document.getElementById('nrzList');
+                nrzList.innerHTML = '';
+                EVENT_DATA.nrz_zones.forEach(zone => {
+                    const item = document.createElement('div');
+                    item.className = 'zone-item';
+                    item.innerHTML = `
+                        <div class="zone-name">${zone.name}</div>
+                        <div class="zone-status">Enforcement: ${zone.enforcement ? 'Active' : 'Monitoring'}</div>
+                    `;
+                    nrzList.appendChild(item);
+                });
+
+                // Render operators
+                const operatorList = document.getElementById('operatorList');
+                operatorList.innerHTML = '';
+                EVENT_DATA.operators.forEach(op => {
+                    const item = document.createElement('div');
+                    item.className = 'zone-item';
+                    item.innerHTML = `
+                        <div class="zone-name">${op}</div>
+                        <div class="zone-status">Actively monitoring and coordinating with event management</div>
+                    `;
+                    operatorList.appendChild(item);
+                });
+
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+
+            } catch (err) {
+                console.error('Error loading event data:', err);
+            }
+        }
+
+        loadEventData();
+        setInterval(loadEventData, 60000); // Refresh every minute
+    </script>
+</body>
+</html>
