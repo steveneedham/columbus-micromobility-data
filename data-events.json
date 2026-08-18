@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T01:09:15.103279+00:00",
+  "generated_at": "2026-08-18T01:05:07.361512+00:00",
   "source_workbook": "Claude Forecast 0 Columbus_Micromobility_Events_Historical_2024-2026.xlsx",
   "method": "Events are cross-referenced to neighborhoods by the venue area recorded in the source workbook, not by coordinate. A listing means the event tends to drive trips through the neighborhood, not that the venue sits inside the boundary polygon.",
   "caveat": "The workbook is an AI-compiled event list carrying its own status column and a Data Gaps sheet. Scheduled, Projected and Unconfirmed entries are not equally certain and are labelled as such.",
@@ -158,6 +158,16 @@
       ],
       "recent": [
         {
+          "date": "2026-08-18",
+          "event": "Clippers homestand vs St. Paul (start of 6-game series)",
+          "category": "Sports - MiLB (homestand)",
+          "venue": "Huntington Park",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "milb.com/columbus/schedule"
+        },
+        {
           "date": "2026-08-14",
           "event": "Zac Brown Band - Love & Fear Tour",
           "category": "Concert",
@@ -206,29 +216,9 @@
           "attendance": null,
           "status": "Played",
           "source": "columbuscrew.com 2026 schedule"
-        },
-        {
-          "date": "2026-07-23",
-          "event": "Lil Wayne",
-          "category": "Concert",
-          "venue": "Nationwide Arena",
-          "area": "Nationwide Arena",
-          "attendance": null,
-          "status": "Played",
-          "source": "search summary"
         }
       ],
       "upcoming": [
-        {
-          "date": "2026-08-18",
-          "event": "Clippers homestand vs St. Paul (start of 6-game series)",
-          "category": "Sports - MiLB (homestand)",
-          "venue": "Huntington Park",
-          "area": "Arena District",
-          "attendance": null,
-          "status": "Scheduled",
-          "source": "milb.com/columbus/schedule"
-        },
         {
           "date": "2026-08-19",
           "event": "Columbus Crew vs CF Montreal",
@@ -531,7 +521,7 @@
         }
       ],
       "recorded_total": 206,
-      "recorded_past": 175,
+      "recorded_past": 176,
       "recorded_from": "2024-02-24",
       "recorded_to": "2026-12-31",
       "top_categories": [
