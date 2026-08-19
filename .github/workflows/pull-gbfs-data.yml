@@ -2,8 +2,11 @@ name: Pull GBFS Data
 
 on:
   schedule:
-    - cron: '0 8 * * *'   # 8am UTC
-    - cron: '0 20 * * *'  # 8pm UTC
+    - cron: '0 8 * * *'   # 8:00 a.m. UTC
+    - cron: '0 20 * * *'  # 8:00 p.m. UTC
+    - cron: '0 22 * * *'  # 10:00 p.m. UTC
+    - cron: '0 0 * * *'   # Midnight UTC
+    - cron: '0 16 * * *'  # 4:00 p.m. UTC
   workflow_dispatch:
 
 jobs:
