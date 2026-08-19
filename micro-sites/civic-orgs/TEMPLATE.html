@@ -392,8 +392,8 @@
                 gbfsData.vehicles.forEach(v => {
                     const point = turf.point([v.lng, v.lat]);
                     if (pointInPolygon(point, boundary)) {
-                        if (v.provider === 'Veo') veoCount++;
-                        else if (v.provider === 'Spin') spinCount++;
+                        if (v.company === 'Veo') veoCount++;
+                        else if (v.company === 'Spin') spinCount++;
                     }
                 });
 
@@ -409,7 +409,7 @@
                 let totalComplaints = 0;
 
                 c311Data.records.forEach(r => {
-                    const date = new Date(r.created_date);
+                    const date = new Date(r.reported_at);
                     const point = turf.point([r.longitude, r.latitude]);
 
                     if (date >= thirtyDaysAgo && pointInPolygon(point, boundary)) {

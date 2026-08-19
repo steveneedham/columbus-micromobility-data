@@ -300,8 +300,8 @@
                     );
 
                     if (distance <= geofence.radius_meters) {
-                        if (vehicle.provider === 'Veo') veoCount++;
-                        else if (vehicle.provider === 'Spin') spinCount++;
+                        if (vehicle.company === 'Veo') veoCount++;
+                        else if (vehicle.company === 'Spin') spinCount++;
                     }
                 });
 
@@ -310,12 +310,12 @@
                 document.getElementById('spinCount').textContent = spinCount;
 
                 // Count complaints within geofence and event window
-                const eventStart = new Date(EVENT_DATA.start_date);
-                const eventEnd = new Date(EVENT_DATA.end_date);
+                const eventStart = new Date(EVENT_DATA.monitoring_start);
+                const eventEnd = new Date(EVENT_DATA.monitoring_end);
 
                 let complaintCount = 0;
                 c311Data.records.forEach(record => {
-                    const date = new Date(record.created_date);
+                    const date = new Date(record.reported_at);
                     const distance = turf.distance(
                         [record.longitude, record.latitude],
                         geofence.center,
