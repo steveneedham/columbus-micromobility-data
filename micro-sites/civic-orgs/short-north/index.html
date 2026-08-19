@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Short North Civic Association — Micromobility Data</title>
+    <meta name="description" content="Micromobility activity and 311 complaints in the Short North neighborhood, Columbus.">
+    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/civic-orgs/short-north/">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/field-ledger-mark.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
+
+        :root {
+            --color-surface: #f3f0e8;
+            --color-text: #1a1714;
+            --color-text-secondary: #5a5550;
+            --color-border: #ccc8bf;
+            --color-accent-amber: #faa71a;
+            --color-civic: #e8a33d;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-surface: #1a1714;
+                --color-text: #f3f0e8;
+                --color-text-secondary: #a89f95;
+                --color-border: #3a3530;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .header-icon {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            opacity: 0.9;
+            background: var(--color-civic);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        header a {
+            color: var(--color-accent-amber);
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            font-family: 'Newsreader', serif;
+        }
+
+        .description {
+            color: var(--color-text-secondary);
+            font-size: 1.125rem;
+        }
+
+        .civic-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--color-civic);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .website-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(232, 163, 61, 0.15);
+            border: 1px solid var(--color-civic);
+            color: var(--color-civic);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .website-link:hover {
+            background: rgba(232, 163, 61, 0.25);
+            transform: translateY(-2px);
+        }
+
+        section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        section h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-family: 'Newsreader', serif;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: rgba(232, 163, 61, 0.1);
+            border: 1px solid var(--color-civic);
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-civic);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .insight-box {
+            padding: 1.5rem;
+            background: rgba(232, 163, 61, 0.05);
+            border-left: 3px solid var(--color-civic);
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .insight-box strong {
+            color: var(--color-civic);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .complaint-categories {
+            margin: 1.5rem 0;
+        }
+
+        .category-item {
+            padding: 0.75rem;
+            background: rgba(232, 163, 61, 0.02);
+            border-left: 3px solid var(--color-civic);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-name {
+            font-weight: 500;
+        }
+
+        .category-count {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            color: var(--color-civic);
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        .copyright-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.8125rem;
+            color: var(--color-text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.75rem; }
+            header { flex-direction: column; gap: 1rem; }
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-76JHMZJ82N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-76JHMZJ82N');
+    </script>
+    <!-- PostHog Analytics -->
+    <script>
+      !function(t,e){var o,n,p,r,a=e.location,c=[],s=[];function u(e){try{s.push(e)}catch(t){}}function h(e){console.error('PostHog error:',e)}t.PostHog=t.PostHog||function(){if(o)return o;o={_queue:[],push:u};var e=['capture','identify','reset','feature_flags','on_feature_flags','reloadFeatureFlags','getFeatureFlag','getFeatureFlagPayload','isFeatureEnabled'];return e.forEach(function(e){o[e]=function(){o._queue.push({method:e,args:Array.prototype.slice.call(arguments)})}}),o},window.posthog=new t.PostHog;var m='https://us.posthog.com';window.posthog.init=function(e,t){var o=t||{};o.hook_server_url=o.hook_server_url||m,window.posthog_config=o,window.posthog.config=o.posthog_config||{},window.posthog.isFeatureEnabled=function(e){return!0},window.posthog.reloadFeatureFlags=function(){},fetch(m+'/decide/?v=2',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:e,distinct_id:window.posthog_distinct_id||'',groups:o.groups||{},v:'1.0'})}).then(function(t){t.json().then(function(e){window.posthog.featureFlags=e.featureFlags||{}}).catch(h)}).catch(h)},window.posthog.init('phc_tYXqzrjNDJBTRNqVGpC3hTb1YpqCqXCWzqEpMZcf8kZ',{api_host:m})};
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-icon">🏘️</div>
+            <div>
+                <a href="../../">← Back to neighborhoods</a>
+                <h1>Short North Civic Association</h1>
+                <p class="description">Micromobility activity & 311 complaint tracking for the Short North area</p>
+                <div style="margin-top: 1rem;">
+                    <span class="civic-badge">Civic Organization</span>
+                    <a href="https://shortnorthcivic.org/" class="website-link" target="_blank">Visit Website →</a>
+                </div>
+            </div>
+        </header>
+
+        <section id="overview">
+            <h2>📊 Area Overview</h2>
+
+            <div class="insight-box">
+                <strong>Coverage Area</strong>
+                <p>5th Ave (North) to Goodale St (South), Olentangy River (West) to N 4th St (East)</p>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Active Vehicles</div>
+                    <div class="stat-value" id="vehicleCount">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">311 Complaints (30d)</div>
+                    <div class="stat-value" id="complaintCount">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Veo Vehicles</div>
+                    <div class="stat-value" id="veoCount">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Spin Vehicles</div>
+                    <div class="stat-value" id="spinCount">—</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="complaints">
+            <h2>📋 311 Complaint Categories (30 days)</h2>
+
+            <div class="insight-box">
+                <strong>Most Common Issues</strong>
+                <p>Tracked complaints within Short North civic area boundaries</p>
+            </div>
+
+            <div class="complaint-categories" id="complaintList">
+                <div class="category-item">
+                    <span class="category-name">Loading complaint data...</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="insights">
+            <h2>💡 Key Insights</h2>
+
+            <div class="insight-box">
+                <strong>For Civic Leaders</strong>
+                <p>This data helps the Short North Civic Association track micromobility activity and community complaints in your area. Use this information to:</p>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li>Monitor parking and placement issues with bikes/scooters</li>
+                    <li>Coordinate with operators (Veo, Spin) on compliance</li>
+                    <li>Support data-driven advocacy with city planning</li>
+                    <li>Identify problem areas for community engagement</li>
+                </ul>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1.125rem;">Operator Contact</h3>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li><strong>Veo:</strong> Community relations for micromobility coordination</li>
+                <li><strong>Spin:</strong> Multi-modal operator (bikes + scooters)</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p><strong>Data sources:</strong> Columbus 311 (City system), GBFS operators (Veo, Spin), OpenStreetMap</p>
+            <p><strong>Last updated:</strong> <span id="lastUpdated">—</span></p>
+        </footer>
+
+        <div class="copyright-section">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                &copy; 2026 <a href="https://steveneedham.com" style="color: inherit; text-decoration: none; border-bottom: 1px dotted var(--color-text-secondary);">Steven Needham</a>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                Made in Columbus, OH
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+    <script>
+        const GEOFENCE = {
+            type: "Polygon",
+            coordinates: [[
+                [-83.0185, 39.9875],
+                [-83.0205, 39.9732],
+                [-82.9983, 39.9736],
+                [-82.9983, 39.9875],
+                [-83.0185, 39.9875]
+            ]]
+        };
+
+        function pointInPolygon(point, polygon) {
+            try {
+                return turf.booleanPointInPolygon(point, turf.polygon(polygon.coordinates));
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function loadCivicData() {
+            try {
+                const [gbfsResponse, c311Response] = await Promise.all([
+                    fetch('/columbus-micromobility-data/data-gbfs.json'),
+                    fetch('/columbus-micromobility-data/data-311.json')
+                ]);
+
+                const gbfsData = await gbfsResponse.json();
+                const c311Data = await c311Response.json();
+
+                // Count vehicles
+                let veoCount = 0, spinCount = 0;
+                gbfsData.vehicles.forEach(v => {
+                    const point = turf.point([v.lng, v.lat]);
+                    if (pointInPolygon(point, GEOFENCE)) {
+                        if (v.provider === 'Veo') veoCount++;
+                        else if (v.provider === 'Spin') spinCount++;
+                    }
+                });
+
+                document.getElementById('vehicleCount').textContent = veoCount + spinCount;
+                document.getElementById('veoCount').textContent = veoCount;
+                document.getElementById('spinCount').textContent = spinCount;
+
+                // Count complaints (last 30 days)
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+                const complaints = {};
+                let totalComplaints = 0;
+
+                c311Data.records.forEach(r => {
+                    const date = new Date(r.created_date);
+                    const point = turf.point([r.longitude, r.latitude]);
+
+                    if (date >= thirtyDaysAgo && pointInPolygon(point, GEOFENCE)) {
+                        totalComplaints++;
+                        const category = r.type || 'Other';
+                        complaints[category] = (complaints[category] || 0) + 1;
+                    }
+                });
+
+                document.getElementById('complaintCount').textContent = totalComplaints;
+
+                // Render complaint categories
+                const sorted = Object.entries(complaints)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10);
+
+                const complaintList = document.getElementById('complaintList');
+                complaintList.innerHTML = '';
+
+                if (sorted.length === 0) {
+                    complaintList.innerHTML = '<div class="category-item"><span class="category-name">No complaints recorded in this period</span></div>';
+                } else {
+                    sorted.forEach(([category, count]) => {
+                        const item = document.createElement('div');
+                        item.className = 'category-item';
+                        item.innerHTML = `
+                            <span class="category-name">${category}</span>
+                            <span class="category-count">${count}</span>
+                        `;
+                        complaintList.appendChild(item);
+                    });
+                }
+
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+
+            } catch (err) {
+                console.error('Error loading civic data:', err);
+            }
+        }
+
+        loadCivicData();
+    </script>
+</body>
+</html>
