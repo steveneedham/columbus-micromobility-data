@@ -1,6 +1,40 @@
 {
   "events": [
     {
+      "id": "osu-move-in",
+      "name": "OSU Move-In",
+      "date": "2026-08-19",
+      "category": "Academic - Move-In",
+      "venue": "Ohio State University - Columbus Campus",
+      "area": "University District",
+      "hero_image": "osu-move-in.jpg",
+      "geofence": {
+        "center": [40.0067, -83.0135],
+        "radius_meters": 3000
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-08-19",
+      "monitoring_end": "2026-08-22",
+      "expected_attendance": 50000
+    },
+    {
+      "id": "osu-first-day-of-classes",
+      "name": "OSU First Day of Classes",
+      "date": "2026-08-25",
+      "category": "Academic - First Day of Classes",
+      "venue": "Ohio State University - Columbus Campus",
+      "area": "University District",
+      "hero_image": "osu-first-day-of-classes.jpg",
+      "geofence": {
+        "center": [40.0067, -83.0135],
+        "radius_meters": 3000
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-08-25",
+      "monitoring_end": "2026-08-27",
+      "expected_attendance": 60000
+    },
+    {
       "id": "columbus-crew-vs-cf-montreal",
       "name": "Columbus Crew vs CF Montreal",
       "date": "2026-08-19",
