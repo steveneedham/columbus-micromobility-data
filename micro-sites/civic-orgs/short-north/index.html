@@ -52,6 +52,27 @@
             gap: 2rem;
         }
 
+        .header-hero {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 8px;
+            filter: grayscale(75%) contrast(110%) brightness(115%) blur(1.5px);
+            opacity: 0.85;
+            margin-bottom: 1.5rem;
+            background: var(--color-border);
+        }
+
+        .header-hero.missing {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header-hero {
+                height: 200px;
+            }
+        }
+
         .header-icon {
             width: 64px;
             height: 64px;
@@ -244,6 +265,7 @@
 </head>
 <body>
     <div class="container">
+        <img src="../../../assets/hero/short-north-civic-assocaition.jpg" alt="Short North Civic Association" class="header-hero missing" onerror="this.classList.add('missing')" onload="this.classList.remove('missing')">
         <header>
             <div class="header-icon">🏘️</div>
             <div>
