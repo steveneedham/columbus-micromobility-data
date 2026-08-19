@@ -1,66 +1,141 @@
 {
   "events": [
     {
-      "id": "sonic-temple-2026",
-      "name": "Sonic Temple",
-      "date_start": "2026-09-12",
-      "date_end": "2026-09-14",
-      "monitoring_start": "2026-08-17",
-      "monitoring_end": "2026-09-21",
-      "status": "scheduled",
-      "location": "Historic Crew Stadium, Columbus OH",
+<<<<<<< HEAD
+      "id": "osu-move-in",
+      "name": "OSU Move-In",
+      "date": "2026-08-19",
+      "category": "Academic - Move-In",
+      "venue": "Ohio State University - Columbus Campus",
+      "area": "University District",
+      "hero_image": "osu-move-in.jpg",
+      "geofence": {
+        "center": [40.0067, -83.0135],
+        "radius_meters": 3000
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-08-19",
+      "monitoring_end": "2026-08-22",
+      "expected_attendance": 50000
+    },
+    {
+      "id": "osu-first-day-of-classes",
+      "name": "OSU First Day of Classes",
+      "date": "2026-08-25",
+      "category": "Academic - First Day of Classes",
+      "venue": "Ohio State University - Columbus Campus",
+      "area": "University District",
+      "hero_image": "osu-first-day-of-classes.jpg",
+      "geofence": {
+        "center": [40.0067, -83.0135],
+        "radius_meters": 3000
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-08-25",
+      "monitoring_end": "2026-08-27",
+      "expected_attendance": 60000
+    },
+    {
+      "id": "osu-football-vs-ball-state",
+      "name": "Ohio State Football vs Ball State",
+      "date": "2026-09-05",
+      "category": "Sports - College Football",
+      "venue": "Ohio Stadium",
+      "area": "University District",
+      "hero_image": "osu-football-vs-ball-state.jpg",
+      "geofence": {
+        "center": [40.0067, -83.0135],
+        "radius_meters": 3000
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-08-29",
+      "monitoring_end": "2026-09-12",
+      "expected_attendance": 100000
+    },
+    {
+      "id": "columbus-crew-vs-cf-montreal",
+      "name": "Columbus Crew vs CF Montreal",
+      "date": "2026-08-19",
+      "category": "Sports - MLS",
+      "venue": "ScottsMiracle-Gro Field",
+      "area": "Arena District",
+      "hero_image": "columbus-crew-vs-cf-montreal.jpg",
       "geofence": {
         "center": [39.9612, -82.9988],
         "radius_meters": 1500
       },
-      "npz_zones": [
-        {
-          "name": "Stadium Perimeter",
-          "bounds": [[39.9612, -82.9988], [39.9612, -82.9888], [39.9712, -82.9888], [39.9712, -82.9988]],
-          "enforcement": true
-        }
-      ],
-      "nrz_zones": [
-        {
-          "name": "Event Footprint",
-          "bounds": [[39.9612, -82.9988], [39.9612, -82.9888], [39.9712, -82.9888], [39.9712, -82.9988]],
-          "enforcement": true
-        }
-      ],
       "operators": ["Veo", "Spin"],
-      "expected_attendees": 50000,
-      "microsite_url": "/columbus-micromobility-data/micro-sites/events/sonic-temple-2026/"
+      "monitoring_start": "2026-08-12",
+      "monitoring_end": "2026-08-26",
+      "expected_attendance": 20000
+    },
+    {
+      "id": "columbus-crew-vs-new-england-revolution",
+      "name": "Columbus Crew vs New England Revolution",
+      "date": "2026-08-29",
+      "category": "Sports - MLS",
+      "venue": "ScottsMiracle-Gro Field",
+      "area": "Arena District",
+      "hero_image": "columbus-crew-vs-new-england-revolution.jpg",
+      "geofence": {
+        "center": [39.9612, -82.9988],
+        "radius_meters": 1500
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-08-22",
+      "monitoring_end": "2026-09-05",
+      "expected_attendance": 20000
+    },
+    {
+      "id": "clippers-homestand-vs-iowa",
+      "name": "Clippers homestand vs Iowa",
+      "date": "2026-09-01",
+      "category": "Sports - MiLB (homestand)",
+      "venue": "Huntington Park",
+      "area": "Arena District",
+      "hero_image": "clippers-homestand-vs-iowa.jpg",
+      "geofence": {
+        "center": [39.9612, -82.9988],
+        "radius_meters": 1500
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-08-25",
+      "monitoring_end": "2026-09-08",
+      "expected_attendance": 8000
+    },
+    {
+      "id": "sonic-temple-2026",
+      "name": "Sonic Temple",
+      "date": "2026-09-13",
+      "category": "Festival",
+      "venue": "Historic Crew Stadium",
+      "area": "Arena District",
+      "hero_image": "sonic-temple-2026.jpg",
+      "geofence": {
+        "center": [39.9612, -82.9988],
+        "radius_meters": 1500
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-09-06",
+      "monitoring_end": "2026-09-20",
+      "expected_attendance": 100000
     },
     {
       "id": "breakaway-festival-2026",
       "name": "Breakaway Festival",
-      "date_start": "2026-06-13",
-      "date_end": "2026-06-14",
-      "monitoring_start": "2026-05-17",
-      "monitoring_end": "2026-06-21",
-      "status": "scheduled",
-      "location": "Historic Crew Stadium, Columbus OH",
+      "date": "2026-06-14",
+      "category": "Festival",
+      "venue": "Historic Crew Stadium",
+      "area": "Arena District",
+      "hero_image": "breakaway-festival-2026.jpg",
       "geofence": {
         "center": [39.9612, -82.9988],
         "radius_meters": 1500
       },
-      "npz_zones": [
-        {
-          "name": "Stadium Perimeter",
-          "bounds": [[39.9612, -82.9988], [39.9612, -82.9888], [39.9712, -82.9888], [39.9712, -82.9988]],
-          "enforcement": true
-        }
-      ],
-      "nrz_zones": [
-        {
-          "name": "Event Footprint",
-          "bounds": [[39.9612, -82.9988], [39.9612, -82.9888], [39.9712, -82.9888], [39.9712, -82.9988]],
-          "enforcement": true
-        }
-      ],
       "operators": ["Veo", "Spin"],
-      "expected_attendees": 40000,
-      "microsite_url": "/columbus-micromobility-data/micro-sites/events/breakaway-festival-2026/"
+      "monitoring_start": "2026-06-07",
+      "monitoring_end": "2026-06-21",
+      "expected_attendance": 40000
     }
   ]
 }

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breakaway Festival — Event Micromobility Monitoring</title>
-    <meta name="description" content="Real-time micromobility monitoring for Breakaway Festival in Columbus.">
-    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/events/breakaway-festival-2026/">
+    <title>Ohio State Football vs Ball State — Event Micromobility Monitoring</title>
+    <meta name="description" content="Real-time micromobility monitoring for Ohio State Football vs Ball State in Columbus.">
+    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/events/osu-football-vs-ball-state/">
     <link rel="icon" type="image/svg+xml" href="../../../assets/field-ledger-mark.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
@@ -208,30 +208,30 @@
 </head>
 <body>
     <div class="container">
-        <img src="../../../assets/hero/breakaway-festival-2026.jpg" alt="Breakaway Festival" class="event-hero missing" onerror="this.classList.add('missing')" onload="this.classList.remove('missing')">
+        <img src="../../../assets/hero/osu-football-vs-ball-state.jpg" alt="Ohio State Football vs Ball State" class="event-hero missing" onerror="this.classList.add('missing')" onload="this.classList.remove('missing')">
         <header>
             <a href="../../">← Back to microsites</a>
-            <h1>Breakaway Festival</h1>
+            <h1>Ohio State Football vs Ball State</h1>
             <p style="color: var(--color-text-secondary); font-size: 1.125rem;">Real-time micromobility monitoring & activity tracking</p>
-            <span class="event-badge">🎪 Festival</span>
+            <span class="event-badge">🎪 Sports - College Football</span>
         </header>
 
         <div class="event-info">
             <div class="info-card">
                 <div class="info-label">Event Date</div>
-                <div class="info-value">Sun, Jun 14, 2026</div>
+                <div class="info-value">Sat, Sep 5, 2026</div>
             </div>
             <div class="info-card">
                 <div class="info-label">Venue</div>
-                <div class="info-value" style="font-size: 1rem;">Historic Crew Stadium</div>
+                <div class="info-value" style="font-size: 1rem;">Ohio Stadium</div>
             </div>
             <div class="info-card">
                 <div class="info-label">Expected Attendance</div>
-                <div class="info-value">40,000</div>
+                <div class="info-value">100,000</div>
             </div>
             <div class="info-card">
                 <div class="info-label">Monitoring Window</div>
-                <div class="info-value" style="font-size: 0.9rem;">Jun 7 - Jun 21</div>
+                <div class="info-value" style="font-size: 0.9rem;">Aug 29 - Sep 12</div>
             </div>
         </div>
 
@@ -273,7 +273,7 @@
 
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script>
-        const EVENT_DATA = {"geofence":{"center":[39.9612,-82.9988],"radius_meters":1500}};
+        const EVENT_DATA = {"geofence":{"center":[40.0067,-83.0135],"radius_meters":3000}};
 
         async function loadEventData() {
             try {

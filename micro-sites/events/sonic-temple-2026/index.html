@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sonic Temple — Micromobility Intelligence</title>
+    <title>Sonic Temple — Event Micromobility Monitoring</title>
     <meta name="description" content="Real-time micromobility monitoring for Sonic Temple in Columbus.">
     <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/events/sonic-temple-2026/">
     <link rel="icon" type="image/svg+xml" href="../../../assets/field-ledger-mark.svg">
@@ -41,6 +41,21 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+        }
+
+        .event-hero {
+            width: calc(100% + 4rem);
+            height: 300px;
+            object-fit: cover;
+            margin: -2rem -2rem 2rem -2rem;
+            border-radius: 0 0 8px 8px;
+            filter: grayscale(75%) contrast(110%) brightness(115%) blur(1.5px);
+            opacity: 0.85;
+            background: var(--color-border);
+        }
+
+        .event-hero.missing {
+            display: none;
         }
 
         header {
@@ -150,29 +165,6 @@
             font-family: 'IBM Plex Mono', monospace;
         }
 
-        .zone-list {
-            margin: 1.5rem 0;
-        }
-
-        .zone-item {
-            padding: 1rem;
-            background: rgba(231, 76, 60, 0.02);
-            border-left: 3px solid var(--color-event);
-            margin-bottom: 0.75rem;
-            border-radius: 4px;
-        }
-
-        .zone-name {
-            font-weight: 600;
-            color: var(--color-event);
-            margin-bottom: 0.25rem;
-        }
-
-        .zone-status {
-            font-size: 0.875rem;
-            color: var(--color-text-secondary);
-        }
-
         footer {
             margin-top: 3rem;
             padding-top: 2rem;
@@ -198,6 +190,7 @@
             h1 { font-size: 1.75rem; }
             section h2 { font-size: 1.25rem; }
             .metrics-grid { grid-template-columns: 1fr; }
+            .event-hero { height: 200px; margin: -1rem -1rem 1.5rem -1rem; }
         }
     </style>
     <!-- Google tag (gtag.js) -->
@@ -215,29 +208,30 @@
 </head>
 <body>
     <div class="container">
+        <img src="../../../assets/hero/sonic-temple-2026.jpg" alt="Sonic Temple" class="event-hero missing" onerror="this.classList.add('missing')" onload="this.classList.remove('missing')">
         <header>
-            <a href="../../">← Back to neighborhoods</a>
+            <a href="../../">← Back to microsites</a>
             <h1>Sonic Temple</h1>
-            <p style="color: var(--color-text-secondary); font-size: 1.125rem;">Real-time micromobility monitoring & zone enforcement</p>
-            <span class="event-badge">🎪 ACTIVE EVENT</span>
+            <p style="color: var(--color-text-secondary); font-size: 1.125rem;">Real-time micromobility monitoring & activity tracking</p>
+            <span class="event-badge">🎪 Festival</span>
         </header>
 
         <div class="event-info">
             <div class="info-card">
-                <div class="info-label">Event Dates</div>
-                <div class="info-value">9/12/2026 - 9/14/2026</div>
+                <div class="info-label">Event Date</div>
+                <div class="info-value">Sun, Sep 13, 2026</div>
             </div>
             <div class="info-card">
-                <div class="info-label">Location</div>
-                <div class="info-value" style="font-size: 1rem;">Historic Crew Stadium, Columbus OH</div>
+                <div class="info-label">Venue</div>
+                <div class="info-value" style="font-size: 1rem;">Historic Crew Stadium</div>
             </div>
             <div class="info-card">
                 <div class="info-label">Expected Attendance</div>
-                <div class="info-value">50,000</div>
+                <div class="info-value">100,000</div>
             </div>
             <div class="info-card">
                 <div class="info-label">Monitoring Window</div>
-                <div class="info-value" style="font-size: 1rem;">8/17/2026 - 9/21/2026</div>
+                <div class="info-value" style="font-size: 0.9rem;">Sep 6 - Sep 20</div>
             </div>
         </div>
 
@@ -245,61 +239,27 @@
             <h2>📊 Live Event Metrics</h2>
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-label">Active Vehicles (Geofence)</div>
+                    <div class="metric-label">Active Vehicles</div>
                     <div class="metric-value" id="vehicleCount">—</div>
-                    <div class="metric-label" style="margin-top: 0.75rem;">Veo / Spin breakdown</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-label">311 Complaints (Event Area)</div>
+                    <div class="metric-label">311 Complaints (Last 24h)</div>
                     <div class="metric-value" id="complaintCount">—</div>
-                    <div class="metric-label" style="margin-top: 0.75rem;">Last 24 hours</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-label">NPZ Violations</div>
-                    <div class="metric-value" id="npzViolations">—</div>
-                    <div class="metric-label" style="margin-top: 0.75rem;">Vehicles in no-park zones</div>
+                    <div class="metric-label">Veo Vehicles</div>
+                    <div class="metric-value" id="veoCount">—</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-label">NRZ Violations</div>
-                    <div class="metric-value" id="nrzViolations">—</div>
-                    <div class="metric-label" style="margin-top: 0.75rem;">Vehicles in no-ride zones</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="zones">
-            <h2>🚫 Enforcement Zones</h2>
-
-            <h3 style="margin-top: 1.5rem; font-size: 1.125rem; color: var(--color-event);">No Parking Zones (NPZ)</h3>
-            <div class="zone-list" id="npzList">
-                <div class="zone-item">
-                    <div class="zone-name">Loading zones...</div>
-                </div>
-            </div>
-
-            <h3 style="margin-top: 1.5rem; font-size: 1.125rem; color: var(--color-event);">No Ride Zones (NRZ)</h3>
-            <div class="zone-list" id="nrzList">
-                <div class="zone-item">
-                    <div class="zone-name">Loading zones...</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="operators">
-            <h2>🚲 Operator Coordination</h2>
-            <p style="margin-bottom: 1rem; color: var(--color-text-secondary);">Active operators coordinating with event management:</p>
-            <div class="zone-list" id="operatorList">
-                <div class="zone-item">
-                    <div class="zone-name">Loading operator data...</div>
+                    <div class="metric-label">Spin Vehicles</div>
+                    <div class="metric-value" id="spinCount">—</div>
                 </div>
             </div>
         </section>
 
         <footer>
-            <p><strong>Data sources:</strong> Columbus 311 (City system), GBFS feeds (Veo, Spin), Real-time vehicle telemetry</p>
+            <p><strong>Data sources:</strong> Columbus 311 (City system), GBFS operators (Veo, Spin), Real-time vehicle telemetry</p>
             <p><strong>Last updated:</strong> <span id="lastUpdated">—</span></p>
-        </footer>
-
         <div class="copyright-section">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
                 &copy; 2026 <a href="https://steveneedham.com" style="color: inherit; text-decoration: none; border-bottom: 1px dotted var(--color-text-secondary);">Steven Needham</a>
@@ -308,11 +268,12 @@
                 Made in Columbus, OH
             </div>
         </div>
+        </footer>
     </div>
 
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script>
-        const EVENT_DATA = {"id":"sonic-temple-2026","name":"Sonic Temple","date_start":"2026-09-12","date_end":"2026-09-14","monitoring_start":"2026-08-17","monitoring_end":"2026-09-21","status":"scheduled","location":"Historic Crew Stadium, Columbus OH","geofence":{"center":[39.9612,-82.9988],"radius_meters":1500},"npz_zones":[{"name":"Stadium Perimeter","bounds":[[39.9612,-82.9988],[39.9612,-82.9888],[39.9712,-82.9888],[39.9712,-82.9988]],"enforcement":true}],"nrz_zones":[{"name":"Event Footprint","bounds":[[39.9612,-82.9988],[39.9612,-82.9888],[39.9712,-82.9888],[39.9712,-82.9988]],"enforcement":true}],"operators":["Veo","Spin"],"expected_attendees":50000,"microsite_url":"/columbus-micromobility-data/micro-sites/events/sonic-temple-2026/"};
+        const EVENT_DATA = {"geofence":{"center":[39.9612,-82.9988],"radius_meters":1500}};
 
         async function loadEventData() {
             try {
@@ -342,8 +303,10 @@
                 });
 
                 document.getElementById('vehicleCount').textContent = (veoCount + spinCount) + ` (${veoCount}v / ${spinCount}s)`;
+                document.getElementById('veoCount').textContent = veoCount;
+                document.getElementById('spinCount').textContent = spinCount;
 
-                // Count complaints within geofence
+                // Count complaints within geofence (last 24 hours)
                 const oneDayAgo = new Date();
                 oneDayAgo.setDate(oneDayAgo.getDate() - 1);
 
@@ -362,46 +325,6 @@
                 });
 
                 document.getElementById('complaintCount').textContent = complaintCount;
-
-                // Render NPZ zones
-                const npzList = document.getElementById('npzList');
-                npzList.innerHTML = '';
-                EVENT_DATA.npz_zones.forEach(zone => {
-                    const item = document.createElement('div');
-                    item.className = 'zone-item';
-                    item.innerHTML = `
-                        <div class="zone-name">${zone.name}</div>
-                        <div class="zone-status">Enforcement: ${zone.enforcement ? 'Active' : 'Monitoring'}</div>
-                    `;
-                    npzList.appendChild(item);
-                });
-
-                // Render NRZ zones
-                const nrzList = document.getElementById('nrzList');
-                nrzList.innerHTML = '';
-                EVENT_DATA.nrz_zones.forEach(zone => {
-                    const item = document.createElement('div');
-                    item.className = 'zone-item';
-                    item.innerHTML = `
-                        <div class="zone-name">${zone.name}</div>
-                        <div class="zone-status">Enforcement: ${zone.enforcement ? 'Active' : 'Monitoring'}</div>
-                    `;
-                    nrzList.appendChild(item);
-                });
-
-                // Render operators
-                const operatorList = document.getElementById('operatorList');
-                operatorList.innerHTML = '';
-                EVENT_DATA.operators.forEach(op => {
-                    const item = document.createElement('div');
-                    item.className = 'zone-item';
-                    item.innerHTML = `
-                        <div class="zone-name">${op}</div>
-                        <div class="zone-status">Actively monitoring and coordinating with event management</div>
-                    `;
-                    operatorList.appendChild(item);
-                });
-
                 document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
 
             } catch (err) {

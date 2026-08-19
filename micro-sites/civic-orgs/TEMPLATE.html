@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Short North Civic Association — Micromobility Data</title>
-    <meta name="description" content="Micromobility activity and 311 complaints in the Short North neighborhood, Columbus.">
-    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/civic-orgs/short-north/">
+    <title>{{CIVIC_NAME}} — Micromobility Data</title>
+    <meta name="description" content="Micromobility activity and 311 complaints in {{CIVIC_NAME}}, Columbus.">
+    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/civic-orgs/{{CIVIC_SLUG}}/">
     <link rel="icon" type="image/svg+xml" href="../../../assets/field-ledger-mark.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
@@ -265,16 +265,16 @@
 </head>
 <body>
     <div class="container">
-        <img src="../../../assets/hero/short-north-civic-association.jpg" alt="Short North Civic Association" class="header-hero missing" onerror="this.classList.add('missing')" onload="this.classList.remove('missing')">
+        <img src="../../../assets/hero/{{CIVIC_SLUG}}.jpg" alt="{{CIVIC_NAME}}" class="header-hero missing" onerror="this.classList.add('missing')" onload="this.classList.remove('missing')">
         <header>
             <div class="header-icon">🏘️</div>
             <div>
-                <a href="../../">← Back to neighborhoods</a>
-                <h1>Short North Civic Association</h1>
-                <p class="description">Micromobility activity & 311 complaint tracking for the Short North area</p>
+                <a href="../../">← Back to microsites</a>
+                <h1>{{CIVIC_NAME}}</h1>
+                <p class="description">Micromobility activity & 311 complaint tracking for {{CIVIC_NAME}}</p>
                 <div style="margin-top: 1rem;">
                     <span class="civic-badge">Civic Organization</span>
-                    <a href="https://shortnorthcivic.org/" class="website-link" target="_blank">Visit Website →</a>
+                    <a href="{{WEBSITE_URL}}" class="website-link" target="_blank">Visit Website →</a>
                 </div>
             </div>
         </header>
@@ -284,7 +284,7 @@
 
             <div class="insight-box">
                 <strong>Coverage Area</strong>
-                <p>5th Ave (North) to Goodale St (South), Olentangy River (West) to N 4th St (East)</p>
+                <p>{{COVERAGE_DESCRIPTION}}</p>
             </div>
 
             <div class="metrics-grid">
@@ -312,7 +312,7 @@
 
             <div class="insight-box">
                 <strong>Most Common Issues</strong>
-                <p>Tracked complaints within Short North civic area boundaries</p>
+                <p>Tracked complaints within {{CIVIC_NAME}} civic area boundaries</p>
             </div>
 
             <div class="complaint-categories" id="complaintList">
@@ -327,7 +327,7 @@
 
             <div class="insight-box">
                 <strong>For Civic Leaders</strong>
-                <p>This data helps the Short North Civic Association track micromobility activity and community complaints in your area. Use this information to:</p>
+                <p>This data helps {{CIVIC_NAME}} track micromobility activity and community complaints in your area. Use this information to:</p>
                 <ul style="margin: 1rem 0; padding-left: 2rem;">
                     <li>Monitor parking and placement issues with bikes/scooters</li>
                     <li>Coordinate with operators (Veo, Spin) on compliance</li>

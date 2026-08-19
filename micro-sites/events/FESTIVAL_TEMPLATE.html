@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breakaway Festival — Event Micromobility Monitoring</title>
-    <meta name="description" content="Real-time micromobility monitoring for Breakaway Festival in Columbus.">
-    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/events/breakaway-festival-2026/">
+    <title>{{EVENT_NAME}} — Festival Micromobility Monitoring</title>
+    <meta name="description" content="Real-time micromobility monitoring for {{EVENT_NAME}} in Columbus.">
+    <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/events/{{EVENT_SLUG}}/">
     <link rel="icon" type="image/svg+xml" href="../../../assets/field-ledger-mark.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&display=swap');
@@ -208,42 +208,42 @@
 </head>
 <body>
     <div class="container">
-        <img src="../../../assets/hero/breakaway-festival-2026.jpg" alt="Breakaway Festival" class="event-hero missing" onerror="this.classList.add('missing')" onload="this.classList.remove('missing')">
+        <img src="../../../assets/hero/{{HERO_IMAGE}}" alt="{{EVENT_NAME}}" class="event-hero missing" onerror="this.classList.add('missing')" onload="this.classList.remove('missing')">
         <header>
             <a href="../../">← Back to microsites</a>
-            <h1>Breakaway Festival</h1>
+            <h1>{{EVENT_NAME}}</h1>
             <p style="color: var(--color-text-secondary); font-size: 1.125rem;">Real-time micromobility monitoring & activity tracking</p>
-            <span class="event-badge">🎪 Festival</span>
+            <span class="event-badge">🎪 {{EVENT_CATEGORY}}</span>
         </header>
 
         <div class="event-info">
             <div class="info-card">
                 <div class="info-label">Event Date</div>
-                <div class="info-value">Sun, Jun 14, 2026</div>
+                <div class="info-value">{{EVENT_DATE}}</div>
             </div>
             <div class="info-card">
                 <div class="info-label">Venue</div>
-                <div class="info-value" style="font-size: 1rem;">Historic Crew Stadium</div>
+                <div class="info-value" style="font-size: 1rem;">{{EVENT_VENUE}}</div>
             </div>
             <div class="info-card">
                 <div class="info-label">Expected Attendance</div>
-                <div class="info-value">40,000</div>
+                <div class="info-value">{{EVENT_ATTENDANCE}}</div>
             </div>
             <div class="info-card">
                 <div class="info-label">Monitoring Window</div>
-                <div class="info-value" style="font-size: 0.9rem;">Jun 7 - Jun 21</div>
+                <div class="info-value" style="font-size: 0.9rem;">{{MONITORING_WINDOW}}</div>
             </div>
         </div>
 
         <section id="overview">
-            <h2>📊 Live Event Metrics</h2>
+            <h2>📊 Live Festival Metrics</h2>
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-label">Active Vehicles</div>
                     <div class="metric-value" id="vehicleCount">—</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-label">311 Complaints (Last 24h)</div>
+                    <div class="metric-label">311 Complaints (Event Window)</div>
                     <div class="metric-value" id="complaintCount">—</div>
                 </div>
                 <div class="metric-card">
@@ -273,7 +273,7 @@
 
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script>
-        const EVENT_DATA = {"geofence":{"center":[39.9612,-82.9988],"radius_meters":1500}};
+        const EVENT_DATA = {{EVENT_JSON}};
 
         async function loadEventData() {
             try {
@@ -285,7 +285,7 @@
                 const gbfsData = await gbfsResponse.json();
                 const c311Data = await c311Response.json();
 
-                // Count vehicles within geofence
+                // Count vehicles within geofence (using center point + radius)
                 const geofence = EVENT_DATA.geofence;
                 let veoCount = 0, spinCount = 0;
 
@@ -306,9 +306,9 @@
                 document.getElementById('veoCount').textContent = veoCount;
                 document.getElementById('spinCount').textContent = spinCount;
 
-                // Count complaints within geofence (last 24 hours)
-                const oneDayAgo = new Date();
-                oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+                // Count complaints within geofence and event window
+                const eventStart = new Date(EVENT_DATA.start_date);
+                const eventEnd = new Date(EVENT_DATA.end_date);
 
                 let complaintCount = 0;
                 c311Data.records.forEach(record => {
@@ -319,7 +319,7 @@
                         { units: 'meters' }
                     );
 
-                    if (date >= oneDayAgo && distance <= geofence.radius_meters) {
+                    if (date >= eventStart && date <= eventEnd && distance <= geofence.radius_meters) {
                         complaintCount++;
                     }
                 });
@@ -333,7 +333,7 @@
         }
 
         loadEventData();
-        setInterval(loadEventData, 60000); // Refresh every minute
+        setInterval(loadEventData, 60000);
     </script>
 </body>
 </html>
