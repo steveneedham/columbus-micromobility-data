@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neighborhood Micro-Sites — Columbus Micromobility Data</title>
-    <meta name="description" content="Explore neighborhood-specific data views for Columbus micromobility.">
+    <title>Microsites — Operator | Municipality | Neighborhood | Event</title>
+    <meta name="description" content="Explore operator, municipality, neighborhood, and event-specific micromobility data for Columbus.">
     <link rel="canonical" href="https://steveneedham.github.io/columbus-micromobility-data/micro-sites/">
     <link rel="icon" type="image/svg+xml" href="../assets/field-ledger-mark.svg">
     <style>
@@ -148,26 +148,53 @@
     <div class="container">
         <header>
             <a href="../">← Back to main</a>
-            <h1>Neighborhood Micro-Sites</h1>
-            <p class="description">Explore neighborhood-specific data for Columbus micromobility.</p>
+            <h1>Microsites</h1>
+            <p class="description">Operator | Municipality | Neighborhood | Event</p>
+            <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">Explore micromobility activity across different geographic and organizational scopes.</p>
         </header>
 
-        <section style="margin: 2rem 0; padding: 2rem; background: rgba(250, 167, 26, 0.05); border: 1px solid var(--color-border); border-radius: 8px;">
-            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; font-family: 'Newsreader', serif;">Operator Analysis</h2>
+        <!-- OPERATOR SECTION -->
+        <section style="margin: 2rem 0; padding: 2rem; background: rgba(46, 204, 113, 0.05); border: 1px solid var(--color-border); border-radius: 8px;">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Newsreader', serif;">🚲 Operators</h2>
             <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Compare market positioning, competitive dynamics, and strategic insights for individual operators.</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
                 <a href="operators/veo/" style="display: block; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#2ecc71'; this.style.boxShadow='0 4px 12px rgba(46, 204, 113, 0.1)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
-                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #2ecc71;">🔋 Veo</div>
-                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Scooter specialist with urban core focus and 11 service areas</div>
+                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #2ecc71;">⚡ Veo</div>
+                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Scooter specialist with urban core focus</div>
                 </a>
                 <a href="operators/spin/" style="display: block; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#00bfa5'; this.style.boxShadow='0 4px 12px rgba(0, 191, 165, 0.1)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
                     <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #00bfa5;">🚴 Spin</div>
-                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Multi-modal (bikes + scooters) with suburban market leadership</div>
+                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Multi-modal bikes & scooters with suburban market leadership</div>
                 </a>
             </div>
         </section>
 
-        <div class="neighborhoods-grid" id="neighborhoods"></div>
+        <!-- MUNICIPALITY SECTION -->
+        <section style="margin: 2rem 0; padding: 2rem; background: rgba(232, 163, 61, 0.05); border: 1px solid var(--color-border); border-radius: 8px;">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Newsreader', serif;">🏘️ Municipalities & Civic Organizations</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Neighborhood civic associations and municipal-level micromobility tracking.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <a href="civic-orgs/short-north/" style="display: block; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#e8a33d'; this.style.boxShadow='0 4px 12px rgba(232, 163, 61, 0.1)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #e8a33d;">🏘️ Short North Civic Association</div>
+                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Geofence-based tracking for neighborhood civic leaders</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- NEIGHBORHOOD SECTION -->
+        <section style="margin: 2rem 0;">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Newsreader', serif;">🏘️ Neighborhoods</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Real-time micromobility activity in Columbus neighborhoods.</p>
+            <div class="neighborhoods-grid" id="neighborhoods"></div>
+        </section>
+
+        <!-- EVENT SECTION -->
+        <section style="margin: 2rem 0; padding: 2rem; background: rgba(231, 76, 60, 0.05); border: 1px solid var(--color-border); border-radius: 8px;">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Newsreader', serif;">🎪 Events</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Temporary monitoring for large events with geofence-based tracking and zone enforcement.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;" id="events"></div>
+        </section>
+
         <section class="donation-section">
             <h3>🍔 Buy Me Lunch</h3>
             <p>If you find this data useful, consider supporting the work.</p>
@@ -287,7 +314,52 @@
             }
         }
 
+        async function loadAndDisplayEvents() {
+            try {
+                const registryResponse = await fetch('/columbus-micromobility-data/data-events-registry.json');
+                const registry = await registryResponse.json();
+                const eventsContainer = document.getElementById('events');
+
+                if (!registry.events || registry.events.length === 0) {
+                    eventsContainer.innerHTML = '<div style="grid-column: 1/-1; color: var(--color-text-secondary);">No scheduled events at this time.</div>';
+                    return;
+                }
+
+                registry.events.forEach(event => {
+                    const eventStart = new Date(event.date_start);
+                    const eventEnd = new Date(event.date_end);
+                    const dateRange = `${eventStart.toLocaleDateString()} – ${eventEnd.toLocaleDateString()}`;
+
+                    const eventCard = document.createElement('a');
+                    eventCard.href = `events/${event.id}/`;
+                    eventCard.style.cssText = 'display: block; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s ease;';
+                    eventCard.onmouseover = () => {
+                        eventCard.style.borderColor = '#e74c3c';
+                        eventCard.style.boxShadow = '0 4px 12px rgba(231, 76, 60, 0.1)';
+                        eventCard.style.transform = 'translateY(-2px)';
+                    };
+                    eventCard.onmouseout = () => {
+                        eventCard.style.borderColor = 'var(--color-border)';
+                        eventCard.style.boxShadow = 'none';
+                        eventCard.style.transform = 'translateY(0)';
+                    };
+
+                    eventCard.innerHTML = `
+                        <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #e74c3c;">🎪 ${event.name}</div>
+                        <div style="font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 0.5rem;">${dateRange}</div>
+                        <div style="font-size: 0.8125rem; color: var(--color-text-secondary);">${event.location}</div>
+                    `;
+                    eventsContainer.appendChild(eventCard);
+                });
+            } catch (err) {
+                console.error('Error loading events:', err);
+                const eventsContainer = document.getElementById('events');
+                eventsContainer.innerHTML = '<div style="grid-column: 1/-1; color: var(--color-text-secondary);">Error loading events.</div>';
+            }
+        }
+
         loadAndDisplayNeighborhoods();
+        loadAndDisplayEvents();
     </script>
 </body>
 </html>
