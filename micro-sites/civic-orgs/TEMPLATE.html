@@ -447,6 +447,8 @@
 
             } catch (err) {
                 console.error('Error loading civic data:', err);
+                document.getElementById('vehicleCount').textContent = `Error: ${err.message}`;
+                document.getElementById('complaintCount').textContent = `Error: ${err.message}`;
             }
         }
 
