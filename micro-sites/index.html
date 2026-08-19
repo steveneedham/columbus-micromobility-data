@@ -350,8 +350,8 @@
                 }
 
                 registry.events.forEach(event => {
-                    const eventStart = new Date(event.date_start);
-                    const eventEnd = new Date(event.date_end);
+                    const eventStart = new Date(event.monitoring_start);
+                    const eventEnd = new Date(event.monitoring_end);
                     const dateRange = `${eventStart.toLocaleDateString()} – ${eventEnd.toLocaleDateString()}`;
 
                     const eventCard = document.createElement('a');
@@ -371,7 +371,7 @@
                     eventCard.innerHTML = `
                         <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #e74c3c;">🎪 ${event.name}</div>
                         <div style="font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 0.5rem;">${dateRange}</div>
-                        <div style="font-size: 0.8125rem; color: var(--color-text-secondary);">${event.location}</div>
+                        <div style="font-size: 0.8125rem; color: var(--color-text-secondary);">${event.venue}</div>
                     `;
                     eventsContainer.appendChild(eventCard);
                 });
