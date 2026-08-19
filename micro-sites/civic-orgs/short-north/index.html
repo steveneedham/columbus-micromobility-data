@@ -360,20 +360,11 @@
 
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script>
-        const GEOFENCE = {
-            type: "Polygon",
-            coordinates: [[
-                [-83.0185, 39.9875],
-                [-83.0205, 39.9732],
-                [-82.9983, 39.9736],
-                [-82.9983, 39.9875],
-                [-83.0185, 39.9875]
-            ]]
-        };
+        let boundary = null;
 
         function pointInPolygon(point, polygon) {
             try {
-                return turf.booleanPointInPolygon(point, turf.polygon(polygon.coordinates));
+                return turf.booleanPointInPolygon(point, polygon);
             } catch (e) {
                 return false;
             }
@@ -381,19 +372,23 @@
 
         async function loadCivicData() {
             try {
-                const [gbfsResponse, c311Response] = await Promise.all([
+                const [boundaryResponse, gbfsResponse, c311Response] = await Promise.all([
+                    fetch('./boundary.geojson'),
                     fetch('/columbus-micromobility-data/data-gbfs.json'),
                     fetch('/columbus-micromobility-data/data-311.json')
                 ]);
 
+                const boundaryData = await boundaryResponse.json();
                 const gbfsData = await gbfsResponse.json();
                 const c311Data = await c311Response.json();
+
+                boundary = boundaryData.features[0].geometry;
 
                 // Count vehicles
                 let veoCount = 0, spinCount = 0;
                 gbfsData.vehicles.forEach(v => {
                     const point = turf.point([v.lng, v.lat]);
-                    if (pointInPolygon(point, GEOFENCE)) {
+                    if (pointInPolygon(point, boundary)) {
                         if (v.provider === 'Veo') veoCount++;
                         else if (v.provider === 'Spin') spinCount++;
                     }
@@ -414,7 +409,7 @@
                     const date = new Date(r.created_date);
                     const point = turf.point([r.longitude, r.latitude]);
 
-                    if (date >= thirtyDaysAgo && pointInPolygon(point, GEOFENCE)) {
+                    if (date >= thirtyDaysAgo && pointInPolygon(point, boundary)) {
                         totalComplaints++;
                         const category = r.type || 'Other';
                         complaints[category] = (complaints[category] || 0) + 1;
@@ -453,6 +448,7 @@
         }
 
         loadCivicData();
+        setInterval(loadCivicData, 60000);
     </script>
 </body>
 </html>
