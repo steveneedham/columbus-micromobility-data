@@ -101,6 +101,40 @@
       "monitoring_start": "2026-08-25",
       "monitoring_end": "2026-09-08",
       "expected_attendance": 8000
+    },
+    {
+      "id": "sonic-temple-2026",
+      "name": "Sonic Temple",
+      "date": "2026-09-13",
+      "category": "Festival",
+      "venue": "Historic Crew Stadium",
+      "area": "Arena District",
+      "hero_image": "sonic-temple-2026.jpg",
+      "geofence": {
+        "center": [39.9612, -82.9988],
+        "radius_meters": 1500
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-09-06",
+      "monitoring_end": "2026-09-20",
+      "expected_attendance": 100000
+    },
+    {
+      "id": "breakaway-festival-2026",
+      "name": "Breakaway Festival",
+      "date": "2026-06-14",
+      "category": "Festival",
+      "venue": "Historic Crew Stadium",
+      "area": "Arena District",
+      "hero_image": "breakaway-festival-2026.jpg",
+      "geofence": {
+        "center": [39.9612, -82.9988],
+        "radius_meters": 1500
+      },
+      "operators": ["Veo", "Spin"],
+      "monitoring_start": "2026-06-07",
+      "monitoring_end": "2026-06-21",
+      "expected_attendance": 40000
     }
   ]
 }
