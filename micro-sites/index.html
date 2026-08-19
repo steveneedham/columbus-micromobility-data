@@ -170,15 +170,17 @@
         </section>
 
         <!-- MUNICIPALITY SECTION -->
-        <section style="margin: 2rem 0; padding: 2rem; background: rgba(232, 163, 61, 0.05); border: 1px solid var(--color-border); border-radius: 8px;">
-            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Newsreader', serif;">🏘️ Municipalities & Civic Organizations</h2>
-            <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Neighborhood civic associations and municipal-level micromobility tracking.</p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                <a href="civic-orgs/short-north/" style="display: block; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#e8a33d'; this.style.boxShadow='0 4px 12px rgba(232, 163, 61, 0.1)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
-                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #e8a33d;">🏘️ Short North Civic Association</div>
-                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Geofence-based tracking for neighborhood civic leaders</div>
-                </a>
-            </div>
+        <section style="margin: 2rem 0; padding: 2rem; background: rgba(100, 150, 200, 0.05); border: 1px solid var(--color-border); border-radius: 8px;">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Newsreader', serif;">🏛️ Municipalities</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Suburban and surrounding municipal areas with micromobility tracking.</p>
+            <div class="neighborhoods-grid" id="municipalities"></div>
+        </section>
+
+        <!-- CAMPUSES SECTION -->
+        <section style="margin: 2rem 0; padding: 2rem; background: rgba(150, 100, 150, 0.05); border: 1px solid var(--color-border); border-radius: 8px;">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Newsreader', serif;">🎓 Campuses</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">University campuses and educational institutions with vehicle activity.</p>
+            <div class="neighborhoods-grid" id="campuses"></div>
         </section>
 
         <!-- NEIGHBORHOOD SECTION -->
@@ -186,6 +188,15 @@
             <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Newsreader', serif;">🏘️ Neighborhoods</h2>
             <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Real-time micromobility activity in Columbus neighborhoods.</p>
             <div class="neighborhoods-grid" id="neighborhoods"></div>
+
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; font-family: 'Newsreader', serif;">Civic Organizations</h3>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Neighborhood civic associations and community leaders.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <a href="civic-orgs/short-north/" style="display: block; padding: 1.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#e8a33d'; this.style.boxShadow='0 4px 12px rgba(232, 163, 61, 0.1)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--color-border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #e8a33d;">🏘️ Short North Civic Association</div>
+                    <div style="font-size: 0.875rem; color: var(--color-text-secondary);">Geofence-based tracking for neighborhood civic leaders</div>
+                </a>
+            </div>
         </section>
 
         <!-- EVENT SECTION -->
@@ -223,13 +234,19 @@
     </div>
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script>
-        const neighborhoods = [
+        const municipalities = [
             { slug: "bexley", name: "Bexley", description: "Eastern suburb", icon: "bexley" },
             { slug: "dublin", name: "Dublin", description: "Northern suburb", icon: "dublin" },
-            { slug: "the-ohio-state-university", name: "The Ohio State University", description: "Campus area", icon: "the-ohio-state-university" },
             { slug: "grandview-heights", name: "Grandview Heights", description: "Northern residential", icon: "grandview-heights" },
             { slug: "marble-cliff", name: "Marble Cliff", description: "Upscale suburb", icon: "marble-cliff" },
-            { slug: "upper-arlington", name: "Upper Arlington", description: "Residential west", icon: "upper-arlington" },
+            { slug: "upper-arlington", name: "Upper Arlington", description: "Residential west", icon: "upper-arlington" }
+        ];
+
+        const campuses = [
+            { slug: "the-ohio-state-university", name: "The Ohio State University", description: "Campus area", icon: "the-ohio-state-university" }
+        ];
+
+        const neighborhoods = [
             { slug: "harrison-west", name: "Harrison West", description: "Mixed-use downtown", icon: "harrison-west" },
             { slug: "short-north", name: "Short North", description: "Trendy urban", icon: "short-north" },
             { slug: "italian-village", name: "Italian Village", description: "Historic district", icon: "italian-village" },
@@ -249,27 +266,26 @@
             }
         }
 
-        async function loadAndDisplayNeighborhoods() {
+        async function loadAndDisplayAreaCards(areaList, containerId) {
             try {
                 // Load data files
-                const [gbfsResponse, c311Response, hubsResponse] = await Promise.all([
+                const [gbfsResponse, c311Response] = await Promise.all([
                     fetch('/columbus-micromobility-data/data-gbfs.json'),
-                    fetch('/columbus-micromobility-data/data-311.json'),
-                    fetch('/columbus-micromobility-data/data-ride-hubs.json')
+                    fetch('/columbus-micromobility-data/data-311.json')
                 ]);
 
                 const gbfsData = await gbfsResponse.json();
                 const c311Data = await c311Response.json();
 
-                // Load all neighborhood boundaries in parallel
-                const boundaryPromises = neighborhoods.map(n =>
+                // Load all boundaries in parallel
+                const boundaryPromises = areaList.map(n =>
                     fetch(`${n.slug}/boundary.geojson`).then(r => r.json()).catch(() => null)
                 );
                 const boundaries = await Promise.all(boundaryPromises);
 
-                // Calculate counts for each neighborhood
-                const container = document.getElementById('neighborhoods');
-                neighborhoods.forEach((n, index) => {
+                // Calculate counts for each area
+                const container = document.getElementById(containerId);
+                areaList.forEach((n, index) => {
                     const boundary = boundaries[index];
                     let c311Count = 0, gbfsCount = 0;
 
@@ -295,7 +311,7 @@
                     card.className = 'neighborhood-card';
                     const heroImg = document.createElement('img');
                     heroImg.className = 'card-hero missing';
-                    heroImg.alt = `${n.name} neighborhood`;
+                    heroImg.alt = `${n.name}`;
                     heroImg.onerror = () => heroImg.classList.add('missing');
 
                     // Determine hero image asset name
@@ -310,8 +326,16 @@
                     container.appendChild(card);
                 });
             } catch (err) {
-                console.error('Error loading neighborhood data:', err);
+                console.error(`Error loading area data for ${containerId}:`, err);
             }
+        }
+
+        async function loadAllAreas() {
+            await Promise.all([
+                loadAndDisplayAreaCards(municipalities, 'municipalities'),
+                loadAndDisplayAreaCards(campuses, 'campuses'),
+                loadAndDisplayAreaCards(neighborhoods, 'neighborhoods')
+            ]);
         }
 
         async function loadAndDisplayEvents() {
@@ -358,7 +382,7 @@
             }
         }
 
-        loadAndDisplayNeighborhoods();
+        loadAllAreas();
         loadAndDisplayEvents();
     </script>
 </body>
