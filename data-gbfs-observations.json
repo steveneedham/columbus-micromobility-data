@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-05T11:47:36.569755+00:00",
+  "generated_at": "2026-09-05T17:54:55.204455+00:00",
   "method": {
     "scope": "GBFS vendor behavior only; no 311 records or complaint signals are used.",
     "comparison": "Newest website GBFS snapshot versus the newest older archived snapshot. Backfilled entries compare each archived snapshot against the one immediately before it in the repo's archive, which may be several days apart where the archive itself has a gap.",
@@ -28,6 +28,223 @@
     "interpretation": "Published point-in-time fleet observations, not proof of deployment intent, demand, service quality, or causation."
   },
   "snapshots": [
+    {
+      "snapshot_id": "20260905T175454Z",
+      "compared_with": "20260905T175407Z",
+      "observations": [
+        {
+          "category": "fleet_size",
+          "vendor": "Spin",
+          "text": "Spin published 1,105 vehicles, unchanged 0 from the prior snapshot.",
+          "current": 1105,
+          "previous": 1105,
+          "change": 0,
+          "change_pct": 0.0
+        },
+        {
+          "category": "published_range",
+          "vendor": "Spin",
+          "text": "Spin\u2019s median published range was lower at 14.6 miles (-0.6 miles versus the prior snapshot).",
+          "current": 14.6,
+          "previous": 15.2,
+          "change": -0.6,
+          "unit": "miles"
+        },
+        {
+          "category": "fleet_size",
+          "vendor": "Veo",
+          "text": "Veo published 1,987 vehicles, down 1 (0.1%) from the prior snapshot.",
+          "current": 1987,
+          "previous": 1988,
+          "change": -1,
+          "change_pct": -0.1
+        },
+        {
+          "category": "published_range",
+          "vendor": "Veo",
+          "text": "Veo\u2019s median published range was essentially unchanged at 22.4 miles (+0.0 miles versus the prior snapshot).",
+          "current": 22.4,
+          "previous": 22.4,
+          "change": 0.0,
+          "unit": "miles"
+        }
+      ],
+      "vendor_metrics": {
+        "Spin": {
+          "current": {
+            "vehicle_count": 1105,
+            "median_range_miles": 14.6,
+            "available_share_pct": 90.9,
+            "review_area_counts": {
+              "Arena District review area": 34,
+              "Short North review area": 37,
+              "Downtown review area": 43,
+              "Ohio State review area": 236
+            }
+          },
+          "previous": {
+            "vehicle_count": 1105,
+            "median_range_miles": 15.2,
+            "available_share_pct": 90.9,
+            "review_area_counts": {
+              "Arena District review area": 34,
+              "Short North review area": 37,
+              "Downtown review area": 43,
+              "Ohio State review area": 236
+            }
+          }
+        },
+        "Veo": {
+          "current": {
+            "vehicle_count": 1987,
+            "median_range_miles": 22.4,
+            "available_share_pct": 94.7,
+            "review_area_counts": {
+              "Arena District review area": 94,
+              "Short North review area": 71,
+              "Downtown review area": 161,
+              "Ohio State review area": 188
+            }
+          },
+          "previous": {
+            "vehicle_count": 1988,
+            "median_range_miles": 22.4,
+            "available_share_pct": 94.7,
+            "review_area_counts": {
+              "Arena District review area": 94,
+              "Short North review area": 71,
+              "Downtown review area": 161,
+              "Ohio State review area": 187
+            }
+          }
+        }
+      }
+    },
+    {
+      "snapshot_id": "20260905T175407Z",
+      "compared_with": "20260905T114735Z",
+      "observations": [
+        {
+          "category": "fleet_size",
+          "vendor": "Spin",
+          "text": "Spin published 1,105 vehicles, down 62 (5.3%) from the prior snapshot.",
+          "current": 1105,
+          "previous": 1167,
+          "change": -62,
+          "change_pct": -5.3
+        },
+        {
+          "category": "published_range",
+          "vendor": "Spin",
+          "text": "Spin\u2019s median published range was lower at 15.2 miles (-0.9 miles versus the prior snapshot).",
+          "current": 15.2,
+          "previous": 16.1,
+          "change": -0.9,
+          "unit": "miles"
+        },
+        {
+          "category": "availability",
+          "vendor": "Spin",
+          "text": "Spin\u2019s published available share moved -5.0 percentage points to 90.9%.",
+          "change_percentage_points": -5.0
+        },
+        {
+          "category": "fleet_size",
+          "vendor": "Veo",
+          "text": "Veo published 1,988 vehicles, up 3 (0.2%) from the prior snapshot.",
+          "current": 1988,
+          "previous": 1985,
+          "change": 3,
+          "change_pct": 0.2
+        },
+        {
+          "category": "published_range",
+          "vendor": "Veo",
+          "text": "Veo\u2019s median published range was lower at 22.4 miles (-0.3 miles versus the prior snapshot).",
+          "current": 22.4,
+          "previous": 22.7,
+          "change": -0.3,
+          "unit": "miles"
+        },
+        {
+          "category": "availability",
+          "vendor": "Veo",
+          "text": "Veo\u2019s published available share moved -3.6 percentage points to 94.7%.",
+          "change_percentage_points": -3.6
+        },
+        {
+          "category": "geographic_concentration",
+          "vendor": "Veo",
+          "area": "Ohio State review area",
+          "text": "Veo had 187 vehicles in the Ohio State review area, up 71 (61.2%) from the prior snapshot.",
+          "current": 187,
+          "previous": 116,
+          "change": 71,
+          "change_pct": 61.2
+        },
+        {
+          "category": "geographic_concentration",
+          "vendor": "Veo",
+          "area": "Short North review area",
+          "text": "Veo had 71 vehicles in the Short North review area, down 35 (33.0%) from the prior snapshot.",
+          "current": 71,
+          "previous": 106,
+          "change": -35,
+          "change_pct": -33.0
+        }
+      ],
+      "vendor_metrics": {
+        "Spin": {
+          "current": {
+            "vehicle_count": 1105,
+            "median_range_miles": 15.2,
+            "available_share_pct": 90.9,
+            "review_area_counts": {
+              "Arena District review area": 34,
+              "Short North review area": 37,
+              "Downtown review area": 43,
+              "Ohio State review area": 236
+            }
+          },
+          "previous": {
+            "vehicle_count": 1167,
+            "median_range_miles": 16.1,
+            "available_share_pct": 95.9,
+            "review_area_counts": {
+              "Arena District review area": 31,
+              "Short North review area": 38,
+              "Downtown review area": 44,
+              "Ohio State review area": 243
+            }
+          }
+        },
+        "Veo": {
+          "current": {
+            "vehicle_count": 1988,
+            "median_range_miles": 22.4,
+            "available_share_pct": 94.7,
+            "review_area_counts": {
+              "Arena District review area": 94,
+              "Short North review area": 71,
+              "Downtown review area": 161,
+              "Ohio State review area": 187
+            }
+          },
+          "previous": {
+            "vehicle_count": 1985,
+            "median_range_miles": 22.7,
+            "available_share_pct": 98.3,
+            "review_area_counts": {
+              "Arena District review area": 127,
+              "Short North review area": 106,
+              "Downtown review area": 183,
+              "Ohio State review area": 116
+            }
+          }
+        }
+      },
+      "backfilled": true
+    },
     {
       "snapshot_id": "20260905T114735Z",
       "compared_with": "20260905T114654Z",
