@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T00:16:45.253311+00:00",
+  "generated_at": "2026-09-19T00:57:26.648103+00:00",
   "source_workbook": "Claude Forecast 0 Columbus_Micromobility_Events_Historical_2024-2026.xlsx",
   "method": "Events are cross-referenced to neighborhoods by the venue area recorded in the source workbook, not by coordinate. A listing means the event tends to drive trips through the neighborhood, not that the venue sits inside the boundary polygon.",
   "caveat": "The workbook is an AI-compiled event list carrying its own status column and a Data Gaps sheet. Scheduled, Projected and Unconfirmed entries are not equally certain and are labelled as such.",
@@ -635,6 +635,16 @@
       ],
       "recent": [
         {
+          "date": "2026-09-19",
+          "event": "Ohio State Football vs Kent State",
+          "category": "Sports - College Football",
+          "venue": "Ohio Stadium",
+          "area": "University District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
+        },
+        {
           "date": "2026-09-05",
           "event": "Ohio State Football vs Ball State",
           "category": "Sports - College Football",
@@ -676,16 +686,6 @@
         }
       ],
       "upcoming": [
-        {
-          "date": "2026-09-19",
-          "event": "Ohio State Football vs Kent State",
-          "category": "Sports - College Football",
-          "venue": "Ohio Stadium",
-          "area": "University District",
-          "attendance": null,
-          "status": "Scheduled",
-          "source": "ohiostatebuckeyes.com/sports/football/schedule/2026"
-        },
         {
           "date": "2026-09-26",
           "event": "Ohio State Football vs Illinois",
@@ -738,7 +738,7 @@
         }
       ],
       "recorded_total": 35,
-      "recorded_past": 29,
+      "recorded_past": 30,
       "recorded_from": "2024-07-19",
       "recorded_to": "2026-11-28",
       "top_categories": [
