@@ -6,6 +6,19 @@ Complete inventory of workflows and scripts that power the columbus-micromobilit
 
 ## GitHub Actions Workflows
 
+### `.github/workflows/organize-snapshots.yml`
+**Purpose:** Move 2026 311 and vehicle snapshots into archive subfolders
+
+**Trigger:**
+- Every push
+- Manual workflow dispatch
+
+**Process:**
+1. Checkout the repository
+2. Move `snapshots/311_req*.json` to `snapshots/archive2026/311_data/`
+3. Move `snapshots/columbus_scooters_2026*.csv` to `snapshots/archive2026/vehicle_data/`
+4. Commit and push only when matching files are found
+
 ### `.github/workflows/pull-311-data.yml`
 **Purpose:** Fetch Columbus 311 complaints hourly
 
