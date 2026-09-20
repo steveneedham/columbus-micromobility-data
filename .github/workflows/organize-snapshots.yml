@@ -1,0 +1,52 @@
+name: Organize Snapshot Files
+
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: organize-snapshots
+  cancel-in-progress: false
+
+jobs:
+  organize:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Move snapshots into archive folders
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p snapshots/archive2026/311_data snapshots/archive2026/vehicle_data
+          moved=0
+
+          while IFS= read -r -d '' file; do
+            git mv "$file" snapshots/archive2026/311_data/
+            moved=$((moved + 1))
+          done < <(find snapshots -maxdepth 1 -type f -name '311_req*.json' -print0)
+
+          while IFS= read -r -d '' file; do
+            git mv "$file" snapshots/archive2026/vehicle_data/
+            moved=$((moved + 1))
+          done < <(find snapshots -maxdepth 1 -type f -name 'columbus_scooters_2026*.csv' -print0)
+
+          echo "Moved ${moved} snapshot file(s)"
+
+      - name: Commit and push reorganized snapshots
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add -A snapshots
+
+          if git diff --cached --quiet; then
+            echo "No snapshots to reorganize"
+          else
+            git commit -m "Organize 2026 snapshot files"
+            git push
+          fi
