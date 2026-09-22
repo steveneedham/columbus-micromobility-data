@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T03:36:28.644635+00:00",
+  "generated_at": "2026-09-22T09:13:46.526246+00:00",
   "method": {
     "scope": "GBFS vendor behavior only; no 311 records or complaint signals are used.",
     "comparison": "Newest website GBFS snapshot versus the newest older archived snapshot. Backfilled entries compare each archived snapshot against the one immediately before it in the repo's archive, which may be several days apart where the archive itself has a gap.",
@@ -28,6 +28,114 @@
     "interpretation": "Published point-in-time fleet observations, not proof of deployment intent, demand, service quality, or causation."
   },
   "snapshots": [
+    {
+      "snapshot_id": "20260922T091345Z",
+      "compared_with": "20260922T033627Z",
+      "observations": [
+        {
+          "category": "fleet_size",
+          "vendor": "Spin",
+          "text": "Spin published 1,195 vehicles, up 74 (6.6%) from the prior snapshot.",
+          "current": 1195,
+          "previous": 1121,
+          "change": 74,
+          "change_pct": 6.6
+        },
+        {
+          "category": "published_range",
+          "vendor": "Spin",
+          "text": "Spin\u2019s median published range was higher at 17.3 miles (+0.9 miles versus the prior snapshot).",
+          "current": 17.3,
+          "previous": 16.4,
+          "change": 0.9,
+          "unit": "miles"
+        },
+        {
+          "category": "geographic_concentration",
+          "vendor": "Spin",
+          "area": "Ohio State review area",
+          "text": "Spin had 164 vehicles in the Ohio State review area, up 34 (26.2%) from the prior snapshot.",
+          "current": 164,
+          "previous": 130,
+          "change": 34,
+          "change_pct": 26.2
+        },
+        {
+          "category": "fleet_size",
+          "vendor": "Veo",
+          "text": "Veo published 1,939 vehicles, down 12 (0.6%) from the prior snapshot.",
+          "current": 1939,
+          "previous": 1951,
+          "change": -12,
+          "change_pct": -0.6
+        },
+        {
+          "category": "published_range",
+          "vendor": "Veo",
+          "text": "Veo\u2019s median published range was essentially unchanged at 24.1 miles (+0.0 miles versus the prior snapshot).",
+          "current": 24.1,
+          "previous": 24.1,
+          "change": 0.0,
+          "unit": "miles"
+        },
+        {
+          "category": "availability",
+          "vendor": "Veo",
+          "text": "Veo\u2019s published available share moved +1.2 percentage points to 98.4%.",
+          "change_percentage_points": 1.2
+        }
+      ],
+      "vendor_metrics": {
+        "Spin": {
+          "current": {
+            "vehicle_count": 1195,
+            "median_range_miles": 17.3,
+            "available_share_pct": 94.5,
+            "review_area_counts": {
+              "Arena District review area": 63,
+              "Short North review area": 106,
+              "Downtown review area": 97,
+              "Ohio State review area": 164
+            }
+          },
+          "previous": {
+            "vehicle_count": 1121,
+            "median_range_miles": 16.4,
+            "available_share_pct": 93.6,
+            "review_area_counts": {
+              "Arena District review area": 61,
+              "Short North review area": 107,
+              "Downtown review area": 96,
+              "Ohio State review area": 130
+            }
+          }
+        },
+        "Veo": {
+          "current": {
+            "vehicle_count": 1939,
+            "median_range_miles": 24.1,
+            "available_share_pct": 98.4,
+            "review_area_counts": {
+              "Arena District review area": 64,
+              "Short North review area": 80,
+              "Downtown review area": 97,
+              "Ohio State review area": 116
+            }
+          },
+          "previous": {
+            "vehicle_count": 1951,
+            "median_range_miles": 24.1,
+            "available_share_pct": 97.2,
+            "review_area_counts": {
+              "Arena District review area": 71,
+              "Short North review area": 90,
+              "Downtown review area": 106,
+              "Ohio State review area": 111
+            }
+          }
+        }
+      }
+    },
     {
       "snapshot_id": "20260922T033627Z",
       "compared_with": "20260922T033519Z",
