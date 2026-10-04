@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-04T02:23:50.327554+00:00",
+  "fetched_at": "2026-10-04T09:20:36.900180+00:00",
   "source": {
     "name": "City of Columbus 311 Service Requests",
     "map_url": "https://gis.columbus.gov/coc311map/",
@@ -7,10 +7,30 @@
     "request_type": "Shared Electric Bike & Scooters",
     "mode": "read-only"
   },
-  "record_count": 68,
+  "record_count": 67,
   "duplicate_count": 0,
   "invalid_count": 0,
   "records": [
+    {
+      "source_id": "CAS-3182674-K3D6P9",
+      "city": "columbus",
+      "operator": "unknown",
+      "complaint_type": "unclassified",
+      "descriptor": "Shared Electric Bike & Scooters",
+      "address": "361 S OAKLEY AVE",
+      "latitude": 39.9479495803,
+      "longitude": -83.0625870824,
+      "zone_id": "Greater Hilltop",
+      "reported_at": "2026-10-03T18:14:14Z",
+      "status": "received",
+      "source_status": "Received",
+      "source_status_at": "",
+      "source_updated_at": "2026-10-03T18:14:16Z",
+      "source_name": "City of Columbus 311 public map",
+      "source_url": "https://gis.columbus.gov/coc311map/",
+      "council_district": "District 6",
+      "zip": "43204"
+    },
     {
       "source_id": "CAS-3182448-W2N4V6",
       "city": "columbus",
@@ -1330,46 +1350,6 @@
       "source_url": "https://gis.columbus.gov/coc311map/",
       "council_district": "District 2",
       "zip": "43235"
-    },
-    {
-      "source_id": "CAS-3146461-T9F1D8",
-      "city": "columbus",
-      "operator": "unknown",
-      "complaint_type": "unclassified",
-      "descriptor": "Shared Electric Bike & Scooters",
-      "address": "415 FREBIS AVE",
-      "latitude": 39.9352762105,
-      "longitude": -82.9847574234,
-      "zone_id": "South Side",
-      "reported_at": "2026-09-03T23:43:16Z",
-      "status": "closed",
-      "source_status": "Closed",
-      "source_status_at": "2026-09-08T14:27:04Z",
-      "source_updated_at": "2026-09-08T14:27:04Z",
-      "source_name": "City of Columbus 311 public map",
-      "source_url": "https://gis.columbus.gov/coc311map/",
-      "council_district": "District 8",
-      "zip": "43206"
-    },
-    {
-      "source_id": "CAS-3146460-V4Y3T7",
-      "city": "columbus",
-      "operator": "unknown",
-      "complaint_type": "unclassified",
-      "descriptor": "Shared Electric Bike & Scooters",
-      "address": "1367 PARSONS AVE",
-      "latitude": 39.9354736474,
-      "longitude": -82.9838562012,
-      "zone_id": "South Side",
-      "reported_at": "2026-09-03T23:41:47Z",
-      "status": "closed",
-      "source_status": "Closed",
-      "source_status_at": "2026-09-08T14:26:37Z",
-      "source_updated_at": "2026-09-08T14:26:37Z",
-      "source_name": "City of Columbus 311 public map",
-      "source_url": "https://gis.columbus.gov/coc311map/",
-      "council_district": "District 8",
-      "zip": "43206"
     }
   ]
 }
