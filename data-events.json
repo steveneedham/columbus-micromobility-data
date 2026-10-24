@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T01:12:00.768415+00:00",
+  "generated_at": "2026-10-24T03:17:24.090718+00:00",
   "source_workbook": "Claude Forecast 0 Columbus_Micromobility_Events_Historical_2024-2026.xlsx",
   "method": "Events are cross-referenced to neighborhoods by the venue area recorded in the source workbook, not by coordinate. A listing means the event tends to drive trips through the neighborhood, not that the venue sits inside the boundary polygon.",
   "caveat": "The workbook is an AI-compiled event list carrying its own status column and a Data Gaps sheet. Scheduled, Projected and Unconfirmed entries are not equally certain and are labelled as such.",
@@ -158,6 +158,26 @@
       ],
       "recent": [
         {
+          "date": "2026-10-24",
+          "event": "Columbus Crew vs Toronto FC",
+          "category": "Sports - MLS",
+          "venue": "ScottsMiracle-Gro Field",
+          "area": "Arena District",
+          "attendance": null,
+          "status": "Scheduled",
+          "source": "columbuscrew.com 2026 schedule"
+        },
+        {
+          "date": "2026-10-24",
+          "event": "Blue Jackets vs Washington Capitals (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
           "date": "2026-10-18",
           "event": "Blue Jackets vs Tampa Bay Lightning (PROJECTED \u2014 2026-27 schedule not yet released)",
           "category": "Sports - NHL",
@@ -196,49 +216,9 @@
           "attendance": null,
           "status": "Scheduled",
           "source": "columbuscrew.com 2026 schedule"
-        },
-        {
-          "date": "2026-10-13",
-          "event": "Blue Jackets vs New Jersey Devils (PROJECTED \u2014 2026-27 schedule not yet released)",
-          "category": "Sports - NHL",
-          "venue": "Nationwide Arena",
-          "area": "Arena District",
-          "attendance": 16958,
-          "status": "Projected",
-          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
-        },
-        {
-          "date": "2026-09-27",
-          "event": "Columbus Crew vs Inter Miami CF",
-          "category": "Sports - MLS",
-          "venue": "ScottsMiracle-Gro Field",
-          "area": "Arena District",
-          "attendance": null,
-          "status": "Scheduled",
-          "source": "columbuscrew.com 2026 schedule"
         }
       ],
       "upcoming": [
-        {
-          "date": "2026-10-24",
-          "event": "Blue Jackets vs Washington Capitals (PROJECTED \u2014 2026-27 schedule not yet released)",
-          "category": "Sports - NHL",
-          "venue": "Nationwide Arena",
-          "area": "Arena District",
-          "attendance": 16958,
-          "status": "Projected",
-          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
-        },
-        {
-          "date": "2026-10-24",
-          "event": "Columbus Crew vs Toronto FC",
-          "category": "Sports - MLS",
-          "venue": "ScottsMiracle-Gro Field",
-          "area": "Arena District",
-          "attendance": null,
-          "status": "Scheduled",
-          "source": "columbuscrew.com 2026 schedule"
-        },
         {
           "date": "2026-10-29",
           "event": "Blue Jackets vs Toronto Maple Leafs (PROJECTED \u2014 2026-27 schedule not yet released)",
@@ -401,7 +381,7 @@
         }
       ],
       "recorded_total": 206,
-      "recorded_past": 188,
+      "recorded_past": 190,
       "recorded_from": "2024-02-24",
       "recorded_to": "2026-12-31",
       "top_categories": [
