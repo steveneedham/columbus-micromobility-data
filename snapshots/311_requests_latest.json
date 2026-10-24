@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-24T08:38:18.403388+00:00",
+  "fetched_at": "2026-10-24T13:06:01.721567+00:00",
   "source": {
     "name": "City of Columbus 311 Service Requests",
     "map_url": "https://gis.columbus.gov/coc311map/",
@@ -7,13 +7,29 @@
     "request_type": "Shared Electric Bike & Scooters",
     "mode": "read-only"
   },
-  "record_count": 66,
+  "record_count": 65,
   "records": [
     {
+      "CASE_ID": "CAS-3203774-G0T6D5",
+      "STATUS": "Closed",
+      "REPORTED_DATE": 1792760212000,
+      "STATUS_DATE": 1792782873000,
+      "REQUEST_TYPE": "Shared Electric Bike & Scooters",
+      "STREET": "KELTON AVE & OAK ST",
+      "CITY": "Columbus",
+      "ZIP": "43205",
+      "COLUMBUSCOMMUNITY": "Near East",
+      "AREACOMMISSION": "Near East Area Commission",
+      "COUNCILDISTRICT": "District 7",
+      "LATITUDE": 39.962358,
+      "LONGITUDE": -82.958337,
+      "REQUEST_MODIFIED": 1792782873000
+    },
+    {
       "CASE_ID": "CAS-3203079-M4Z7C6",
-      "STATUS": "Received",
+      "STATUS": "Closed",
       "REPORTED_DATE": 1792690967000,
-      "STATUS_DATE": null,
+      "STATUS_DATE": 1792782804000,
       "REQUEST_TYPE": "Shared Electric Bike & Scooters",
       "STREET": "1476 BOLENHILL AVE",
       "CITY": "Columbus",
@@ -23,7 +39,7 @@
       "COUNCILDISTRICT": "District 1",
       "LATITUDE": 40.1030466654,
       "LONGITUDE": -82.9767653644,
-      "REQUEST_MODIFIED": 1792690969000
+      "REQUEST_MODIFIED": 1792782804000
     },
     {
       "CASE_ID": "CAS-3202563-F8D7C7",
@@ -1032,38 +1048,6 @@
       "LATITUDE": 39.9846845882,
       "LONGITUDE": -83.0246981422,
       "REQUEST_MODIFIED": 1790269206000
-    },
-    {
-      "CASE_ID": "CAS-3169971-Q6W4Y4",
-      "STATUS": "Closed",
-      "REPORTED_DATE": 1790173944000,
-      "STATUS_DATE": 1790265279000,
-      "REQUEST_TYPE": "Shared Electric Bike & Scooters",
-      "STREET": "N 3RD ST & I-670 E",
-      "CITY": "Columbus",
-      "ZIP": "43215",
-      "COLUMBUSCOMMUNITY": "Italian Village",
-      "AREACOMMISSION": "",
-      "COUNCILDISTRICT": "District 7",
-      "LATITUDE": 39.9755516883,
-      "LONGITUDE": -82.9997581757,
-      "REQUEST_MODIFIED": 1790265279000
-    },
-    {
-      "CASE_ID": "CAS-3169715-B7B8L0",
-      "STATUS": "Closed",
-      "REPORTED_DATE": 1790166733000,
-      "STATUS_DATE": 1790265246000,
-      "REQUEST_TYPE": "Shared Electric Bike & Scooters",
-      "STREET": "2700 CALUMET ST",
-      "CITY": "Columbus",
-      "ZIP": "43202",
-      "COLUMBUSCOMMUNITY": "University District",
-      "AREACOMMISSION": "University Area Commission",
-      "COUNCILDISTRICT": "District 3",
-      "LATITUDE": 40.017978,
-      "LONGITUDE": -83.006091,
-      "REQUEST_MODIFIED": 1790265246000
     }
   ]
 }
