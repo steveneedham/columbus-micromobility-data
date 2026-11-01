@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T02:00:22.656630+00:00",
+  "generated_at": "2026-11-01T04:24:55.949953+00:00",
   "source_workbook": "Claude Forecast 0 Columbus_Micromobility_Events_Historical_2024-2026.xlsx",
   "method": "Events are cross-referenced to neighborhoods by the venue area recorded in the source workbook, not by coordinate. A listing means the event tends to drive trips through the neighborhood, not that the venue sits inside the boundary polygon.",
   "caveat": "The workbook is an AI-compiled event list carrying its own status column and a Data Gaps sheet. Scheduled, Projected and Unconfirmed entries are not equally certain and are labelled as such.",
@@ -158,6 +158,16 @@
       ],
       "recent": [
         {
+          "date": "2026-11-01",
+          "event": "Blue Jackets vs St. Louis Blues (PROJECTED \u2014 2026-27 schedule not yet released)",
+          "category": "Sports - NHL",
+          "venue": "Nationwide Arena",
+          "area": "Arena District",
+          "attendance": 16958,
+          "status": "Projected",
+          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
+        },
+        {
           "date": "2026-10-31",
           "event": "Columbus Crew vs D.C. United",
           "category": "Sports - MLS",
@@ -206,29 +216,9 @@
           "attendance": 16958,
           "status": "Projected",
           "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
-        },
-        {
-          "date": "2026-10-17",
-          "event": "Columbus Marathon / Half Marathon (provisional) (Oct 17-Oct 18)",
-          "category": "Race",
-          "venue": "Downtown Columbus",
-          "area": "Downtown Columbus",
-          "attendance": 15000,
-          "status": "Unconfirmed",
-          "source": "My Best Runs / ahotu"
         }
       ],
       "upcoming": [
-        {
-          "date": "2026-11-01",
-          "event": "Blue Jackets vs St. Louis Blues (PROJECTED \u2014 2026-27 schedule not yet released)",
-          "category": "Sports - NHL",
-          "venue": "Nationwide Arena",
-          "area": "Arena District",
-          "attendance": 16958,
-          "status": "Projected",
-          "source": "PROJECTION \u2014 based on hockey-reference.com/teams/CBJ 2025-26 season, not an official 2026-27 source"
-        },
         {
           "date": "2026-11-13",
           "event": "Blue Jackets vs Edmonton Oilers (PROJECTED \u2014 2026-27 schedule not yet released)",
@@ -361,7 +351,7 @@
         }
       ],
       "recorded_total": 206,
-      "recorded_past": 192,
+      "recorded_past": 193,
       "recorded_from": "2024-02-24",
       "recorded_to": "2026-12-31",
       "top_categories": [
