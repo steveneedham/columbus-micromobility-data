@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-08T08:35:41.520858+00:00",
+  "fetched_at": "2026-11-08T15:47:13.477735+00:00",
   "source": {
     "name": "City of Columbus 311 Service Requests",
     "map_url": "https://gis.columbus.gov/coc311map/",
@@ -7,10 +7,50 @@
     "request_type": "Shared Electric Bike & Scooters",
     "mode": "read-only"
   },
-  "record_count": 66,
+  "record_count": 67,
   "duplicate_count": 0,
   "invalid_count": 0,
   "records": [
+    {
+      "source_id": "CAS-3219310-R0Z3X4",
+      "city": "columbus",
+      "operator": "unknown",
+      "complaint_type": "unclassified",
+      "descriptor": "Shared Electric Bike & Scooters",
+      "address": "1267 EASTWOOD AVE",
+      "latitude": 39.967542,
+      "longitude": -82.967283,
+      "zone_id": "Near East",
+      "reported_at": "2026-11-07T13:30:44Z",
+      "status": "received",
+      "source_status": "Received",
+      "source_status_at": "",
+      "source_updated_at": "2026-11-07T13:30:47Z",
+      "source_name": "City of Columbus 311 public map",
+      "source_url": "https://gis.columbus.gov/coc311map/",
+      "council_district": "District 7",
+      "zip": "43203"
+    },
+    {
+      "source_id": "CAS-3219302-S1B5Q6",
+      "city": "columbus",
+      "operator": "unknown",
+      "complaint_type": "unclassified",
+      "descriptor": "Shared Electric Bike & Scooters",
+      "address": "1254 BRIARWOOD AVE",
+      "latitude": 40.0177619732,
+      "longitude": -82.975932195,
+      "zone_id": "North Linden",
+      "reported_at": "2026-11-07T12:14:34Z",
+      "status": "received",
+      "source_status": "Received",
+      "source_status_at": "",
+      "source_updated_at": "2026-11-07T12:14:37Z",
+      "source_name": "City of Columbus 311 public map",
+      "source_url": "https://gis.columbus.gov/coc311map/",
+      "council_district": "District 4",
+      "zip": "43211"
+    },
     {
       "source_id": "CAS-3218616-R0L4Q5",
       "city": "columbus",
@@ -1310,26 +1350,6 @@
       "source_url": "https://gis.columbus.gov/coc311map/",
       "council_district": "District 3",
       "zip": "43202"
-    },
-    {
-      "source_id": "CAS-3189168-H4C7T2",
-      "city": "columbus",
-      "operator": "unknown",
-      "complaint_type": "unclassified",
-      "descriptor": "Shared Electric Bike & Scooters",
-      "address": "957 N 4TH ST",
-      "latitude": 39.9825882172,
-      "longitude": -82.998833321,
-      "zone_id": "Italian Village",
-      "reported_at": "2026-10-09T02:56:52Z",
-      "status": "closed",
-      "source_status": "Closed",
-      "source_status_at": "2026-10-13T13:39:41Z",
-      "source_updated_at": "2026-10-13T13:39:41Z",
-      "source_name": "City of Columbus 311 public map",
-      "source_url": "https://gis.columbus.gov/coc311map/",
-      "council_district": "District 7",
-      "zip": "43201"
     }
   ]
 }
